@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -188,7 +189,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
         return m_odometry.getPoseMeters();
       }
  SwerveDriveOdometry m_odometry =
-       new SwerveDriveOdometry(Constants.kDriveKinematics, new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)));
+       new SwerveDriveOdometry(Constants.kDriveKinematics, new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)), null);
 
    /** Creates a new DriveSubsystem. */
 //   public DriveSubsystem() {}
@@ -210,11 +211,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
-        m_odometry.resetPosition(pose, new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)));
+        m_odometry.resetPosition(pose,  new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)));
         }
 
   @Override
   public void periodic() {
+    SwerveModulePosition shit = new SwerveModulePosition();
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     m_odometry.update(Rotation2d.fromDegrees(getHeading(true)), states);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
