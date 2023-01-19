@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 //import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.commands.Aadith_Autonomous;
 import frc.robot.autonomous.commands.AntiSabatogeClimberFourBall;
 import frc.robot.autonomous.commands.AutoRotateTest;
 import frc.robot.commands.DefaultDriveCommand;
@@ -88,7 +89,7 @@ public class RobotContainer {
       m_chooser.setDefaultOption("rotate wheel", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, 90)));
       m_chooser.addOption("HAHA", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, Math.PI / 2)));
       m_chooser.addOption("Rotate Test", new AutoRotateTest(m_drivetrainSubsystem));
-      m_chooser.addOption("Four Ball", new AntiSabatogeClimberFourBall(m_drivetrainSubsystem));
+      m_chooser.addOption("Aadith_Test", new Aadith_Autonomous(m_drivetrainSubsystem));
   }
 
   private static double deadband(double value, double deadband) {

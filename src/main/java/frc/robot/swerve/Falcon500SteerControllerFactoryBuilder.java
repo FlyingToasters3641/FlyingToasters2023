@@ -142,7 +142,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
                     sensorPositionCoefficient,
                     sensorVelocityCoefficient,
                     hasMotionMagic() ? TalonFXControlMode.MotionMagic : TalonFXControlMode.Position,
-                    absoluteEncoder);  // FIXME - Cancoders not wired up. Uncomment when they are.
+                    absoluteEncoder);
         }
     }
 
@@ -184,7 +184,6 @@ public final class Falcon500SteerControllerFactoryBuilder {
             // Reset the Falcon's encoder periodically when the module is not rotating.
             // Sometimes (~5% of the time) when we initialize, the absolute encoder isn't fully set up, and we don't
             // end up getting a good reading. If we reset periodically this won't matter anymore.
-            // FIXME - Cancoders not wired up. Uncomment below when they are.
             if (motor.getSelectedSensorVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESET_MAX_ANGULAR_VELOCITY) {
                  if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
                      resetIteration = 0;
