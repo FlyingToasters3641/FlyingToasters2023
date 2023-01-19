@@ -190,7 +190,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 return m_odometry.getPoseMeters();
         }
         SwerveDriveOdometry m_odometry =
-        new SwerveDriveOdometry(Constants.kDriveKinematics, new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)), new SwerveModulePosition[] {});
+        new SwerveDriveOdometry(Constants.kDriveKinematics, new Rotation2d(m_pigeon.getFusedHeading() * (Math.PI / 180)), new SwerveModulePosition[] {new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition(), new SwerveModulePosition()});
  
         /** Creates a new DriveSubsystem. */
 //   public DriveSubsystem() {}
