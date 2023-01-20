@@ -12,10 +12,10 @@ public class AutonomousCommand extends SequentialCommandGroup {
 
     public AutonomousCommand(DrivetrainSubsystem drive, Pose2d startingPose, Command... commands) {
         super();
+        m_startingPose = startingPose;
+        m_drive = drive;
         addCommands(new InstantCommand(() -> m_drive.resetOdometry(m_startingPose)));
         addCommands(commands);
-        m_drive = drive;
-        m_startingPose = startingPose;
     }
 
 }
