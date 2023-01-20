@@ -90,7 +90,7 @@ public class RobotContainer {
       m_chooser.setDefaultOption("rotate wheel", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, 90)));
       m_chooser.addOption("HAHA", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, Math.PI / 2)));
       m_chooser.addOption("Rotate Test", new AutoRotateTest(m_drivetrainSubsystem));
-      m_chooser.addOption("Four Ball", new AntiSabatogeClimberFourBall(m_drivetrainSubsystem));
+      m_chooser.addOption("Test Auton", new testAuton(m_drivetrainSubsystem));
   }
 
   private static double deadband(double value, double deadband) {
