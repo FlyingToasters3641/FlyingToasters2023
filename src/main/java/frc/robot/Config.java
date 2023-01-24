@@ -92,9 +92,9 @@ public final class Config {
         // public static final double kS = 0.465; // Volts
         // public static final double kV = 2.18; // Volts per m/s (Volt seconds per meter)
         // public static final double kA = 0.118; // Volts per m/s^2 (Volt seconds^2 per meter)
-        public static final double kS = 0.35; //0.71817; // 0.72818; // Volts
-        public static final double kV = 0.95354; // 0.77832; // Volts per m/s (Volt seconds per meter)
-        public static final double kA = 0.055253; // 0.10349; // Volts per m/s^2 (Volt seconds^2 per meter)
+        public static final double kS = 0.098517; //0.35 //0.71817; // 0.72818; // Volts
+        public static final double kV = 2.3163;//0.95354 // 0.77832; // Volts per m/s (Volt seconds per meter)
+        public static final double kA = 0.15711;//0.055253 // 0.10349; // Volts per m/s^2 (Volt seconds^2 per meter)
         public static final double trackWidth = inchesToMeters((26 + (3 / 16))); // Meters
 
         // public static final double kP = 0.17; // From characterization: 0.186 // for position feedback loop: 0.0443
