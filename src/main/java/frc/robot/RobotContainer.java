@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,7 +34,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   //private final XboxController m_controller = new XboxController(0);
-  private final PS4Controller m_controller = new PS4Controller(0);
+  private final XboxController m_controller = new XboxController(0);
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1);
 
@@ -76,7 +75,7 @@ public class RobotContainer {
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link PS4Controller}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
