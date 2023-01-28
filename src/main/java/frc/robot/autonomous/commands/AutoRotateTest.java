@@ -31,7 +31,7 @@ public class AutoRotateTest extends AutonomousCommand {
 
     
     private static Pose2d start = new Pose2d(0, 0, Rotation2d.fromDegrees(0.0));
-    private static Pose2d pickUpBall = new Pose2d(1.82, 0, Rotation2d.fromDegrees(0.0));
+    private static Pose2d pickUpBall = new Pose2d(5.02, 0, Rotation2d.fromDegrees(0.0));
     
     private DrivetrainSubsystem m_drive;
     private static SwerveTrajectory pathForward = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), start, pickUpBall);
