@@ -4,9 +4,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,20 +13,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.swerve.AbsoluteEncoder;
-import frc.robot.swerve.Mk4SwerveModuleHelper;
+import frc.robot.swerve.Mk4iSwerveModuleHelper;
 import frc.robot.swerve.SdsModuleConfigurations;
 import frc.robot.swerve.SwerveModule;
-import frc.robot.swerve.SwerveModule.*;
-
 import static frc.robot.Constants.*;
 
 public class DrivetrainSubsystem extends SubsystemBase {
@@ -55,8 +48,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
          * line.
          */
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-                        SdsModuleConfigurations.MK4_L2.getDriveReduction() *
-                        SdsModuleConfigurations.MK4_L2.getWheelDiameter() * Math.PI;
+                        SdsModuleConfigurations.MK4i_L2.getDriveReduction() *
+                        SdsModuleConfigurations.MK4i_L2.getWheelDiameter() * Math.PI;
         /**
          * The maximum angular velocity of the robot in radians per second.
          * <p>
@@ -92,14 +85,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 
                 // Setup motor configuration
-                m_frontLeftModule = Mk4SwerveModuleHelper.createFalcon500(
+                m_frontLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
                                 // This parameter is optional, but will allow you to see the current state of
                                 // the module on the dashboard.
                                 tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(0, 0),
                                 // This can either be STANDARD or FAST depending on your gear configuration
-                                Mk4SwerveModuleHelper.GearRatio.L2,
+                                Mk4iSwerveModuleHelper.GearRatio.L2,
                                 FRONT_LEFT_MODULE_DRIVE_MOTOR,
                                 FRONT_LEFT_MODULE_STEER_MOTOR,
                                 FRONT_LEFT_MODULE_STEER_ENCODER,
@@ -108,31 +101,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
                                 FRONT_LEFT_MODULE_STEER_OFFSET);
 
                 // We will do the same for the other modules
-                m_frontRightModule = Mk4SwerveModuleHelper.createFalcon500(
+                m_frontRightModule = Mk4iSwerveModuleHelper.createFalcon500(
                                 tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(2, 0),
-                                Mk4SwerveModuleHelper.GearRatio.L2,
+                                Mk4iSwerveModuleHelper.GearRatio.L2,
                                 FRONT_RIGHT_MODULE_DRIVE_MOTOR,
                                 FRONT_RIGHT_MODULE_STEER_MOTOR,
                                 FRONT_RIGHT_MODULE_STEER_ENCODER,
                                 FRONT_RIGHT_MODULE_STEER_OFFSET);
 
-                m_backLeftModule = Mk4SwerveModuleHelper.createFalcon500(
+                m_backLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
                                 tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(4, 0),
-                                Mk4SwerveModuleHelper.GearRatio.L2,
+                                Mk4iSwerveModuleHelper.GearRatio.L2,
                                 BACK_LEFT_MODULE_DRIVE_MOTOR,
                                 BACK_LEFT_MODULE_STEER_MOTOR,
                                 BACK_LEFT_MODULE_STEER_ENCODER,
                                 BACK_LEFT_MODULE_STEER_OFFSET);
 
-                m_backRightModule = Mk4SwerveModuleHelper.createFalcon500(
+                m_backRightModule = Mk4iSwerveModuleHelper.createFalcon500(
                                 tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                                                 .withSize(2, 4)
                                                 .withPosition(6, 0),
-                                Mk4SwerveModuleHelper.GearRatio.L2,
+                                Mk4iSwerveModuleHelper.GearRatio.L2,
                                 BACK_RIGHT_MODULE_DRIVE_MOTOR,
                                 BACK_RIGHT_MODULE_STEER_MOTOR,
                                 BACK_RIGHT_MODULE_STEER_ENCODER,
