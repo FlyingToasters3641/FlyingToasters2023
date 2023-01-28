@@ -35,7 +35,7 @@ public class RobotContainer {
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   //private final XboxController m_controller = new XboxController(0);
-  private final PS4Controller m_controller = new PS4Controller(0);
+  private final XboxController m_controller = new XboxController(0);
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1);
 
