@@ -23,6 +23,9 @@ public final class Constants {
 
     public static final int DRIVETRAIN_PIGEON_ID = 9; //9
     private final static double kMetersPerInch = 0.0254;
+
+    public static final String CANIVORE_BUS_NAME = "Canivore1";
+
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 11; 
