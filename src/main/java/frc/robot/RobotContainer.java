@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -34,8 +33,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  //private final XboxController m_controller = new XboxController(0);
-  private final PS4Controller m_controller = new PS4Controller(0);
+  private final XboxController m_controller = new XboxController(0);
 
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1);
 
