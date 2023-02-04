@@ -12,10 +12,6 @@ public final class Config {
     private static final int FALCON_EPR = 2048; // Edges per revolution for falcon 500 internal sensor
 
     // Drive subsystem hardware IDs
-    public static final int LEFT_DRIVE_MOTOR_1 = 1;
-    public static final int LEFT_DRIVE_MOTOR_2 = 2;
-    public static final int RIGHT_DRIVE_MOTOR_1 = 3;
-    public static final int RIGHT_DRIVE_MOTOR_2 = 4;
     public static final int MAX_DRIVE_CURRENT = 55;
     public static final double DRIVETRAIN_RATIO = 7.44 / 1; // Gear ratio of drivetrain
     public static final double WHEEL_RADIUS = (13.4 / Math.PI) / 2.0;
