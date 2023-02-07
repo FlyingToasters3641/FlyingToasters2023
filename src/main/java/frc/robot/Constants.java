@@ -26,24 +26,24 @@ public final class Constants {
 
     public static final String CANIVORE_BUS_NAME = "Canivore1";
 
-    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 1;
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 2;
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 11; 
+    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31; 
     public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(42.011719);
 
-    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 3;
-    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 4;
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 13; 
+    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
+    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
+    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41; 
     public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(40.166016);
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 7;
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 8;
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 17; 
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 39;
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38; 
     public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(270.878906);
 
-    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 5;
-    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6;
-    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 15; 
+    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 37;
+    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 35;
+    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40; 
     public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(172.529297);
     
     public static final double PI = 3.141592653589793;
