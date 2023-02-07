@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
-
+import static frc.robot.Constants.*;
 import static frc.robot.swerve.CtreUtils.checkCtreError;
 
 public final class Falcon500SteerControllerFactoryBuilder {
@@ -115,7 +115,7 @@ public final class Falcon500SteerControllerFactoryBuilder {
                 motorConfiguration.supplyCurrLimit.enable = true;
             }
 
-            TalonFX motor = new TalonFX(steerConfiguration.getMotorPort());
+            TalonFX motor = new TalonFX(steerConfiguration.getMotorPort(), CANIVORE_BUS_NAME);
             checkCtreError(motor.configAllSettings(motorConfiguration, CAN_TIMEOUT_MS), "Failed to configure Falcon 500 settings");
 
             if (hasVoltageCompensation()) {
