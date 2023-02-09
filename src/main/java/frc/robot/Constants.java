@@ -29,22 +29,23 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31; 
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -0.415771;
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = 0;
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41; 
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -0.838379;
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = 0;
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;//39
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38; 
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -0.061768;
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = 0;
+    //29.443
 
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 37;
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 35;
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40; 
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -0.570312;
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = 0;
     
     public static final double PI = 3.141592653589793;
     public static final double INCHES_TO_METERS = 0.0254; //NOTE: double INCHES_TO_METERS is equal to the number of meters in a single inch
