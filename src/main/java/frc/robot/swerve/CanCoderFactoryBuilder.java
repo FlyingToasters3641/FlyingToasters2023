@@ -35,6 +35,7 @@ public class CanCoderFactoryBuilder {
 
     private static class EncoderImplementation implements AbsoluteEncoder {
         private final CANCoder encoder;
+        
 
         private EncoderImplementation(CANCoder encoder) {
             this.encoder = encoder;
@@ -43,8 +44,10 @@ public class CanCoderFactoryBuilder {
         @Override
         public double getAbsoluteAngle() {
             //TODO: log here!
-            System.out.println();
+            //TODO: Are we getting signed or unsigned angle?
+            
             double angle = Math.toRadians(encoder.getAbsolutePosition());
+            System.out.println("Absolute position of the cancoders as reported by the phoenix libraries" + Math.toDegrees(angle));
             angle %= 2.0 * Math.PI;
             if (angle < 0.0) {
                 angle += 2.0 * Math.PI;
