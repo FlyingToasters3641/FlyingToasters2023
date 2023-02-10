@@ -6,6 +6,8 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import static frc.robot.Constants.*;
 
+import java.io.Console;
+
 public class CanCoderFactoryBuilder {
     private Direction direction = Direction.COUNTER_CLOCKWISE;
     private int periodMilliseconds = 10;
@@ -40,12 +42,14 @@ public class CanCoderFactoryBuilder {
 
         @Override
         public double getAbsoluteAngle() {
+            //TODO: log here!
+            System.out.println();
             double angle = Math.toRadians(encoder.getAbsolutePosition());
             angle %= 2.0 * Math.PI;
             if (angle < 0.0) {
                 angle += 2.0 * Math.PI;
             }
-
+            System.out.println("Absolute angle as calculated: " + Math.toDegrees(angle));
             return angle;
         }
     }
