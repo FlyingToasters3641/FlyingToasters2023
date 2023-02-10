@@ -10,6 +10,7 @@ import java.io.Console;
 
 public class CanCoderFactoryBuilder {
     private Direction direction = Direction.COUNTER_CLOCKWISE;
+    //TODO: are we polling too much?
     private int periodMilliseconds = 10;
 
     public CanCoderFactoryBuilder withReadingUpdatePeriod(int periodMilliseconds) {
@@ -23,6 +24,7 @@ public class CanCoderFactoryBuilder {
             config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
             config.magnetOffsetDegrees = Math.toDegrees(configuration.getOffset());
             config.sensorDirection = direction == Direction.CLOCKWISE;
+            //TODO: is the sensor oriented in a clockwise direction?
 
             CANCoder encoder = new CANCoder(configuration.getId(), CANIVORE_BUS_NAME);
             CtreUtils.checkCtreError(encoder.configAllSettings(config, 250), "Failed to configure CANCoder");
@@ -44,7 +46,7 @@ public class CanCoderFactoryBuilder {
         @Override
         public double getAbsoluteAngle() {
             //TODO: log here!
-            //TODO: Are we getting signed or unsigned angle?
+            
             
             double angle = Math.toRadians(encoder.getAbsolutePosition());
             System.out.println("Absolute position of the cancoders as reported by the phoenix libraries" + Math.toDegrees(angle));
