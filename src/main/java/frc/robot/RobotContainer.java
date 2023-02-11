@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.autonomous.AutonomousCommand;
 import frc.robot.autonomous.commands.testAuton;
@@ -74,15 +75,18 @@ public class RobotContainer {
 
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
-        chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
-        chooser.setDefaultOption("rotate wheel", new InstantCommand(() -> s_Swerve.setModuleStates(
-          new SwerveModuleState[] {
-            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
-            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
-            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
-            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
-          }
-        )));;
+        //chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
+        chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
+          SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
+          System.out.println("CURRENT: " + moduleStates.toString());
+
+          s_Swerve.setModuleStates(new SwerveModuleState[]{
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(315)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(135)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
+        });
+        }));;
       }
 
     /**
