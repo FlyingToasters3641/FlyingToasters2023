@@ -56,10 +56,10 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         // Configure the autonomous chooser
-        // ArrayList<AutonomousCommand> commands = new ArrayList<AutonomousCommand>();
-        // commands.add(new testAuton(s_Swerve));
-        // commands.add(new testAuton(s_Swerve));
-        // configureAutonomousChooser(commands);
+         ArrayList<AutonomousCommand> commands = new ArrayList<AutonomousCommand>();
+         commands.add(new testAuton(s_Swerve));
+         commands.add(new testAuton(s_Swerve));
+         configureAutonomousChooser(commands);
     }
 
     /**
@@ -73,13 +73,13 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
-    // private void configureAutonomousChooser(ArrayList<AutonomousCommand> commands) {
-    //     SmartDashboard.putData("Chooser", chooser);
-    //     for (AutonomousCommand autonomousCommand : commands) {
+    private void configureAutonomousChooser(ArrayList<AutonomousCommand> commands) {
+        SmartDashboard.putData("Chooser", chooser);
+         for (AutonomousCommand autonomousCommand : commands) {
             
-    //     }
+         }
         
-    // }
+     }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -89,7 +89,7 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
         
-        // return chooser.getSelected();
-        return new testAuton(s_Swerve);
+        return chooser.getSelected();
+        //return new testAuton(s_Swerve);
     }
 }
