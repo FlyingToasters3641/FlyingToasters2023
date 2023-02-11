@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -73,7 +75,15 @@ public class RobotContainer {
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
-     }
+        chooser.setDefaultOption("rotate wheel", new InstantCommand(() -> s_Swerve.setModuleStates(
+          new SwerveModuleState[] {
+            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
+            new SwerveModuleState(0, Rotation2d.fromDegrees(90)),
+          }
+        )));;
+      }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
