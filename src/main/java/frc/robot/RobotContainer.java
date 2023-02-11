@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -8,9 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.AutonomousCommand;
 import frc.robot.autonomous.commands.testAuton;
-import frc.robot.autos.*;
-import frc.robot.autos.Commands.exampleAuto;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -55,7 +56,10 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         // Configure the autonomous chooser
-        configureAutonomousChooser();
+        // ArrayList<AutonomousCommand> commands = new ArrayList<AutonomousCommand>();
+        // commands.add(new testAuton(s_Swerve));
+        // commands.add(new testAuton(s_Swerve));
+        // configureAutonomousChooser(commands);
     }
 
     /**
@@ -69,19 +73,23 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
-    private void configureAutonomousChooser() {
-        SmartDashboard.putData("Chooser", chooser);
-        chooser.setDefaultOption("test", new testAuton(s_Swerve));
+    // private void configureAutonomousChooser(ArrayList<AutonomousCommand> commands) {
+    //     SmartDashboard.putData("Chooser", chooser);
+    //     for (AutonomousCommand autonomousCommand : commands) {
+            
+    //     }
         
-    }
+    // }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *
      * @return the command to run in autonomous
      */
-    public Object getAutonomousCommand() {
+    public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return chooser.getSelected();
+        
+        // return chooser.getSelected();
+        return new testAuton(s_Swerve);
     }
 }
