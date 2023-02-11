@@ -11,7 +11,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.util.ErrorMessages;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
 
 public class ToastyRamseteCommand extends CommandBase {
@@ -44,7 +44,7 @@ public class ToastyRamseteCommand extends CommandBase {
                 HolonomicDriveController follower,
                 SwerveDriveKinematics kinematics,
                 TriConsumer<Double, Double, Double> outputMetersPerSecond,
-                DrivetrainSubsystem driveSubsystem) {
+                Swerve driveSubsystem) {
         m_trajectory = ErrorMessages.requireNonNullParam(trajectory, "trajectory", "RamseteCommand");
         m_pose = ErrorMessages.requireNonNullParam(pose, "pose", "RamseteCommand");
         //m_follower = ErrorMessages.requireNonNullParam(follower, "follower", "RamseteCommand");

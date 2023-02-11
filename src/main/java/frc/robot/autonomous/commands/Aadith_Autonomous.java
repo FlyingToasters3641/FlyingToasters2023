@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autonomous.AutonomousCommand;
 import frc.robot.autonomous.SwerveTrajectory;
 import frc.robot.autonomous.TrajectoryHelpers;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Swerve;
 import static frc.robot.autonomous.TrajectoryHelpers.*;
 
 
@@ -34,7 +34,7 @@ public class Aadith_Autonomous extends AutonomousCommand {
     private static Pose2d pointTwo = new Pose2d(1, 0.5, Rotation2d.fromDegrees(120.0));
     private static Pose2d pointThree = new Pose2d(0, 1, Rotation2d.fromDegrees(240.0));
     
-    private DrivetrainSubsystem m_drive;
+    private Swerve m_drive;
     private static SwerveTrajectory trajectoryOne = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointOne, pointTwo);
     private static SwerveTrajectory trajectoryTwo = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointTwo, pointThree);
     private static SwerveTrajectory trajectoryThree= trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointThree, pointOne);
@@ -44,7 +44,7 @@ public class Aadith_Autonomous extends AutonomousCommand {
     //     pickUpBall
     // );
     
-    public Aadith_Autonomous(DrivetrainSubsystem drive) {
+    public Aadith_Autonomous(Swerve drive) {
         super(
                 drive,
                 pointOne,

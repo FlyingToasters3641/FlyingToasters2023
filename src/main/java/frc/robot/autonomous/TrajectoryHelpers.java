@@ -19,13 +19,12 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.Config;
 import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.Swerve;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import java.io.IOException;
 import frc.robot.Constants.*;
-import frc.robot.lib.Units.*;
+import frc.lib.math.Conversions;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -58,20 +57,20 @@ public class TrajectoryHelpers {
 
     public static TrajectoryConfig trajectoryConfig(Speeds speed, boolean backwards) {
         TrajectoryConfig config;
-        if (Config.Trajectories.safetyMode) {
+        if (Constants.Trajectories.safetyMode) {
             config = new TrajectoryConfig(Speeds.Safe.velocity, Speeds.Safe.acceleration);
         } else {
             config = new TrajectoryConfig(speed.velocity, speed.acceleration);
         }
 
         config.setReversed(backwards);
-        config.setKinematics(Constants.kDriveKinematics); // Add kinematics to ensure max speed is actually
+        config.setKinematics(Constants.Swerve.swerveKinematics); // Add kinematics to ensure max speed is actually
                                                           // obeyed
 
         return config;
     }
 
-    public static HolonomicDriveCommand FollowTrajectory(DrivetrainSubsystem drive,
+    public static HolonomicDriveCommand FollowTrajectory(Swerve drive,
             SwerveTrajectory swerveTrajectory) {
         // SmartDashboard.putNumber("Got to hol command",
         // trajectory.getInitialPose().getX());
@@ -87,17 +86,15 @@ public class TrajectoryHelpers {
                 },
                 new HolonomicDriveController(
                         new PIDController(1, 0, 0), new PIDController(1, 0, 0),
-                        // TODO: figure out right PID values for holonomic drive controller if they need
-                        // to be figured out
                         new ProfiledPIDController(1, 0, 0,
-                                new TrapezoidProfile.Constraints(6.28, 3.14))),
-                Constants.kDriveKinematics,
+                                Constants.AutoConstants.kThetaControllerConstraints)),
+                Constants.Swerve.swerveKinematics,
                 (p0, p1, p2) -> drive.setVelocities(p0, p1, p2),
                 drive);
     }
 
     public static Pose2d waypoint(double x, double y, double degrees) {
-        return new Pose2d(x, y, new Rotation2d(degrees * Constants.PI / 180.0));
+        return new Pose2d(x, y, new Rotation2d(degrees * Math.PI / 180.0));
     }
 
     public static Transform2d transform(double x, double y, double degrees) {

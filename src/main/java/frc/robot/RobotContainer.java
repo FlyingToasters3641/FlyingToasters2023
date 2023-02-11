@@ -1,27 +1,18 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.autonomous.commands.Aadith_Autonomous;
-import frc.robot.autonomous.commands.AntiSabatogeClimberFourBall;
-import frc.robot.autonomous.commands.AutoRotateTest;
 import frc.robot.autonomous.commands.testAuton;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.autos.*;
+import frc.robot.autos.Commands.exampleAuto;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,87 +21,67 @@ import frc.robot.subsystems.DrivetrainSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+    /* Controllers */
+    private final Joystick driver = new Joystick(0);
 
-  //private final XboxController m_controller = new XboxController(0);
-  private final XboxController m_controller = new XboxController(0);
+    /* Drive Controls */
+    private final int translationAxis = XboxController.Axis.kLeftY.value;
+    private final int strafeAxis = XboxController.Axis.kLeftX.value;
+    private final int rotationAxis = XboxController.Axis.kRightX.value;
 
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1);
+    /* Driver Buttons */
+    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(1);
+    /* Subsystems */
+    private final Swerve s_Swerve = new Swerve();
 
-  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(1);
-
-  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
-    // Set up the default command for the drivetrain.
-    // The controls are for field-oriented driving:
-    // Left stick Y axis -> forward and backwards movement
-    // Left stick X axis -> left and right movement
-    // Right stick X axis -> rotation
-    m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
-            m_drivetrainSubsystem,
-            () -> m_xspeedLimiter.calculate(-modifyAxis(m_controller.getLeftY())) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> m_yspeedLimiter.calculate(-modifyAxis(m_controller.getLeftX())) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
-            () -> m_rotLimiter.calculate(-modifyAxis(m_controller.getRightX())) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND
-    ));
-
-    configAutonmousChooser();
-
-    // Configure the button bindings
-    configureButtonBindings();
-  }
-
-  public Command getAutonomousCommand() {
-      return m_chooser.getSelected();
-      
-    }
-
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    new JoystickButton(m_controller, Button.kA.value)
-      .whenHeld(new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, 90)));
+    /* UI Elements */
+    private final SendableChooser chooser = new SendableChooser<>();
     
-  }
 
-  private void configAutonmousChooser() { 
-      SmartDashboard.putData("Chooser", m_chooser);
-      m_chooser.setDefaultOption("rotate wheel", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, 90)));
-      m_chooser.addOption("HAHA", new InstantCommand(() -> m_drivetrainSubsystem.m_frontLeftModule.set(0, Math.PI / 2)));
-      m_chooser.addOption("Rotate Test", new AutoRotateTest(m_drivetrainSubsystem));
-      m_chooser.addOption("Test Auton", new testAuton(m_drivetrainSubsystem));
-  }
+    /** The container for the robot. Contains subsystems, OI devices, and commands. */
+    public RobotContainer() {
+        s_Swerve.setDefaultCommand(
+            new TeleopSwerve(
+                s_Swerve, 
+                () -> -driver.getRawAxis(translationAxis), 
+                () -> -driver.getRawAxis(strafeAxis), 
+                () -> -driver.getRawAxis(rotationAxis), 
+                () -> robotCentric.getAsBoolean()
+            )
+        );
 
-  private static double deadband(double value, double deadband) {
-    if (Math.abs(value) > deadband) {
-      if (value > 0.0) {
-        return (value - deadband) / (1.0 - deadband);
-      } else {
-        return (value + deadband) / (1.0 - deadband);
-      }
-    } else {
-      return 0.0;
+        // Configure the button bindings
+        configureButtonBindings();
+        // Configure the autonomous chooser
+        configureAutonomousChooser();
     }
-  }
 
-  private static double modifyAxis(double value) {
-    // Deadband
-    value = deadband(value, 0.05);
+    /**
+     * Use this method to define your button->command mappings. Buttons can be created by
+     * instantiating a {@link GenericHID} or one of its subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+     * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        /* Driver Buttons */
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+    }
 
-    // Square the axis
-    value = Math.copySign(value * value, value);
+    private void configureAutonomousChooser() {
+        SmartDashboard.putData("Chooser", chooser);
+        chooser.setDefaultOption("test", new testAuton(s_Swerve));
+        
+    }
 
-    return value;
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Object getAutonomousCommand() {
+        // An ExampleCommand will run in autonomous
+        return chooser.getSelected();
+    }
 }
