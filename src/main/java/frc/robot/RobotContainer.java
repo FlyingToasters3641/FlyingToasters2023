@@ -38,7 +38,7 @@ public class RobotContainer {
     private final Swerve s_Swerve = new Swerve();
 
     /* UI Elements */
-    private final SendableChooser chooser = new SendableChooser<>();
+    private final SendableChooser<Command> chooser = new SendableChooser<>();
     
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -56,10 +56,7 @@ public class RobotContainer {
         // Configure the button bindings
         configureButtonBindings();
         // Configure the autonomous chooser
-         ArrayList<AutonomousCommand> commands = new ArrayList<AutonomousCommand>();
-         commands.add(new testAuton(s_Swerve));
-         commands.add(new testAuton(s_Swerve));
-         configureAutonomousChooser(commands);
+         configureAutonomousChooser();
     }
 
     /**
@@ -73,12 +70,9 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
-    private void configureAutonomousChooser(ArrayList<AutonomousCommand> commands) {
+    private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
-         for (AutonomousCommand autonomousCommand : commands) {
-            
-         }
-        
+        chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
      }
 
     /**
