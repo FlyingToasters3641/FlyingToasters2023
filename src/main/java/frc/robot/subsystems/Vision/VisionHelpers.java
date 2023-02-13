@@ -2,6 +2,7 @@ package frc.robot.subsystems.Vision;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.networktables.NetworkTable;
 
 public class VisionHelpers {
     public static class AprilTagConfig {
@@ -30,9 +31,11 @@ public class VisionHelpers {
     public static class TimeCorrectedAprilTag extends AprilTag{
         public Pose3d relativePose;
         public double timeStamp;
+        NetworkTable table;
 
-        public TimeCorrectedAprilTag(int ID, Pose3d pose) {
-            super(ID, pose);
+        public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table) {
+            super(config.id, config.pose);
+            this.table = table;
         }
 
         public void updatePosition(Pose3d relativePose, double timeStamp) {

@@ -169,7 +169,7 @@ public final class Constants {
     }
 
     //TODO: Find and add april tag configurations
-    public static AprilTagConfig[] AprilTagConfigs = {
+    public static final AprilTagConfig[] AprilTagConfigs = {
             new AprilTagConfig(0, new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
             new AprilTagConfig(1, null)
 
