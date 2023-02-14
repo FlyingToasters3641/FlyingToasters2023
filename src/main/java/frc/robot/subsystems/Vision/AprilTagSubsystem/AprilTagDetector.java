@@ -2,12 +2,10 @@ package frc.robot.subsystems.Vision.AprilTagSubsystem;
 
 import java.util.ArrayList;
 
-import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
-import frc.robot.subsystems.Vision.VisionHelpers.TimeCorrectedAprilTag;
 import frc.robot.Constants;
 
 /*the working plan is for the TimeCorrectedAprilTag (name should be changed) class to handle all of the filtering and updating on a per april tag basis,
@@ -18,7 +16,6 @@ import frc.robot.Constants;
 * class or if I should just skip dependency injection and declare it in the TimeCorrectedAprilTag class.
 * I also need to figure out what the field positions of the april tags are
 */
-//TODO: Need to move TimeCorrectedAprilTag to it's own file and rename it, this needs it
 public class AprilTagDetector extends SubsystemBase {
     NetworkTable detector;
     AprilTagConfig config;
@@ -30,5 +27,6 @@ public class AprilTagDetector extends SubsystemBase {
             tags.add(new TimeCorrectedAprilTag(config, detector.getSubTable(Integer.toString(config.getId()))));
         }
     }
+    
 
 }
