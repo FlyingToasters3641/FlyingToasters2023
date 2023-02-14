@@ -31,6 +31,7 @@ public class VisionHelpers {
     public static class TimeCorrectedAprilTag extends AprilTag{
         public Pose3d relativePose;
         public double timeStamp;
+        public double ambiguity;
         NetworkTable table;
 
         public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table) {
@@ -38,9 +39,10 @@ public class VisionHelpers {
             this.table = table;
         }
 
-        public void updatePosition(Pose3d relativePose, double timeStamp) {
+        public void updatePosition(Pose3d relativePose, double timeStamp, double ambiguity) {
             this.relativePose = relativePose;
             this.timeStamp = timeStamp;
+            this.ambiguity = ambiguity;
         }
     
     }

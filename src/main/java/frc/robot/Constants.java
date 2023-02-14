@@ -169,7 +169,7 @@ public final class Constants {
         public static final Speeds defaultSpeed = Speeds.Med;
     }
 
-    // TODO: Find and add april tag configurations
+    
     public static final AprilTagConfig[] AprilTagConfigs = {
             new AprilTagConfig(1, new Pose3d(
                     Units.inchesToMeters(610.77),
