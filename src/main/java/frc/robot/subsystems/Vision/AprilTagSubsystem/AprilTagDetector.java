@@ -22,7 +22,8 @@ public class AprilTagDetector extends SubsystemBase{
     public AprilTagDetector(String nt4Id) {
         detector = NetworkTableInstance.getDefault().getTable(nt4Id).getSubTable("output");
     }
-
+    
+    
 
 }
 

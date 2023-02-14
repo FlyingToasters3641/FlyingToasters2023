@@ -17,7 +17,7 @@ import frc.lib.util.SwerveModuleConstants;
 import frc.robot.autonomous.TrajectoryHelpers.Speeds;
 import frc.robot.subsystems.Vision.VisionHelpers;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
-import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
+import frc.lib.math.Conversions.*;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
@@ -147,7 +147,8 @@ public final class Constants {
         }
     }
 
-    public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
+    public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be
+                                              // tuned to specific robot
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -168,10 +169,52 @@ public final class Constants {
         public static final Speeds defaultSpeed = Speeds.Med;
     }
 
-    //TODO: Find and add april tag configurations
+    // TODO: Find and add april tag configurations
     public static final AprilTagConfig[] AprilTagConfigs = {
-            new AprilTagConfig(0, new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0))),
-            new AprilTagConfig(1, null)
-
+            new AprilTagConfig(1, new Pose3d(
+                    Units.inchesToMeters(610.77),
+                    Units.inchesToMeters(42.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, Math.PI))),
+            new AprilTagConfig(2, new Pose3d(
+                    Units.inchesToMeters(610.77),
+                    Units.inchesToMeters(108.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, Math.PI))),
+            new AprilTagConfig(3, new Pose3d(
+                    Units.inchesToMeters(610.77),
+                    Units.inchesToMeters(174.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, Math.PI))),
+            new AprilTagConfig(4, new Pose3d(
+                    Units.inchesToMeters(636.96),
+                    Units.inchesToMeters(265.74),
+                    Units.inchesToMeters(27.38),
+                    new Rotation3d(0, 0, Math.PI))),
+            new AprilTagConfig(5, new Pose3d(
+                    Units.inchesToMeters(14.25),
+                    Units.inchesToMeters(265.74),
+                    Units.inchesToMeters(27.38),
+                    new Rotation3d(0, 0, 0))),
+            new AprilTagConfig(6, new Pose3d(
+                    Units.inchesToMeters(40.45),
+                    Units.inchesToMeters(174.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, 0))),
+            new AprilTagConfig(6, new Pose3d(
+                    Units.inchesToMeters(40.45),
+                    Units.inchesToMeters(174.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, 0))),
+            new AprilTagConfig(7, new Pose3d(
+                    Units.inchesToMeters(40.45),
+                    Units.inchesToMeters(108.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, 0))),
+            new AprilTagConfig(8, new Pose3d(
+                    Units.inchesToMeters(40.45),
+                    Units.inchesToMeters(42.19),
+                    Units.inchesToMeters(18.22),
+                    new Rotation3d(0, 0, 0))),
     };
 }
