@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.TimesliceRobot;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
+import frc.robot.subsystems.Vision.VisionHelpers.Tuple;
 
 /**
  * This is an extension of the wpilib AprilTag class that adds the
@@ -19,13 +20,11 @@ import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
  * to pass it around
  */
 public class TimeCorrectedAprilTag extends AprilTag {
-    public Pose3d relativePose;
-    double timeStamp;
-    public double ambiguity;
     NetworkTable table;
-    int maxHistValues = 10;
-    // Timestamp, <pose, ambiguity>
-    TreeMap<Double, Map<Pose3d, Double>> historicalValues = new TreeMap<Double, Map<Pose3d, Double>>();
+    double maxHist= 1.0;
+    double ambiguityThreshold = 0.15;
+    //   Ambiguity,    <pose, timestamp>
+    TreeMap<Double, Tuple<Pose3d, Double>> historicalValues = new TreeMap<Double, Tuple<Pose3d, Double>>();
 
     public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table) {
         super(config.getId(), config.getPose());
@@ -33,11 +32,19 @@ public class TimeCorrectedAprilTag extends AprilTag {
     }
 
     public void updatePosition(Pose3d relativePose, double timeStamp, double ambiguity) {
-        Map positions = new HashMap<Pose3d, Double>();
-        positions.put(relativePose, ambiguity);
-        historicalValues.put(timeStamp, positions);
-        if (historicalValues.size() >= maxHistValues) {
-            historicalValues.remove(historicalValues.firstKey());
+        Tuple<Pose3d, Double> positions = new Tuple<>(relativePose, timeStamp);
+        //TODO: need to check how ambiguity is reported
+        //this is just a sketch
+        //TODO: find a way to detect major wheel slippage
+        if (ambiguity < ambiguityThreshold) {
+            historicalValues.put(timeStamp, positions);
+        } 
+        //Remove values older than allowed
+        for (Map.Entry<Double, Tuple<Pose3d, Double>> entry : historicalValues.entrySet()) {
+            Double time = entry.getValue().getSecond();
+            if (time > maxHist) {
+                historicalValues.remove(entry.getKey());
+            }
         }
 
     }
