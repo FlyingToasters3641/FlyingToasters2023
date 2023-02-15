@@ -6,23 +6,15 @@ import edu.wpi.first.networktables.NetworkTable;
 
 public class VisionHelpers {
     public static class AprilTagConfig {
-        int id;
-        Pose3d pose;
+        public int id;
+        public Pose3d pose;
 
         public AprilTagConfig(int id, Pose3d pose) {
             this.id = id;
             this.pose = pose;
         }
-
-        public int getId() {
-            return id;
-        }
-
-        public Pose3d getPose() {
-            return pose;
-        }
     }
-
+    //A la chatgpt
     public static class Tuple<A, B> {
         private final A first;
         private final B second;

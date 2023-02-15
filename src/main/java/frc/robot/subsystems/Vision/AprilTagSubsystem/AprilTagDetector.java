@@ -24,7 +24,7 @@ public class AprilTagDetector extends SubsystemBase {
     public AprilTagDetector(String nt4Id) {
         detector = NetworkTableInstance.getDefault().getTable(nt4Id).getSubTable("output");
         for (AprilTagConfig config : Constants.AprilTagConfigs) {
-            tags.add(new TimeCorrectedAprilTag(config, detector.getSubTable(Integer.toString(config.getId()))));
+            tags.add(new TimeCorrectedAprilTag(config, detector.getSubTable(Integer.toString(config.id))));
         }
     }
     

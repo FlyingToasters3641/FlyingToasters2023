@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.TimesliceRobot;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
 import frc.robot.subsystems.Vision.VisionHelpers.Tuple;
@@ -27,7 +28,7 @@ public class TimeCorrectedAprilTag extends AprilTag {
     TreeMap<Double, Tuple<Pose3d, Double>> historicalValues = new TreeMap<Double, Tuple<Pose3d, Double>>();
 
     public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table) {
-        super(config.getId(), config.getPose());
+        super(config.id, config.pose);
         this.table = table;
     }
 
@@ -42,7 +43,7 @@ public class TimeCorrectedAprilTag extends AprilTag {
         //Remove values older than allowed
         for (Map.Entry<Double, Tuple<Pose3d, Double>> entry : historicalValues.entrySet()) {
             Double time = entry.getValue().getSecond();
-            if (time > maxHist) {
+            if (Timer.getFPGATimestamp() - time > maxHist) {
                 historicalValues.remove(entry.getKey());
             }
         }
