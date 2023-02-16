@@ -161,3 +161,10 @@ bin/
 # Simulation GUI and other tools window save file
 *-window.json
 .vscode/settings.json
+.idea/.gitignore
+.idea/compiler.xml
+.idea/gradle.xml
+.idea/jarRepositories.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/modules/FlyingToasters2023.main.iml
