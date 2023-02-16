@@ -22,8 +22,8 @@ import frc.robot.subsystems.Vision.VisionHelpers.Tuple;
  */
 public class TimeCorrectedAprilTag extends AprilTag {
     NetworkTable table;
-    double maxHist= 1.0;
-    double ambiguityThreshold = 0.15;
+    final double maxHist= 1.0;
+    final double ambiguityThreshold = 0.15;
     //   Ambiguity,    <pose, timestamp>
     TreeMap<Double, Tuple<Pose3d, Double>> historicalValues = new TreeMap<Double, Tuple<Pose3d, Double>>();
 
@@ -47,7 +47,8 @@ public class TimeCorrectedAprilTag extends AprilTag {
                 historicalValues.remove(entry.getKey());
             }
         }
-
     }
+
+    
 
 }

@@ -14,7 +14,7 @@ public class VisionHelpers {
             this.pose = pose;
         }
     }
-    //A la chatgpt
+    
     public static class Tuple<A, B> {
         private final A first;
         private final B second;

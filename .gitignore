@@ -167,3 +167,4 @@ bin/
 .idea/misc.xml
 .idea/vcs.xml
 .idea/modules/FlyingToasters2023.main.iml
+.vscode/settings.json
