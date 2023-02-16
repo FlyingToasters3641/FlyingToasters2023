@@ -76,17 +76,17 @@ public class RobotContainer {
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         //chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
-        chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
-          SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
-          System.out.println("CURRENT: " + moduleStates.toString());
+        // chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
+        //   SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
+        //   System.out.println("CURRENT: " + moduleStates.toString());
 
-          s_Swerve.setModuleStates(new SwerveModuleState[]{
-            new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
-            new SwerveModuleState(0.5, Rotation2d.fromDegrees(315)),
-            new SwerveModuleState(0.5, Rotation2d.fromDegrees(135)),
-            new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
-        });
-        }));;
+        //   s_Swerve.setModuleStates(new SwerveModuleState[]{
+        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(315)),
+        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(135)),
+        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
+        // });
+        // }));;
       }
 
     /**
