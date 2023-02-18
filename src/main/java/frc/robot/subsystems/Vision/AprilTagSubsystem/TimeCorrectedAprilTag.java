@@ -12,11 +12,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.TimesliceRobot;
-import frc.lib.math.Conversions;
 import frc.lib.math.PolynomialRegression;
+import frc.lib.math.MathHelpers.Tuple;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
-import frc.robot.subsystems.Vision.VisionHelpers.Tuple;
+
 
 /**
  * This is an extension of the wpilib AprilTag class that adds the
@@ -27,12 +26,17 @@ public class TimeCorrectedAprilTag extends AprilTag {
     NetworkTable table;
     final double maxHist= 1.0;
     final double ambiguityThreshold = 0.15;
+    PolynomialRegression xyStdDevmodel;
+    PolynomialRegression thetaStdDevModel;
+
     //   Ambiguity,    <pose, timestamp>
     TreeMap<Double, Tuple<Pose3d, Double>> historicalValues = new TreeMap<Double, Tuple<Pose3d, Double>>();
 
-    public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table) {
+    public TimeCorrectedAprilTag(AprilTagConfig config, NetworkTable table, PolynomialRegression xyStdDevModel, PolynomialRegression thetaStdDevModel) {
         super(config.id, config.pose);
         this.table = table;
+        this.xyStdDevmodel = xyStdDevModel;
+        this.thetaStdDevModel = thetaStdDevModel;
     }
 
     
