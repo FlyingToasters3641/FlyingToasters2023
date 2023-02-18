@@ -9,9 +9,12 @@ import java.util.TreeMap;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.TimesliceRobot;
+import frc.lib.math.Conversions;
+import frc.lib.math.PolynomialRegression;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
 import frc.robot.subsystems.Vision.VisionHelpers.Tuple;
 
@@ -31,6 +34,8 @@ public class TimeCorrectedAprilTag extends AprilTag {
         super(config.id, config.pose);
         this.table = table;
     }
+
+    
 
     public void updatePosition(Pose3d relativePose, double timeStamp, double ambiguity) {
         Tuple<Pose3d, Double> positions = new Tuple<>(relativePose, timeStamp);
