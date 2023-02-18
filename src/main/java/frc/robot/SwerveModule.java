@@ -16,8 +16,8 @@ import frc.lib.util.CTREModuleState;
 import frc.lib.util.SwerveModuleConstants;
 
 public class SwerveModule {
-    public int moduleNumber;
-    private Rotation2d angleOffset;
+    public final int moduleNumber;
+    public final Rotation2d angleOffset;
     private Rotation2d lastAngle;
 
     private TalonFX mAngleMotor;
