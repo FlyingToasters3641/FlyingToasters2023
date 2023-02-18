@@ -15,13 +15,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 public class SwerveModule {
+    private static final int ENCODER_RESET_ITERATIONS = 500;
+    private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
+
     public int moduleNumber;
-    private Rotation2d angleOffset;
+    public Rotation2d angleOffset;
     private Rotation2d lastAngle;
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
     private CANCoder angleEncoder;
+
+    private double resetIteration = 0;
 
     SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
@@ -45,8 +50,20 @@ public class SwerveModule {
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
+        var currentAngle = getState().angle;
+
+        if (getAngularVelocityRadians() < ENCODER_RESET_MAX_ANGULAR_VELOCITY){
+            if (++resetIteration >= ENCODER_RESET_ITERATIONS) {
+                resetIteration = 0;
+                System.out.println(String.format("Resetting steer motor %d encoders to absolute.", moduleNumber));
+                currentAngle = resetToAbsolute();
+            }
+        } else {
+            resetIteration = 0;
+        }
+
         /* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
-        desiredState = CTREModuleState.optimize(desiredState, getState().angle); 
+        desiredState = CTREModuleState.optimize(desiredState, currentAngle); 
         setAngle(desiredState);
         setSpeed(desiredState, isOpenLoop);
     }
@@ -73,13 +90,19 @@ public class SwerveModule {
         return Rotation2d.fromDegrees(Conversions.falconToDegrees(mAngleMotor.getSelectedSensorPosition(), Constants.Swerve.angleGearRatio));
     }
 
+    private double getAngularVelocityRadians(){
+        return mAngleMotor.getSelectedSensorVelocity() * 2.0 * Math.PI / 2048.0 / Constants.Swerve.angleGearRatio;
+    }
+
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
 
-    public void resetToAbsolute(){
-        double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
+    public Rotation2d resetToAbsolute(){
+        double currentAngle = getCanCoder().getDegrees() - angleOffset.getDegrees();
+        double absolutePosition = Conversions.degreesToFalcon(currentAngle, Constants.Swerve.angleGearRatio);
         mAngleMotor.setSelectedSensorPosition(absolutePosition);
+        return Rotation2d.fromDegrees(currentAngle);
     }
 
     private void configAngleEncoder(){        

@@ -111,8 +111,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetModulesToAbsolute(){
-        for(SwerveModule mod : mSwerveMods){
-            mod.resetToAbsolute();
+        //for(SwerveModule mod : mSwerveMods){
+        for(int i = 3; i >= 0; i--){
+            Timer.delay(2.0);
+            mSwerveMods[i].resetToAbsolute();
         }
     }
 
@@ -121,6 +123,7 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getYaw(), getModulePositions());  
 
         for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder (Robot POV w/ offset)", mod.getCanCoder().getDegrees() - mod.angleOffset.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Integrated", mod.getPosition().angle.getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    

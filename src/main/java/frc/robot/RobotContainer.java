@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,6 +40,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final Timer reseedTimer = new Timer ();
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -58,8 +60,19 @@ public class RobotContainer {
 
         // Configure the button bindings
         configureButtonBindings();
+
+        reseedTimer.start();
+
         // Configure the autonomous chooser
          configureAutonomousChooser();
+    }
+
+    public void disabledPeriodic() {
+        //Reseed the motor offset continously when the robot is disabled to help solve dead wheel issue
+        if (reseedTimer.advanceIfElapsed(1.0)) {
+            System.out.println("Disabled: Resetting steer motor encoders to absolute.");
+            s_Swerve.resetModulesToAbsolute();
+        }
     }
 
     /**
