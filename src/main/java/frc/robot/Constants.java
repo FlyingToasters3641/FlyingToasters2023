@@ -252,4 +252,12 @@ public final class Constants {
                         },
                         1);
 
+        private static final double xyStdWeightAbs = 1.0 ;
+        private static final double thetaStdWeightAbs = 1.0;
+        private static final double ambiguityWeightAbs = 1.0;
+
+        public static final double xyStdWeight = xyStdWeightAbs / (xyStdWeightAbs + thetaStdWeightAbs + ambiguityWeightAbs);
+        public static final double thetaStdWeight = thetaStdWeightAbs / (xyStdWeightAbs + thetaStdWeightAbs + ambiguityWeightAbs);
+        public static final double ambiguityWeight = ambiguityWeightAbs / (xyStdWeightAbs + thetaStdWeightAbs + ambiguityWeightAbs);
+
 }
