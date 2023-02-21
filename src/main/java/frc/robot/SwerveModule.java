@@ -5,6 +5,8 @@ import com.ctre.phoenixpro.controls.PositionDutyCycle;
 import com.ctre.phoenixpro.controls.VelocityDutyCycle;
 import com.ctre.phoenixpro.hardware.CANcoder;
 import com.ctre.phoenixpro.hardware.TalonFX;
+import com.ctre.phoenixpro.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenixpro.signals.InvertedValue;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -30,15 +32,11 @@ public class SwerveModule {
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
         
-        /* Angle Encoder Config */
         angleEncoder = new CANcoder(moduleConstants.cancoderID, moduleConstants.canBusName);
-        configAngleEncoder();
-
-        /* Angle Motor Config */
         mAngleMotor = new TalonFX(moduleConstants.angleMotorID, moduleConstants.canBusName);
-        configAngleMotor();
 
-        /* Drive Motor Config */
+        configAngleEncoderAndMotor();
+
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID, moduleConstants.canBusName);
         configDriveMotor();
 
@@ -88,21 +86,25 @@ public class SwerveModule {
         //mAngleMotor.setSelectedSensorPosition(absolutePosition);
     }
 
-    private void configAngleEncoder(){        
-        //angleEncoder.configFactoryDefault();
-        //angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
-        angleEncoder.getConfigurator().apply(Robot.ctreConfigs.swerveCanCoderConfig);
-    }
+    private void configAngleEncoderAndMotor(){        
+        var encoderConfig = Robot.ctreConfigs.swerveCanCoderConfig;
+        encoderConfig.MagnetSensor.MagnetOffset = -((angleOffset.getDegrees() - 180.0) / 360.0);  // put into range -0.5 to +0.5, CCW+
+        angleEncoder.getConfigurator().apply(encoderConfig);
 
-    private void configAngleMotor(){
-        //mDriveMotor.configFactoryDefault();
         mAngleMotor.getConfigurator().apply(new TalonFXConfiguration());
-        // mAngleMotor.configAllSettings(Robot.ctreConfigs.swerveAngleFXConfig);
-        Robot.ctreConfigs.swerveAngleFXConfig.MotorOutput.NeutralMode = Constants.Swerve.angleNeutralMode;
-        mAngleMotor.getConfigurator().apply(Robot.ctreConfigs.swerveAngleFXConfig);
-        mAngleMotor.setInverted(Constants.Swerve.angleMotorInvert);
-        //mAngleMotor.setNeutralMode(Constants.Swerve.angleNeutralMode);
-        resetToAbsolute();
+
+        var motorConfig = Robot.ctreConfigs.swerveAngleFXConfig;
+        motorConfig.MotorOutput.NeutralMode = Constants.Swerve.angleNeutralMode;
+        motorConfig.MotorOutput.Inverted = Constants.Swerve.angleMotorInvert ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive;
+
+        // Configure motor/cancoder fused mode
+        motorConfig.Feedback.FeedbackRemoteSensorID = angleEncoder.getDeviceID();
+        motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        motorConfig.Feedback.SensorToMechanismRatio = 1.0;
+        motorConfig.Feedback.RotorToSensorRatio = Constants.Swerve.angleGearRatio;
+        mAngleMotor.getConfigurator().apply(motorConfig);
+
+        // resetToAbsolute();
     }
 
     private void configDriveMotor(){        

@@ -4,6 +4,7 @@ import com.ctre.phoenixpro.configs.CANcoderConfiguration;
 import com.ctre.phoenixpro.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenixpro.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenixpro.configs.TalonFXConfiguration;
+import com.ctre.phoenixpro.signals.AbsoluteSensorRangeValue;
 import com.ctre.phoenixpro.signals.SensorDirectionValue;
 
 // import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -70,7 +71,10 @@ public final class CTREConfigs {
         
         /* Swerve CANCoder Configuration */
         //swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.canCoderInvert ? SensorDirectionValue.CounterClockwise_Positive : SensorDirectionValue.Clockwise_Positive;
+        //swerveCanCoderConfig.MagnetSensor.SensorDirection = Constants.Swerve.canCoderInvert ? SensorDirectionValue.CounterClockwise_Positive : SensorDirectionValue.Clockwise_Positive;
+        swerveCanCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+        swerveCanCoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+
         //swerveCanCoderConfig.MagnetSensor.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         //swerveCanCoderConfig.sensorTimeBase = SensorTimeBase.PerSecond;
     }
