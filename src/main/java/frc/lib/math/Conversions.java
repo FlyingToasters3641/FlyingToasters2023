@@ -37,8 +37,8 @@ public class Conversions {
      * @param gearRatio Gear Ratio between Falcon and Mechanism
      * @return Degrees of Rotation of Mechanism
      */
-    public static double falconRotationsToDegrees(double positionCounts, double gearRatio) {
-        return positionCounts * (360.0 / gearRatio);
+    public static double falconFusedUnitsToDegrees(double positionCounts) {
+        return positionCounts * 360.0 + 180.0;
     }
 
     /**
@@ -52,11 +52,10 @@ public class Conversions {
 
     /**
      * @param degrees Degrees of rotation of Mechanism
-     * @param gearRatio Gear Ratio between Falcon and Mechanism
-     * @return Falcon Position Counts (rotations)
+     * @return Falcon fused angle (-0.5 to 0.5)
      */
-    public static double degreesToFalconRotations(double degrees, double gearRatio) {
-        return degrees / (360.0 / gearRatio);
+    public static double degreesToFalconFusedUnits(double degrees) {
+        return (degrees - 180.0) / 360.0;
     }
 
     /**

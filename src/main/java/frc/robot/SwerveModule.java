@@ -20,7 +20,7 @@ import frc.lib.util.SwerveModuleConstants;
 public class SwerveModule {
     public final int moduleNumber;
     public final Rotation2d angleOffset;
-    private Rotation2d lastAngle;
+    //private Rotation2d lastAngle;
 
     private TalonFX mAngleMotor;
     private TalonFX mDriveMotor;
@@ -40,7 +40,7 @@ public class SwerveModule {
         mDriveMotor = new TalonFX(moduleConstants.driveMotorID, moduleConstants.canBusName);
         configDriveMotor();
 
-        lastAngle = getState().angle;
+        //lastAngle = getState().angle;
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
@@ -64,27 +64,28 @@ public class SwerveModule {
     }
 
     private void setAngle(SwerveModuleState desiredState){
-        Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01)) ? lastAngle : desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
-        
+        // Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01)) ? lastAngle : desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+        //Rotation2d angle = desiredState.angle; //Prevent rotating module if speed is less then 1%. Prevents Jittering.
+
         //mAngleMotor.set(ControlMode.Position, Conversions.degreesToFalcon(angle.getDegrees(), Constants.Swerve.angleGearRatio));
-        mAngleMotor.setControl(new PositionDutyCycle(Conversions.degreesToFalconRotations(angle.getDegrees(), Constants.Swerve.angleGearRatio)));
-        lastAngle = angle;
+        mAngleMotor.setControl(new PositionDutyCycle(Conversions.degreesToFalconFusedUnits(desiredState.angle.getDegrees())));
+        //lastAngle = angle;
     }
 
     private Rotation2d getAngle(){
-        return Rotation2d.fromDegrees(Conversions.falconRotationsToDegrees(mAngleMotor.getRotorPosition().getValue(), Constants.Swerve.angleGearRatio));
+        return Rotation2d.fromDegrees(Conversions.falconFusedUnitsToDegrees(mAngleMotor.getRotorPosition().getValue()));
     }
 
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition().getValue() * 360.0);
     }
 
-    public void resetToAbsolute(){
-        mAngleMotor.setRotorPosition(Conversions.degreesToFalconRotations(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio));
+    // public void resetToAbsolute(){
+    //     mAngleMotor.setRotorPosition(Conversions.degreesToFalconRotations(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio));
 
-        //double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
-        //mAngleMotor.setSelectedSensorPosition(absolutePosition);
-    }
+    //     //double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
+    //     //mAngleMotor.setSelectedSensorPosition(absolutePosition);
+    // }
 
     private void configAngleEncoderAndMotor(){        
         var encoderConfig = Robot.ctreConfigs.swerveCanCoderConfig;
