@@ -1,20 +1,70 @@
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+import java.util.Map;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import frc.lib.util.COTSFalconSwerveConstants;
-import frc.lib.util.SwerveModuleConstants;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.autonomous.TrajectoryHelpers.Speeds;
 import frc.robot.subsystems.swerve.ModuleConfiguration;
 
 
 public final class Constants {
+    private static final RobotType robot = RobotType.ROBOT_SIMBOT;
+    public static final double loopPeriodSecs = 0.02;
+    public static final boolean tuningMode = false;
+  
+    public static RobotType getRobot() {
+      if (!disableHAL && RobotBase.isReal()) {
+        if (robot == RobotType.ROBOT_SIMBOT) { // Invalid robot selected
+            DriverStation.reportError("Invalid robot selected, using competition robot as default.", false);
+          return RobotType.ROBOT_2023;
+        } else {
+          return robot;
+        }
+      } else {
+        return robot;
+      }
+    }
+  
+    public static Mode getMode() {
+      switch (getRobot()) {
+        case ROBOT_2023:
+          return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+  
+        case ROBOT_SIMBOT:
+          return Mode.SIM;
+  
+        default:
+          return Mode.REAL;
+      }
+    }
+  
+    public static final Map<RobotType, String> logFolders =
+        Map.of(RobotType.ROBOT_2023, "/media/sda2/");
+  
+    public static enum RobotType {
+      ROBOT_2023,
+      ROBOT_SIMBOT
+    }
+  
+    public static enum Mode {
+      REAL,
+      REPLAY,
+      SIM
+    }
+  
+    // Function to disable HAL interaction when running without native libs
+    private static boolean disableHAL = false;
+  
+    public static void disableHAL() {
+      disableHAL = true;
+    }
+    
     public static final double stickDeadband = 0.1;
 
     public static final class DrivetrainConstants {
