@@ -22,6 +22,7 @@ import static frc.robot.Constants.*;
 public class TimeCorrectedAprilTag extends AprilTag {
     NetworkTable table;
     final double maxHist = 1.0;
+    //TODO: move ambiguity threshold to constants
     final double ambiguityThreshold = (5 / 100) * ((1600 * 1200) / 2);
     PolynomialRegression xyStdDevmodel;
     PolynomialRegression thetaStdDevModel;
