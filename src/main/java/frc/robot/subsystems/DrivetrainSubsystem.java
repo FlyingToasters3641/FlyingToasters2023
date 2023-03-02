@@ -241,6 +241,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
     SmartDashboard.putNumberArray("Drivetrain/SwerveStates", swerveModulesToNTValues(swerveModules));
 
+    int i = 0;
+    for(SwerveModule mod : swerveModules){
+      SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
+      SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
+      SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);    
+      i++;
+  }
+
     // Always reset desiredChassisSpeeds to null to prevent latching to the last
     // state (aka motor safety)!!
     desiredChassisSpeeds = null;
