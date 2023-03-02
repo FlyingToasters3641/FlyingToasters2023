@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.Vision.VisionHelpers.*;
 import frc.robot.subsystems.Vision.VisionHelpers.AprilTagConfig;
 import frc.robot.Constants;
 
@@ -21,9 +22,11 @@ public class AprilTagDetector extends SubsystemBase {
     NetworkTable detector;
     AprilTagConfig config;
     ArrayList<TimeCorrectedAprilTag> tags;
-
+    AprilTagVisionIO io;
     public AprilTagDetector(String nt4Id, Pose3d cameraPose) {
         detector = NetworkTableInstance.getDefault().getTable(nt4Id).getSubTable("output");
+        io = new AprilTagVisionIONorthstar(nt4Id);
+
         for (AprilTagConfig config : Constants.AprilTagConfigs) {
             tags.add(new TimeCorrectedAprilTag(config, Constants.xyStdDevModel, Constants.thetaStdDevModel));
         }

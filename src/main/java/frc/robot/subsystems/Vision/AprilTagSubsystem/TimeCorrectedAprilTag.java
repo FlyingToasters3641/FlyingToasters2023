@@ -23,7 +23,7 @@ public class TimeCorrectedAprilTag extends AprilTag {
     NetworkTable table;
     final double maxHist = 1.0;
     //TODO: move ambiguity threshold to constants
-    final double ambiguityThreshold = (5 / 100) * ((1600 * 1200) / 2);
+    final double ambiguityThreshold = (0.5 / 100.0) * ((1600.0 + 1200.0) / 2.0);
     PolynomialRegression xyStdDevmodel;
     PolynomialRegression thetaStdDevModel;
     double xyStdDev;
@@ -41,14 +41,14 @@ public class TimeCorrectedAprilTag extends AprilTag {
     }
 
     public void updatePosition(Pose3d relativePose, double timeStamp, double ambiguity) {
-        Tuple<Pose3d, Double> positions = new Tuple<>(relativePose, timeStamp);
+        var positions = new Tuple<>(relativePose, timeStamp);
         //this is just a sketch
         //TODO: find a way to detect major wheel slippage
         //NOTE: the standard deviation and ambiguity are probably redundant and I'm not sure that we
-        //actually need the standard deviation stuff as it is only a prediction of error. I want to see if multiplying
+        //actually need to use standard deviation as it is only a prediction of error. I want to see if multiplying
         //ambiguity times the standard deviations or the normal distance is superior since ambiguity is just a pixel
         //measurement of error.
-        //TODO: Determine if ambiguity (e.g. reprojection error) comes out as a pixel value or something else
+        //TODO: Determine if ambiguity (aka reprojection error) comes out as a pixel value or something else
         tagDistance = relativePose.getTranslation().getNorm();
         xyStdDev = xyStdDevmodel.predict(tagDistance);
         thetaStdDev = thetaStdDevModel.predict(tagDistance);
