@@ -92,7 +92,4 @@ public class TimeCorrectedAprilTag extends AprilTag {
         historicalValues.clear();
     }
 
-
-
-
 }
