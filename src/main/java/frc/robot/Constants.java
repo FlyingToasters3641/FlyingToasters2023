@@ -93,22 +93,25 @@ public final class Constants {
         public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 37;
         public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 35;
         public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40;
-        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(25.22);
+        // public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(25.22);
+        public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(25.488);
 
         public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
         public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
         public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38;
-        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(202.675);
+        // public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(202.675);
+        public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(240.557);
 
         public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
         public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
         public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41;
-        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(122.78);
+        // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(122.78);
+        public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(123.486);
 
         public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
-        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(329.33);
+        public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(292.676);
 
         public static final int LEFT_ARM_MOTOR = 22;
         public static final int RIGHT_ARM_MOTOR = 21;
@@ -173,8 +176,8 @@ public final class Constants {
 
         public static final double DEADBAND = 0.1;
     
-        public static final double X_RATE_LIMIT = 6.0;
-        public static final double Y_RATE_LIMIT = 6.0;
+        public static final double X_RATE_LIMIT = 10.0;
+        public static final double Y_RATE_LIMIT = 10.0;
         public static final double ROTATION_RATE_LIMIT = 5.0 * Math.PI;
     
         public static final double HEADING_MAX_VELOCITY = Math.PI * 2;
@@ -217,7 +220,7 @@ public final class Constants {
         public static final boolean safetyMode = false;
         public static final Speeds defaultSpeed = Speeds.Med;
     }
-    
+
     public enum ArmPos {
       LOWERED(0),
       CONE_PICKUP_ALLIGMENT (91.5),

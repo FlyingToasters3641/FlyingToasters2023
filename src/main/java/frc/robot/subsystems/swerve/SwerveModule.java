@@ -60,4 +60,7 @@ public class SwerveModule {
     steerController.configMotorOffset(false);
   }
 
+  public Rotation2d getCancoderAbsoluteAngle() {
+    return Rotation2d.fromRadians(steerController.getAbsoluteAngle());
+  }
 }
