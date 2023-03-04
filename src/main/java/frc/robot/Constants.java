@@ -117,7 +117,8 @@ public final class Constants {
         public static final int RIGHT_ARM_MOTOR = 21;
         public static final int ARM_POT_CHANNEL = 0; //Port for the potentiometer on the rotation for the arm. 
 
-        public static final int ROLLER_MOTOR = 0; //Neo motor for the rollers. 
+        public static final int ARM_EXTENDER_MOTOR = 23;
+        public static final int ROLLER_MOTOR = 24; //Neo motor for the rollers. 
         // intake pneumatic
         public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
         public static final int EFFECTOR_EXTENDED_CHANNEL = 0;
