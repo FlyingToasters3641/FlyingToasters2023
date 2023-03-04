@@ -168,3 +168,6 @@ bin/
 .idea/misc.xml
 .idea/vcs.xml
 .idea/modules/FlyingToasters2023.main.iml
+
+# Version file
+src/main/java/frc/robot/BuildConstants.java
