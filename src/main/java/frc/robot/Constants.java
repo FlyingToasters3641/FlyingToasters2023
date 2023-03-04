@@ -109,7 +109,16 @@ public final class Constants {
         public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
         public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
         public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(329.33);
-    
+
+        public static final int LEFT_ARM_MOTOR = 22;
+        public static final int RIGHT_ARM_MOTOR = 21;
+        public static final int ARM_POT_CHANNEL = 0; //Port for the potentiometer on the rotation for the arm. 
+
+        public static final int ROLLER_MOTOR = 0; //Neo motor for the rollers. 
+        // intake pneumatic
+        public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
+        public static final int EFFECTOR_EXTENDED_CHANNEL = 0;
+                 
         public static final int PIGEON_ID = 9;
     
         /**
@@ -154,7 +163,7 @@ public final class Constants {
         public static final double STEER_kI = 0.0;
         public static final double STEER_kD = 0.1; // 0
     
-        public static final double DRIVE_kP = 0.02; // 0.05
+        public static final double DRIVE_kP = 0.02; // 0.05 6
         public static final double DRIVE_kI = 0.0;
         public static final double DRIVE_kD = 0.0;
     
@@ -208,6 +217,22 @@ public final class Constants {
         public static final boolean safetyMode = false;
         public static final Speeds defaultSpeed = Speeds.Med;
     }
-
     
+    public enum ArmPos {
+      LOWERED(0),
+      CONE_PICKUP_ALLIGMENT (91.5),
+      CONE_PICKUP_LOWERED (75),
+      L2_SCORING (81),
+      L3_SCORING (81);
+
+      private double angle;
+
+      private ArmPos(double angle) {
+          this.angle = angle;
+      }
+
+      public double getAngle() {
+          return angle;
+      }
+    }
 }

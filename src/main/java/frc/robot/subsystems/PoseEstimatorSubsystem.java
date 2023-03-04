@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 // import static frc.robot.Constants.VisionConstants.ROBOT_TO_CAMERA;
 
 import java.io.IOException;
-import java.util.ConcurrentModificationException;
-import java.util.Optional;
 
 // import org.photonvision.EstimatedRobotPose;
 // import org.photonvision.PhotonCamera;
