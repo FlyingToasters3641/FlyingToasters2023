@@ -22,7 +22,8 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     // private final Joystick driver = new Joystick(0);
-    private final CommandXboxController controller = new CommandXboxController(0);
+    private final CommandXboxController m_driverController = new CommandXboxController(0);
+    private final CommandXboxController m_operatorController = new CommandXboxController(1);
 
     /* Drive Controls */
     //private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -50,9 +51,9 @@ public class RobotContainer {
             new FieldOrientedDriveCommand(
                 m_drivetrainSubsystem,
                 () -> m_poseEstimator.getCurrentPose().getRotation(),
-                () -> -modifyAxis(controller.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(controller.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(controller.getRightX()) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
+                () -> -modifyAxis(m_driverController.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                () -> -modifyAxis(m_driverController.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                () -> -modifyAxis(m_driverController.getRightX()) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
 
         // Configure the button bindings
         configureButtonBindings();
