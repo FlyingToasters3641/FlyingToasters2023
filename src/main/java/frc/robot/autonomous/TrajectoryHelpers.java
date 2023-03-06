@@ -3,33 +3,18 @@ package frc.robot.autonomous;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.RamseteController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
-import frc.robot.subsystems.Swerve;
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import java.io.IOException;
-import frc.robot.Constants.*;
-import frc.lib.math.Conversions;
-
-import java.nio.file.Path;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
 import java.util.Arrays;
-
-import org.opencv.core.Mat;
 
 public class TrajectoryHelpers {
     public enum Speeds {
@@ -64,13 +49,13 @@ public class TrajectoryHelpers {
         }
 
         config.setReversed(backwards);
-        config.setKinematics(Constants.Swerve.swerveKinematics); // Add kinematics to ensure max speed is actually
+        config.setKinematics(Constants.DrivetrainConstants.KINEMATICS); // Add kinematics to ensure max speed is actually
                                                           // obeyed
 
         return config;
     }
 
-    public static HolonomicDriveCommand FollowTrajectory(Swerve drive,
+    public static HolonomicDriveCommand FollowTrajectory(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator,
             SwerveTrajectory swerveTrajectory) {
         // SmartDashboard.putNumber("Got to hol command",
         // trajectory.getInitialPose().getX());
@@ -78,7 +63,7 @@ public class TrajectoryHelpers {
         return new HolonomicDriveCommand(
                 trajectory,
                 () -> {
-                    Pose2d pose = drive.getPose();
+                    Pose2d pose = poseEstimator.getCurrentPose();
                     if (pose == null) {
                         pose = new Pose2d();
                     }
@@ -88,8 +73,8 @@ public class TrajectoryHelpers {
                         new PIDController(1, 0, 0), new PIDController(1, 0, 0),
                         new ProfiledPIDController(1, 0, 0,
                                 Constants.AutoConstants.kThetaControllerConstraints)),
-                Constants.Swerve.swerveKinematics,
-                (p0, p1, p2) -> drive.setVelocities(p0, p1, p2),
+                Constants.DrivetrainConstants.KINEMATICS,
+                (p0, p1, p2) -> drive.drive(ChassisSpeeds.fromFieldRelativeSpeeds(p0, p1, p2, Rotation2d.fromRadians(drive.getGyroscopeHeading()))),
                 drive);
     }
 

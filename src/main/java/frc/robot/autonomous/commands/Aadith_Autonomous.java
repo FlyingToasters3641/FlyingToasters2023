@@ -2,16 +2,11 @@ package frc.robot.autonomous.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autonomous.AutonomousCommand;
 import frc.robot.autonomous.SwerveTrajectory;
-import frc.robot.autonomous.TrajectoryHelpers;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.PoseEstimatorSubsystem;
+
 import static frc.robot.autonomous.TrajectoryHelpers.*;
 
 
@@ -34,7 +29,7 @@ public class Aadith_Autonomous extends AutonomousCommand {
     private static Pose2d pointTwo = new Pose2d(1, 0.5, Rotation2d.fromDegrees(120.0));
     private static Pose2d pointThree = new Pose2d(0, 1, Rotation2d.fromDegrees(240.0));
     
-    private Swerve m_drive;
+    private DrivetrainSubsystem m_drive;
     private static SwerveTrajectory trajectoryOne = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointOne, pointTwo);
     private static SwerveTrajectory trajectoryTwo = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointTwo, pointThree);
     private static SwerveTrajectory trajectoryThree= trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointThree, pointOne);
@@ -44,13 +39,14 @@ public class Aadith_Autonomous extends AutonomousCommand {
     //     pickUpBall
     // );
     
-    public Aadith_Autonomous(Swerve drive) {
+    public Aadith_Autonomous(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator) {
         super(
                 drive,
+                poseEstimator,
                 pointOne,
-                FollowTrajectory(drive, trajectoryOne),
-                FollowTrajectory(drive, trajectoryTwo),
-                FollowTrajectory(drive, trajectoryThree)
+                FollowTrajectory(drive, poseEstimator, trajectoryOne),
+                FollowTrajectory(drive, poseEstimator, trajectoryTwo),
+                FollowTrajectory(drive, poseEstimator, trajectoryThree)
 
 
                 
