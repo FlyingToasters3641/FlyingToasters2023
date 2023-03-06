@@ -4,10 +4,13 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.commands.*;
@@ -36,6 +39,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Timer reseedTimer = new Timer();
 
+    private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(/* photonCamera, */ m_drivetrainSubsystem);
     private final Arm m_Arm = new Arm();
@@ -71,6 +75,29 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        
+        controller.rightBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(3);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+        controller.leftBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(2);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+
+        // new JoystickButton(controller, Button.kLeftBumper.value)
+        // .whileHeld(new InstantCommand(() -> {
+        //     m_LEDSubsystem.ledSwitch(2);
+        // }))
+        // .whenReleased(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+        // new JoystickButton(controller, Button.kRightBumper.value)
+        // .whileHeld(new InstantCommand(() -> {
+        //     m_LEDSubsystem.ledSwitch(3);
+        // }))
+        // .whenReleased(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
     }
 
     private void configureAutonomousChooser() {
@@ -87,6 +114,7 @@ public class RobotContainer {
         //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
         // });
         // }));;
+        
       }
 
     /**
