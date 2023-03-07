@@ -1,15 +1,20 @@
 package frc.robot;
 
-import edu.wpi.first.math.MathUtil;
+import java.util.ArrayList;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.Constants.TeleopDriveConstants;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.autonomous.AutonomousCommand;
+import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -21,25 +26,19 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
     /* Controllers */
-    // private final Joystick driver = new Joystick(0);
-    private final CommandXboxController m_driverController = new CommandXboxController(0);
-    private final CommandXboxController m_operatorController = new CommandXboxController(1);
+    private final Joystick driver = new Joystick(0);
 
     /* Drive Controls */
-    //private final int translationAxis = XboxController.Axis.kLeftY.value;
-    //private final int strafeAxis = XboxController.Axis.kLeftX.value;
-    //private final int rotationAxis = XboxController.Axis.kRightX.value;
+    private final int translationAxis = XboxController.Axis.kLeftY.value;
+    private final int strafeAxis = XboxController.Axis.kLeftX.value;
+    private final int rotationAxis = XboxController.Axis.kRightX.value;
 
     /* Driver Buttons */
-    //private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
-    //private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
+    private final JoystickButton zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
+    private final JoystickButton robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     /* Subsystems */
-    private final Timer reseedTimer = new Timer();
-
-    private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
-    private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(/* photonCamera, */ m_drivetrainSubsystem);
-    private final Arm m_Arm = new Arm();
+    private final Swerve s_Swerve = new Swerve();
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -47,20 +46,20 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        m_drivetrainSubsystem.setDefaultCommand(
-            new FieldOrientedDriveCommand(
-                m_drivetrainSubsystem,
-                () -> m_poseEstimator.getCurrentPose().getRotation(),
-                () -> -modifyAxis(m_driverController.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(m_driverController.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                () -> -modifyAxis(m_driverController.getRightX()) * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
+        s_Swerve.setDefaultCommand(
+            new TeleopSwerve(
+                s_Swerve, 
+                () -> -driver.getRawAxis(translationAxis), 
+                () -> -driver.getRawAxis(strafeAxis), 
+                () -> -driver.getRawAxis(rotationAxis), 
+                () -> robotCentric.getAsBoolean()
+            )
+        );
 
         // Configure the button bindings
         configureButtonBindings();
         // Configure the autonomous chooser
          configureAutonomousChooser();
-
-         reseedTimer.start();
     }
 
     /**
@@ -71,23 +70,23 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         //chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
-        // chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
-        //   SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
-        //   System.out.println("CURRENT: " + moduleStates.toString());
+        chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
+          SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
+          System.out.println("CURRENT: " + moduleStates.toString());
 
-        //   s_Swerve.setModuleStates(new SwerveModuleState[]{
-        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
-        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(315)),
-        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(135)),
-        //     new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
-        // });
-        // }));;
+          s_Swerve.setModuleStates(new SwerveModuleState[]{
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(45)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(315)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(135)),
+            new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
+        });
+        }));;
       }
 
     /**
@@ -101,21 +100,4 @@ public class RobotContainer {
         return chooser.getSelected();
         //return new testAuton(s_Swerve);
     }
-
-    public void disabledPeriodic() {
-        // Reseed the motor offset continuously when the robot is disabled to help solve dead wheel issue
-        if (reseedTimer.advanceIfElapsed(1.0)) {
-          m_drivetrainSubsystem.reseedSteerMotorOffsets();
-        }
-    }
-
-    private static double modifyAxis(double value) {
-        // Deadband
-        value = MathUtil.applyDeadband(value, TeleopDriveConstants.DEADBAND);
-    
-        // Square the axis
-        value = Math.copySign(value * value, value);
-    
-        return value;
-      }    
 }

@@ -2,16 +2,18 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.util.ErrorMessages;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
-
+import frc.robot.subsystems.Swerve;
 import java.util.function.Supplier;
 
 public class HolonomicDriveCommand extends CommandBase {
@@ -44,7 +46,7 @@ public class HolonomicDriveCommand extends CommandBase {
             HolonomicDriveController holonomicDriveController,
             SwerveDriveKinematics kinematics,
             TriConsumer<Double, Double, Double> outputMetersPerSecond,
-            DrivetrainSubsystem driveSubsystem) {
+            Swerve driveSubsystem) {
         m_trajectory = ErrorMessages.requireNonNullParam(trajectory, "trajectory", "RamseteCommand");
         m_pose = ErrorMessages.requireNonNullParam(pose, "pose", "RamseteCommand");
         m_follower = ErrorMessages.requireNonNullParam(holonomicDriveController, "follower", "RamseteCommand");
@@ -55,7 +57,7 @@ public class HolonomicDriveCommand extends CommandBase {
 
     public HolonomicDriveCommand(Trajectory trajectory, RotationalTrajectory rotTrajectory, Supplier<Pose2d> pose,
             HolonomicDriveController holonomicDriveController, SwerveDriveKinematics kdrivekinematics,
-            TriConsumer<Double, Double, Double> outputMetersPerSecond, DrivetrainSubsystem drive) {
+            TriConsumer<Double, Double, Double> outputMetersPerSecond, Swerve drive) {
     }
 
     @Override

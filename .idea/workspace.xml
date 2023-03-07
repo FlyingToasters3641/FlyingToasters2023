@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="22e4418f-4817-4b48-9c9a-275ea4d7cc87" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/AprilTagDetector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/AprilTagDetector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/AprilTagVisionIONorthstar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/AprilTagVisionIONorthstar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/TimeCorrectedAprilTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/AprilTagSubsystem/TimeCorrectedAprilTag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/VisionHelpers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/frc/robot/subsystems/Vision/VisionHelpers.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,8 +52,7 @@
       <option name="presentableId" value="Default" />
       <updated>1676753564803</updated>
       <workItem from="1676753568892" duration="15634000" />
-      <workItem from="1677532961944" duration="6466000" />
-      <workItem from="1677713489831" duration="880000" />
+      <workItem from="1677532961944" duration="848000" />
     </task>
     <servers />
   </component>
