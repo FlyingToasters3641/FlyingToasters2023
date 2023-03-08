@@ -222,12 +222,7 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        var setpoint = new TrapezoidProfile.State(0,0); //current state
-        var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
         return run(() -> {
-            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
-                    endgoal, setpoint);
-            setpoint = armProfile.calculate(.02);
             moveArm(angle.getAngle());
         }).until(() -> isArmAtPos(angle.getAngle()))
                 .finallyDo(end -> m_leftArmMotor.set(0));
