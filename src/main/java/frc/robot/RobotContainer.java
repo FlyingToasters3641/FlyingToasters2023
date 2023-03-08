@@ -89,6 +89,8 @@ public class RobotContainer {
     private void configureButtonBindings() {
         driveController.y().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        driveController.x().onTrue(new SequentialCommandGroup(
+                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
         
         /*Extra button Bindings
         operatorController.y().onTrue(new SequentialCommandGroup(
