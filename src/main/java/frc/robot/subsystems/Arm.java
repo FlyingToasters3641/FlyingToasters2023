@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,53 +19,53 @@ import frc.lib.util.MotorHelper;
 import frc.lib.util.TunableNumber;
 
 public class Arm extends SubsystemBase {
-    public static final boolean TUNING_MODE = false;
-    protected final TunableNumber armP;
-    protected final TunableNumber armI;
-    protected final TunableNumber armD;
-    protected final TunableNumber armF;
-    protected final TunableNumber targetPos;
+    // public static final boolean TUNING_MODE = false;
+    // protected final TunableNumber armP;
+    // protected final TunableNumber armI;
+    // protected final TunableNumber armD;
+    // protected final TunableNumber armF;
+    // protected final TunableNumber targetPos;//HUH
 
     // Pid for extender
-    protected final TunableNumber exP;
-    protected final TunableNumber exI;
-    protected final TunableNumber exD;
-    protected final TunableNumber exF;
+    // protected final TunableNumber exP;
+    // protected final TunableNumber exI;
+    // protected final TunableNumber exD;
+    // protected final TunableNumber exF;
 
     private SparkMaxPIDController m_leftMotorPid;
     private CANSparkMax m_leftArmMotor;
     private CANSparkMax m_rightArmMotor;
-    private CANSparkMax m_extenderMotor;
+    // private CANSparkMax m_extenderMotor;
 
     private AnalogPotentiometer m_pot;
-    private AnalogPotentiometer m_exPot;
+    // private AnalogPotentiometer m_exPot;
 
     private ArmFeedforward m_armFeedforward;
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.01;
+        public static final double KP = 1.0;
         public static final double KI = 0.0;
         public static final double KD = 0.0;
         public static final double KF = 0.0;
-        public static final double KS = 0.32;
-        public static final double KG = 0.42;
-        public static final double KV = 0.01826;
-        public static final double KA = 0.0019367;
+        public static final double KS = -0.25398;
+        public static final double KG = 0.88645; //0.42
+        public static final double KV = 0.018943;
+        public static final double KA = 0.0011304;
         public static final int LEFT_CURRENT_LIMIT = 25;
         public static final int RIGHT_CURRENT_LIMIT = 25;
 
         // values for Extender
-        public static final double GEAR_RATIO_EX = 90 / 1;
-        public static final double EX_KP = 0.01;
-        public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.0;
-        public static final double EX_KF = 0.0;
-        // public static final double EX_KS = 0.32;
-        // public static final double EX_KG = 0.42;
-        // public static final double EX_KV = 0.01826;
-        // public static final double EX_KA = 0.0019367;
-        public static final double EXTENDED_POSITION = 0; // TODO: measure analog pot for extender.
+        // public static final double GEAR_RATIO_EX = 90 / 1;
+        // public static final double EX_KP = 0.01;
+        // public static final double EX_KI = 0.0;
+        // public static final double EX_KD = 0.0;
+        // public static final double EX_KF = 0.0;
+        // // public static final double EX_KS = 0.32;
+        // // public static final double EX_KG = 0.42;
+        // // public static final double EX_KV = 0.01826;
+        // // public static final double EX_KA = 0.0019367;
+        // public static final double EXTENDED_POSITION = 0; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
         public static final double MAX_POSITION = 210; // degrees
@@ -73,15 +74,6 @@ public class Arm extends SubsystemBase {
     }
 
     public Arm() {
-        m_rightArmMotor.setInverted(true);
-
-        m_leftArmMotor.setSmartCurrentLimit(25);
-        m_rightArmMotor.setSmartCurrentLimit(25);
-        m_leftArmMotor.setIdleMode(IdleMode.kBrake);
-        m_rightArmMotor.setIdleMode(IdleMode.kBrake);
-
-        m_rightArmMotor.follow(m_leftArmMotor);
-
         m_armFeedforward = new ArmFeedforward(
                 kArm.KS,
                 kArm.KG,
@@ -90,21 +82,21 @@ public class Arm extends SubsystemBase {
 
         // m_pot.get();
 
-        armP = new TunableNumber("Arm P", kArm.KP, TUNING_MODE);
-        armI = new TunableNumber("Arm I", kArm.KI, TUNING_MODE);
-        armD = new TunableNumber("Arm D", kArm.KD, TUNING_MODE);
-        armF = new TunableNumber("Arm F", kArm.KF, TUNING_MODE);
+        // armP = new TunableNumber("Arm P", kArm.KP, TUNING_MODE);
+        // armI = new TunableNumber("Arm I", kArm.KI, TUNING_MODE);
+        // armD = new TunableNumber("Arm D", kArm.KD, TUNING_MODE);
+        // armF = new TunableNumber("Arm F", kArm.KF, TUNING_MODE);
 
-        // For extender
-        exP = new TunableNumber("Extender P", kArm.EX_KP, TUNING_MODE);
-        exI = new TunableNumber("Extender I", kArm.EX_KI, TUNING_MODE);
-        exD = new TunableNumber("Extender D", kArm.EX_KD, TUNING_MODE);
-        exF = new TunableNumber("Extender F", kArm.EX_KF, TUNING_MODE);
+        // // For extender
+        // exP = new TunableNumber("Extender P", kArm.EX_KP, TUNING_MODE);
+        // exI = new TunableNumber("Extender I", kArm.EX_KI, TUNING_MODE);
+        // exD = new TunableNumber("Extender D", kArm.EX_KD, TUNING_MODE);
+        // exF = new TunableNumber("Extender F", kArm.EX_KF, TUNING_MODE);
 
-        targetPos = new TunableNumber(
-                "Target Pos",
-                ArmPos.STORED_POSITION.getAngle(),
-                TUNING_MODE);
+        // targetPos = new TunableNumber(
+        //         "Target Pos",
+        //         ArmPos.STORED_POSITION.getAngle(),
+        //         TUNING_MODE);//HUH
 
         m_leftArmMotor = MotorHelper.createSparkMax(
                 DrivetrainConstants.LEFT_ARM_MOTOR,
@@ -112,10 +104,10 @@ public class Arm extends SubsystemBase {
                 false,
                 kArm.LEFT_CURRENT_LIMIT,
                 IdleMode.kBrake,
-                armP.get(),
-                armI.get(),
-                armD.get(),
-                armF.get());
+                kArm.KP,
+                kArm.KI,
+                kArm.KD,
+                kArm.KP);
 
         m_rightArmMotor = MotorHelper.createSparkMax(
                 DrivetrainConstants.RIGHT_ARM_MOTOR,
@@ -123,26 +115,35 @@ public class Arm extends SubsystemBase {
                 true,
                 kArm.RIGHT_CURRENT_LIMIT,
                 IdleMode.kBrake,
-                armP.get(),
-                armI.get(),
-                armD.get(),
-                armF.get());
+                kArm.KP,
+                kArm.KI,
+                kArm.KD,
+                kArm.KP);
 
-        m_extenderMotor = MotorHelper.createSparkMax(
-                DrivetrainConstants.EXTENDER_MOTOR,
-                MotorType.kBrushless,
-                false,
-                kArm.RIGHT_CURRENT_LIMIT, // TODO: verify current limit
-                IdleMode.kBrake,
-                exP.get(),
-                exI.get(),
-                exD.get(),
-                exF.get());
+        // m_extenderMotor = MotorHelper.createSparkMax(
+        //         DrivetrainConstants.EXTENDER_MOTOR,
+        //         MotorType.kBrushless,
+        //         false,
+        //         kArm.RIGHT_CURRENT_LIMIT, // TODO: verify current limit
+        //         IdleMode.kBrake,
+        //         exP.get(),
+        //         exI.get(),
+        //         exD.get(),
+        //         exF.get());
 
         m_leftMotorPid = m_leftArmMotor.getPIDController();
 
-        m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 270, 30);
-        m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 270, 30);
+        //m_rightArmMotor.setInverted(true);
+
+        //m_leftArmMotor.setSmartCurrentLimit(25);
+        //m_rightArmMotor.setSmartCurrentLimit(25);
+        //m_leftArmMotor.setIdleMode(IdleMode.kBrake);
+        //m_rightArmMotor.setIdleMode(IdleMode.kBrake);
+
+        m_rightArmMotor.follow(m_leftArmMotor);
+
+        m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44)); //-(350 - 90) / (90 / 44)
+        // m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 270, 30);
 
         m_leftArmMotor.getEncoder().setPositionConversionFactor(
                 360.0 / kArm.GEAR_RATIO); // degrees
@@ -150,8 +151,8 @@ public class Arm extends SubsystemBase {
         m_leftArmMotor.getEncoder().setVelocityConversionFactor(
                 (360.0 / kArm.GEAR_RATIO) / 60.0); // degrees per second
 
-        m_extenderMotor.getEncoder().setPositionConversionFactor(
-                360.0 / kArm.GEAR_RATIO); // degrees
+        // m_extenderMotor.getEncoder().setPositionConversionFactor(
+        //         360.0 / kArm.GEAR_RATIO); // TODO: change gear ratio to 9/1
 
         m_rightArmMotor.follow(m_leftArmMotor, true);
 
@@ -160,78 +161,83 @@ public class Arm extends SubsystemBase {
 
     // Gets updates from Smart Dashboard on PID values and sets them on the motor
     protected void update() {
-        if (armP.hasChanged()) {
-            m_leftMotorPid.setP(armP.get());
-        }
-        if (armI.hasChanged()) {
-            m_leftMotorPid.setI(armI.get());
-        }
-        if (armD.hasChanged()) {
-            m_leftMotorPid.setD(armD.get());
-        }
-        if (armF.hasChanged()) {
-            m_leftMotorPid.setFF(armF.get());
-        }
+        // if (armP.hasChanged()) {
+        //     m_leftMotorPid.setP(armP.get());
+        // }
+        // if (armI.hasChanged()) {
+        //     m_leftMotorPid.setI(armI.get());
+        // }
+        // if (armD.hasChanged()) {
+        //     m_leftMotorPid.setD(armD.get());
+        // }
+        // if (armF.hasChanged()) {
+        //     m_leftMotorPid.setFF(armF.get());
+        // }
 
-        if (exP.hasChanged()) {
-            m_extenderMotor.getPIDController().setP(exP.get());
-        }
-        if (exI.hasChanged()) {
-            m_extenderMotor.getPIDController().setI(exI.get());
-        }
-        if (exD.hasChanged()) {
-            m_extenderMotor.getPIDController().setD(exD.get());
-        }
-        if (exF.hasChanged()) {
-            m_extenderMotor.getPIDController().setFF(exF.get());
-        }
+        // if (exP.hasChanged()) {
+        //     m_extenderMotor.getPIDController().setP(exP.get());
+        // }
+        // if (exI.hasChanged()) {
+        //     m_extenderMotor.getPIDController().setI(exI.get());
+        // }
+        // if (exD.hasChanged()) {
+        //     m_extenderMotor.getPIDController().setD(exD.get());
+        // }
+        // if (exF.hasChanged()) {
+        //     m_extenderMotor.getPIDController().setFF(exF.get());
+        // }
 
-        if (targetPos.hasChanged()) {
-            moveArm(targetPos.get(), 0);
-        }
+        // if (targetPos.hasChanged()) {
+        //     moveArm(targetPos.get(), 0);
+        // }
     }
 
     protected double getArmError(double target) {
         return target - getAbsolutePosition();
-    }
+    }//NEGATIVE VALUE TO THE 0 ANGLE
 
     protected boolean isArmAtPos(double angle) {
         return Math.abs(getArmError(angle)) < kArm.ERROR;
-    }
+    }//BOOLEAN IS ARM ERROR GREATER THAN 5 DEGREES
 
-    protected double getExtError(double target) {
-        return target - getAbsolutePosition();
-    }
+    // protected double getExtError(double target) {
+    //     return target - getAbsolutePosition();
+    // }
 
-    protected boolean isExtAtPos(double angle) {
-        return Math.abs(getExtError(angle)) < kArm.ERROR;
-    }
+    // protected boolean isExtAtPos(double angle) {
+    //     return Math.abs(getExtError(angle)) < kArm.ERROR;
+    // }
 
     protected double getAbsolutePosition() {
-        return m_pot.get();
+        return (m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360);
     }
 
     public void resetArm() {
         m_leftArmMotor.getEncoder().setPosition(getAbsolutePosition());
     }
 
-    public void resetExtender() {
-        m_extenderMotor.getEncoder().setPosition(m_exPot.get());
-    }
+    // public void resetExtender() {
+    //     m_extenderMotor.getEncoder().setPosition(m_exPot.get());
+    // }
 
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        var currentSetpoint = new TrapezoidProfile.State(0,0); //current state
-        var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
+        // var currentSetpoint = new TrapezoidProfile.State(0,0); //current state
+        // var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
         return run(() -> {
-            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
-                    endgoal, currentSetpoint);
-            var setpoint = armProfile.calculate(.02);
-            currentSetpoint.position = setpoint.position;
-            currentSetpoint.velocity = setpoint.velocity;
+            // TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
+            //         endgoal, currentSetpoint);
+            // var setpoint = armProfile.calculate(.02);
+            // currentSetpoint.position = setpoint.position;
+            // currentSetpoint.velocity = setpoint.velocity;
 
-            moveArm(currentSetpoint.position, currentSetpoint.velocity);
+            // System.out.println("Set point position" + setpoint.position); 
+            // System.out.println("Set point velocity" + setpoint.velocity); 
+            // System.out.println("end goal position" + endgoal.position); 
+
+            //moveArm(currentSetpoint.position, currentSetpoint.velocity);
+            moveArm(angle.getAngle(), 0);
         }).until(() -> isArmAtPos(angle.getAngle()))
                 .finallyDo(end -> m_leftArmMotor.set(0));
         // .andThen(() -> extend(angle.getExtended()));
@@ -239,13 +245,15 @@ public class Arm extends SubsystemBase {
 
     // A convinence function for moveArm method
     public void setPosition(double target, double armFF) {
-        targetPos.setDefault(target);
+        // targetPos.setDefault(target);
 
         m_leftMotorPid.setReference(
                 target,
                 CANSparkMax.ControlType.kPosition,
                 0,
                 armFF);
+                SmartDashboard.putNumber("reference target", target);
+                SmartDashboard.putNumber("Computed FF", armFF);
     }
 
     // Sets a target for the arm to reach for the PID loop
@@ -253,29 +261,28 @@ public class Arm extends SubsystemBase {
         target = normalizeAngle(target);
 
         double armFF = m_armFeedforward.calculate(
-                Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),
-                velocity);
+                Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),velocity);
         setPosition(target, armFF);
         SmartDashboard.putNumber("Arm FeedForward", armFF);
     }
 
     // Tells the PID loop a target position to reach
-    public void setExtenderPosition(double target, double extFF) {
-        targetPos.setDefault(target);
-        m_extenderMotor.getPIDController().setReference(
-                target,
-                CANSparkMax.ControlType.kPosition,
-                0,
-                extFF);
-    }
+    // public void setExtenderPosition(double target, double extFF) {
+    //     targetPos.setDefault(target);
+    //     m_extenderMotor.getPIDController().setReference(
+    //             target,
+    //             CANSparkMax.ControlType.kPosition,
+    //             0,
+    //             extFF);
+    // }
 
-    // Waits until the PID loop gets the extender to a set point
-    public Command extend(boolean extended) {
-        return run(() -> {
-            setExtenderPosition(extended ? kArm.EXTENDED_POSITION : 0, 0);
-        }).until(() -> isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0))
-                .finallyDo(end -> m_extenderMotor.set(0));
-    }
+    // // Waits until the PID loop gets the extender to a set point
+    // public Command extend(boolean extended) {
+    //     return run(() -> {
+    //         setExtenderPosition(extended ? kArm.EXTENDED_POSITION : 0, 0);
+    //     }).until(() -> isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0))
+    //             .finallyDo(end -> m_extenderMotor.set(0));
+    // }
 
     // Gives you a max and min angle range for arm rotation
     public double normalizeAngle(double angle) {
@@ -289,11 +296,12 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
         SmartDashboard.putNumber("Arm: Relative Encoder Pos", m_leftArmMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getAbsolutePosition());
-        SmartDashboard.putNumber("Arm: Target Pose", targetPos.get());
-        SmartDashboard.putNumber("Extender: Pot Value", m_exPot.get());
-        SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());
+        // SmartDashboard.putNumber("Arm: Target Pose", targetPos.get());
+        // SmartDashboard.putNumber("Extender: Pot Value", m_exPot.get());
+        // SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());
 
         /*
          * BACKUP IF SMARTDASHBOARD DOES NOT WORK
@@ -310,12 +318,12 @@ public class Arm extends SubsystemBase {
          */
 
         // Resets enconder based off of pot values
-        if (Math.abs(getAbsolutePosition() - m_leftArmMotor.getEncoder().getPosition()) > 1) {
-            resetArm();
+         if (Math.abs(getAbsolutePosition() - m_leftArmMotor.getEncoder().getPosition()) > 1) {
+             resetArm();
         }
-        if (Math.abs(m_exPot.get() - m_extenderMotor.getEncoder().getPosition()) > 1) {
-            resetExtender();
-        }
+        // if (Math.abs(m_exPot.get() - m_extenderMotor.getEncoder().getPosition()) > 1) {
+        //     resetExtender();
+        // }
     }
 
 }
