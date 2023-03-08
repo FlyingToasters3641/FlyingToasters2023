@@ -187,7 +187,7 @@ public class Arm extends SubsystemBase {
         }
 
         if (targetPos.hasChanged()) {
-            moveArm(targetPos.get());
+            moveArm(targetPos.get(), 0);
         }
     }
 
@@ -222,13 +222,16 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        var setpoint = new TrapezoidProfile.State(0,0); //current state
+        var currentSetpoint = new TrapezoidProfile.State(0,0); //current state
         var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
         return run(() -> {
             TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
-                    endgoal, setpoint);
-            setpoint = armProfile.calculate(.02);
-            moveArm(angle.getAngle());
+                    endgoal, currentSetpoint);
+            var setpoint = armProfile.calculate(.02);
+            currentSetpoint.position = setpoint.position;
+            currentSetpoint.velocity = setpoint.velocity;
+
+            moveArm(currentSetpoint.position, currentSetpoint.velocity);
         }).until(() -> isArmAtPos(angle.getAngle()))
                 .finallyDo(end -> m_leftArmMotor.set(0));
         // .andThen(() -> extend(angle.getExtended()));
@@ -246,12 +249,12 @@ public class Arm extends SubsystemBase {
     }
 
     // Sets a target for the arm to reach for the PID loop
-    public void moveArm(double target) {
+    public void moveArm(double target, double velocity) {
         target = normalizeAngle(target);
 
         double armFF = m_armFeedforward.calculate(
                 Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),
-                0);
+                velocity);
         setPosition(target, armFF);
         SmartDashboard.putNumber("Arm FeedForward", armFF);
     }
