@@ -43,7 +43,7 @@ public final class Constants {
     }
   }
 
-  public static final Map<RobotType, String> logFolders = Map.of(RobotType.ROBOT_2023, "/media/sda2/");
+  public static final Map<RobotType, String> logFolders = Map.of(RobotType.ROBOT_2023, "/home/lvuser/");
 
   public static enum RobotType {
     ROBOT_2023,
@@ -118,7 +118,7 @@ public final class Constants {
     public static final int RIGHT_ARM_MOTOR = 21;
     public static final int EXTENDER_MOTOR = 23; 
     public static final int ARM_POT_CHANNEL = 0; // Port for the potentiometer on the rotation for the arm.
-    public static final int EX_POT_CHANNEL = 0; // TODO: port for the extender pot
+    public static final int EX_POT_CHANNEL = 1; // Port for the extender pot
 
     public static final int ROLLER_MOTOR = 24;
     // intake pneumatic
@@ -222,7 +222,7 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(0, false), //ANGLE 70 FOR TESTING
+    STORED_POSITION(-40, false), 
     GROUND_INTAKE_POSITION(10, true), 
     SOLO_PLAYERSTATION_PICKUP(45, false), //+-180 TODO: confirm extended or not
     DOUBLE_PLAYERSTATION_PICKUP(0,false), //TODO: confim extended or not
