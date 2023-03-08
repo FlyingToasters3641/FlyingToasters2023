@@ -44,14 +44,14 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 1.0;
+        public static final double KP = .01;
         public static final double KI = 0.0;
         public static final double KD = 0.0;
         public static final double KF = 0.0;
-        public static final double KS = -0.25398;
-        public static final double KG = 0.88645; //0.42
-        public static final double KV = 0.018943;
-        public static final double KA = 0.0011304;
+        public static final double KS = 0.11814;
+        public static final double KG = 0.49202;//0.88645 //0.42
+        public static final double KV = 0.034012;
+        public static final double KA = 0.0020898;
         public static final int LEFT_CURRENT_LIMIT = 25;
         public static final int RIGHT_CURRENT_LIMIT = 25;
 
@@ -68,7 +68,8 @@ public class Arm extends SubsystemBase {
         // public static final double EXTENDED_POSITION = 0; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
-        public static final double MAX_POSITION = 210; // degrees
+        public static final double MIN_POSITION = -59.0; // degrees
+        public static final double MAX_POSITION = 180; // degrees
 
         public static final double FEEDFORWARD_ANGLE_OFFSET = 30; // TODO: find out what this offset is.
     }
@@ -107,7 +108,7 @@ public class Arm extends SubsystemBase {
                 kArm.KP,
                 kArm.KI,
                 kArm.KD,
-                kArm.KP);
+                kArm.KF);
 
         m_rightArmMotor = MotorHelper.createSparkMax(
                 DrivetrainConstants.RIGHT_ARM_MOTOR,
@@ -118,7 +119,7 @@ public class Arm extends SubsystemBase {
                 kArm.KP,
                 kArm.KI,
                 kArm.KD,
-                kArm.KP);
+                kArm.KF);
 
         // m_extenderMotor = MotorHelper.createSparkMax(
         //         DrivetrainConstants.EXTENDER_MOTOR,
@@ -140,8 +141,6 @@ public class Arm extends SubsystemBase {
         //m_leftArmMotor.setIdleMode(IdleMode.kBrake);
         //m_rightArmMotor.setIdleMode(IdleMode.kBrake);
 
-        m_rightArmMotor.follow(m_leftArmMotor);
-
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44)); //-(350 - 90) / (90 / 44)
         // m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 270, 30);
 
@@ -151,8 +150,8 @@ public class Arm extends SubsystemBase {
         m_leftArmMotor.getEncoder().setVelocityConversionFactor(
                 (360.0 / kArm.GEAR_RATIO) / 60.0); // degrees per second
 
-        // m_extenderMotor.getEncoder().setPositionConversionFactor(
-        //         360.0 / kArm.GEAR_RATIO); // TODO: change gear ratio to 9/1
+        //m_extenderMotor.getEncoder().setPositionConversionFactor(
+        //        360.0 / kArm.GEAR_RATIO); // TODO: change gear ratio to 9/1
 
         m_rightArmMotor.follow(m_leftArmMotor, true);
 
@@ -225,6 +224,7 @@ public class Arm extends SubsystemBase {
     public Command moveArm(ArmPos angle) {
         // var currentSetpoint = new TrapezoidProfile.State(0,0); //current state
         // var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
+        resetArm();
         return run(() -> {
             // TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
             //         endgoal, currentSetpoint);
@@ -236,15 +236,16 @@ public class Arm extends SubsystemBase {
             // System.out.println("Set point velocity" + setpoint.velocity); 
             // System.out.println("end goal position" + endgoal.position); 
 
-            //moveArm(currentSetpoint.position, currentSetpoint.velocity);
+            // moveArm(currentSetpoint.position, currentSetpoint.velocity);
+            System.out.println("TARGET ANGLE (in command): " + angle.getAngle());
             moveArm(angle.getAngle(), 0);
-        }).until(() -> isArmAtPos(angle.getAngle()))
-                .finallyDo(end -> m_leftArmMotor.set(0));
+        }).finallyDo(end -> m_leftArmMotor.set(0)); //.until(() -> isArmAtPos(angle.getAngle()))
+         //       .finallyDo(end -> m_leftArmMotor.set(0));
         // .andThen(() -> extend(angle.getExtended()));
     }
 
     // A convinence function for moveArm method
-    public void setPosition(double target, double armFF) {
+    private void setPosition(double target, double armFF) {
         // targetPos.setDefault(target);
 
         m_leftMotorPid.setReference(
@@ -261,7 +262,9 @@ public class Arm extends SubsystemBase {
         target = normalizeAngle(target);
 
         double armFF = m_armFeedforward.calculate(
-                Units.degreesToRadians(target - kArm.FEEDFORWARD_ANGLE_OFFSET),velocity);
+                Units.degreesToRadians(target /*- kArm.FEEDFORWARD_ANGLE_OFFSET*/),velocity);
+        System.out.println("ARMFF: " + armFF);
+        System.out.println("PID TARGET ANGLE: " + target);
         setPosition(target, armFF);
         SmartDashboard.putNumber("Arm FeedForward", armFF);
     }
@@ -286,8 +289,8 @@ public class Arm extends SubsystemBase {
 
     // Gives you a max and min angle range for arm rotation
     public double normalizeAngle(double angle) {
-        if (angle < 0) {
-            return 0;
+        if (angle < kArm.MIN_POSITION) {
+            return kArm.MIN_POSITION;
         } else if (angle > kArm.MAX_POSITION) {
             return kArm.MAX_POSITION;
         }
@@ -299,6 +302,9 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
         SmartDashboard.putNumber("Arm: Relative Encoder Pos", m_leftArmMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getAbsolutePosition());
+
+        System.out.println("LEFT ARM APPLIED VOLTAGE: " + m_leftArmMotor.getAppliedOutput());
+        System.out.println("RIGHT ARM APPLIED VOLTAGE: " + m_rightArmMotor.getAppliedOutput());
         // SmartDashboard.putNumber("Arm: Target Pose", targetPos.get());
         // SmartDashboard.putNumber("Extender: Pot Value", m_exPot.get());
         // SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());

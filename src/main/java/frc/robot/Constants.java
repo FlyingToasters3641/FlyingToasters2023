@@ -222,7 +222,7 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-40, false), 
+    STORED_POSITION(135.0, false), 
     GROUND_INTAKE_POSITION(10, true), 
     SOLO_PLAYERSTATION_PICKUP(45, false), //+-180 TODO: confirm extended or not
     DOUBLE_PLAYERSTATION_PICKUP(0,false), //TODO: confim extended or not
