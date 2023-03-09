@@ -303,8 +303,6 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Relative Encoder Pos", m_leftArmMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getAbsolutePosition());
 
-        System.out.println("LEFT ARM APPLIED VOLTAGE: " + m_leftArmMotor.getAppliedOutput());
-        System.out.println("RIGHT ARM APPLIED VOLTAGE: " + m_rightArmMotor.getAppliedOutput());
         // SmartDashboard.putNumber("Arm: Target Pose", targetPos.get());
         // SmartDashboard.putNumber("Extender: Pot Value", m_exPot.get());
         // SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());

@@ -93,26 +93,26 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40;
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(25.22);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(25.488);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(164.531250);
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38;
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET =
     // -Math.toRadians(202.675);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(240.557);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(240.292969);
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41;
     // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(122.78);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(123.486);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(121.552734);
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(292.676);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(292.32419);
 
     public static final int LEFT_ARM_MOTOR = 26;
     public static final int RIGHT_ARM_MOTOR = 21;
@@ -121,9 +121,10 @@ public final class Constants {
     public static final int EX_POT_CHANNEL = 1; // Port for the extender pot
 
     public static final int ROLLER_MOTOR = 24;
+    public static final int ROLLER_MOTOR_LIMIT = 20; 
     // intake pneumatic
     public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
-    public static final int EFFECTOR_EXTENDED_CHANNEL = 0;
+    public static final int EFFECTOR_EXTENDED_CHANNEL = 1;
 
     public static final int PIGEON_ID = 9;
 
@@ -222,12 +223,12 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(45, false), 
-    GROUND_INTAKE_POSITION(90, true), 
-    SOLO_PLAYERSTATION_PICKUP(45, false), //+-180 TODO: confirm extended or not
+    STORED_POSITION(-55, false), 
+    GROUND_INTAKE_POSITION(-30, false), 
+    SOLO_PLAYERSTATION_PICKUP(-10, false), //+-180 TODO: confirm extended or not
     DOUBLE_PLAYERSTATION_PICKUP(0,false), //TODO: confim extended or not
-    L2_SCORING(81, false), //TODO: confim extended or not
-    L3_SCORING(81, true); //TODO: confim extended or not
+    L2_SCORING(170, false), //TODO: confim extended or not
+    L3_SCORING(160, false); //TODO: confim extended or not
 
     private double angle;
     private boolean extended;

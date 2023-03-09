@@ -30,9 +30,14 @@ public class RobotContainer {
     // private final Joystick driver = new Joystick(0);
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
+    
+    
     Trigger leftTriggerO = operatorController.leftTrigger(); // Creates a new JoystickButton object for the `left bumper` button on exampleController
+    
     Trigger rightTriggerO = operatorController.rightTrigger(); 
+    
     Trigger rightTriggerD = driveController.rightTrigger(); 
+    
     Trigger rightBumperD = driveController.rightBumper(); 
 
     /* Drive Controls */
@@ -53,6 +58,7 @@ public class RobotContainer {
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
     private final Arm m_Arm = new Arm();
+    private final IntakeEffector m_intake = new IntakeEffector();
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -87,12 +93,12 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        driveController.y().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        driveController.x().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        // driveController.y().onTrue(new SequentialCommandGroup(
+        //         m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        // driveController.x().onTrue(new SequentialCommandGroup(
+        //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
         
-        /*Extra button Bindings
+        //Actual TODO: ADD SLOW MODE AND BALENCE
         operatorController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.a().onTrue(new SequentialCommandGroup(
@@ -101,13 +107,16 @@ public class RobotContainer {
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
         operatorController.x().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+
         leftTriggerO.whileTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L2_SCORING)));
+
         rightTriggerO.whileTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L3_SCORING)));
-        rightTriggerD.whileTrue());//run intake forward
-        rightBumperD.whileTrue());//run intake backward
-        */
+
+        rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
+
+        rightBumperD.whileTrue(m_intake.reverseIntake());//run intake backward
 
         //Driver Buttons 
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));

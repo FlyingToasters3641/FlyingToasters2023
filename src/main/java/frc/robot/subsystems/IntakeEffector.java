@@ -7,10 +7,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.MotorHelper;
 import frc.robot.Constants.DrivetrainConstants;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-public abstract class IntakeEffector extends SubsystemBase {
+public class IntakeEffector extends SubsystemBase {
 
     private final DoubleSolenoid solenoid;
     private CANSparkMax m_rollers;
@@ -25,7 +28,12 @@ public abstract class IntakeEffector extends SubsystemBase {
         solenoid.set(Value.kReverse);
         intakeRetracted = true;
 
-        m_rollers = new CANSparkMax(DrivetrainConstants.ROLLER_MOTOR, CANSparkMaxLowLevel.MotorType.kBrushless);
+        m_rollers = MotorHelper.createSparkMax(
+            DrivetrainConstants.ROLLER_MOTOR,
+            MotorType.kBrushless,
+            false,
+            DrivetrainConstants.ROLLER_MOTOR_LIMIT,
+            IdleMode.kBrake);
     }
 
     public boolean isIn() {
@@ -33,9 +41,10 @@ public abstract class IntakeEffector extends SubsystemBase {
     }
 
     public Command runIntake() {
-        return runOnce(() -> {
-            m_rollers.set(0.3);
-        });
+        return run(() -> {
+            m_rollers.set(0.5);
+            System.out.println("runIntake");
+        }).finallyDo(end -> m_rollers.set(0));
         // TODO: MAP TO A BUTTON FOR RUNNING THE ROLLERS
     }
 
@@ -65,9 +74,9 @@ public abstract class IntakeEffector extends SubsystemBase {
     }
 
     public Command reverseIntake() {
-        return runOnce(() -> {
-            m_rollers.set(-0.3);
-        });
+        return run(() -> {
+            m_rollers.set(-0.5);
+        }).finallyDo(end -> m_rollers.set(0));
         // TODO: MAP TO BUTTON FOR REVERSING THE INTAKE
     }
 
