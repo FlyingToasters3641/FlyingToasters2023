@@ -221,24 +221,22 @@ public class Arm extends SubsystemBase {
 
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
+    TrapezoidProfile.State m_currentSetpoint = new TrapezoidProfile.State(0,0); //current state
     public Command moveArm(ArmPos angle) {
-        // var currentSetpoint = new TrapezoidProfile.State(0,0); //current state
-        // var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
+        var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
         resetArm();
         return run(() -> {
-            // TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 10),
-            //         endgoal, currentSetpoint);
-            // var setpoint = armProfile.calculate(.02);
-            // currentSetpoint.position = setpoint.position;
-            // currentSetpoint.velocity = setpoint.velocity;
+            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 0),
+                    endgoal, m_currentSetpoint);
+            m_currentSetpoint = armProfile.calculate(.02);
 
-            // System.out.println("Set point position" + setpoint.position); 
-            // System.out.println("Set point velocity" + setpoint.velocity); 
-            // System.out.println("end goal position" + endgoal.position); 
+            System.out.println("Set point position" + m_currentSetpoint.position); 
+            System.out.println("Set point velocity" + m_currentSetpoint.velocity); 
+            System.out.println("end goal position" + endgoal.position); 
 
-            // moveArm(currentSetpoint.position, currentSetpoint.velocity);
+            moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
             System.out.println("TARGET ANGLE (in command): " + angle.getAngle());
-            moveArm(angle.getAngle(), 0);
+            // moveArm(angle.getAngle(), 0);
         }).finallyDo(end -> m_leftArmMotor.set(0)); //.until(() -> isArmAtPos(angle.getAngle()))
          //       .finallyDo(end -> m_leftArmMotor.set(0));
         // .andThen(() -> extend(angle.getExtended()));
