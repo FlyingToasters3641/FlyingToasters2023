@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -224,11 +225,12 @@ public class Arm extends SubsystemBase {
     TrapezoidProfile.State m_currentSetpoint = new TrapezoidProfile.State(0,0); //current state
     public Command moveArm(ArmPos angle) {
         var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
+        double startTime = Timer.getFPGATimestamp();
         resetArm();
         return run(() -> {
             TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 0),
                     endgoal, m_currentSetpoint);
-            m_currentSetpoint = armProfile.calculate(.02);
+            m_currentSetpoint = armProfile.calculate(Timer.getFPGATimestamp() - startTime);
 
             System.out.println("Set point position" + m_currentSetpoint.position); 
             System.out.println("Set point velocity" + m_currentSetpoint.velocity); 
@@ -236,6 +238,7 @@ public class Arm extends SubsystemBase {
 
             moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
             System.out.println("TARGET ANGLE (in command): " + angle.getAngle());
+
             // moveArm(angle.getAngle(), 0);
         }).finallyDo(end -> m_leftArmMotor.set(0)); //.until(() -> isArmAtPos(angle.getAngle()))
          //       .finallyDo(end -> m_leftArmMotor.set(0));
