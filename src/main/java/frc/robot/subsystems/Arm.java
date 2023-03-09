@@ -222,13 +222,15 @@ public class Arm extends SubsystemBase {
 
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
-    TrapezoidProfile.State m_currentSetpoint = new TrapezoidProfile.State(0,0); //current state
+    TrapezoidProfile.State m_currentSetpoint;
     public Command moveArm(ArmPos angle) {
+        m_currentSetpoint = new TrapezoidProfile.State(getAbsolutePosition(),0); //current state
         var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
         double startTime = Timer.getFPGATimestamp();
+
         resetArm();
         return run(() -> {
-            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(5, 0),
+            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3, 0),
                     endgoal, m_currentSetpoint);
             m_currentSetpoint = armProfile.calculate(Timer.getFPGATimestamp() - startTime);
 
