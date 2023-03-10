@@ -11,6 +11,7 @@ import edu.wpi.first.util.ErrorMessages;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.lib.helpers.TriConsumer;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import java.util.function.Supplier;
 
@@ -78,7 +79,6 @@ public class HolonomicDriveCommand extends CommandBase {
 
   public HolonomicDriveCommand(
     Trajectory trajectory,
-    RotationalTrajectory rotTrajectory,
     Supplier<Pose2d> pose,
     HolonomicDriveController holonomicDriveController,
     SwerveDriveKinematics kdrivekinematics,

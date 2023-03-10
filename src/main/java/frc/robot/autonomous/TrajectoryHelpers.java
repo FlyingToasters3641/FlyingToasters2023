@@ -72,8 +72,6 @@ public class TrajectoryHelpers {
     PoseEstimatorSubsystem poseEstimator,
     PathPlannerTrajectory swerveTrajectory
   ) {
-    // SmartDashboard.putNumber("Got to hol command",
-    // trajectory.getInitialPose().getX());
     PathPlannerTrajectory trajectory = swerveTrajectory;
     return new HolonomicDriveCommand(
       trajectory,
@@ -135,61 +133,6 @@ public class TrajectoryHelpers {
     );
   }
 
-  // public void SwerveTrajectory1(Trajectory t, double[] r){
-  // Trajectory lateral_trajectory = t;
-  // double[] rotational_trajectory = r;
-  // }
-
-  // Interior headings determineed automatically
-  // public static Trajectory trajectoryCS(TrajectoryConfig config,
-  // Pose2d start,
-  // Pose2d end,
-  // Translation2d... interiorWaypoints) {
-  // return TrajectoryGenerator.generateTrajectory(start,
-  // Arrays.asList(interiorWaypoints), end, config);
-  // }
-
-  public static SwerveTrajectory trajectoryCS(
-    TrajectoryConfig config,
-    Pose2d start,
-    Pose2d end,
-    Translation2d... interiorWaypoints
-  ) {
-    return trajectoryCS_swerve(config, start, end, interiorWaypoints);
-  }
-
-  // Removes the rotation component from trajectory generation and supplants it
-  // with rot_trajectory trajectory generation
-  public static SwerveTrajectory trajectoryCS_swerve(
-    TrajectoryConfig config,
-    Pose2d start,
-    Pose2d end,
-    Translation2d... interiorWaypoints
-  ) {
-    Pose2d trickStart = waypoint(
-      start.getX(),
-      start.getY(),
-      getStraightPathAngle(start, end, config.isReversed()).getDegrees()
-    );
-    Pose2d trickEnd = waypoint(
-      end.getX(),
-      end.getY(),
-      getStraightPathAngle(start, end, config.isReversed()).getDegrees()
-    );
-    Trajectory t = TrajectoryGenerator.generateTrajectory(
-      trickStart,
-      Arrays.asList(interiorWaypoints),
-      trickEnd,
-      config
-    );
-    RotationalTrajectory rot_trajectory = new RotationalTrajectory(
-      start.getRotation(),
-      end.getRotation(),
-      t.getTotalTimeSeconds()
-    );
-
-    return new SwerveTrajectory(t, rot_trajectory);
-  }
 
   private static Rotation2d getStraightPathAngle(
     Pose2d start,
@@ -215,16 +158,4 @@ public class TrajectoryHelpers {
     }
     return new Rotation2d(rotationRadians);
   }
-  // DEPRICATED
-  // public static Trajectory loadTrajectoryFromFile(String filename) {
-  // try {
-  // Path trajectoryPath =
-  // Filesystem.getDeployDirectory().toPath().resolve("paths/" + filename);
-  // return TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-  // } catch (IOException ex) {
-  // DriverStation.reportError("Unable to open trajectory: filename",
-  // ex.getStackTrace());
-  // return null;
-  // }
-  // }
 }

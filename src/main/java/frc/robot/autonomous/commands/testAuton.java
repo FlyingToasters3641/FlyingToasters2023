@@ -7,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import frc.robot.autonomous.AutonomousCommand;
-import frc.robot.autonomous.SwerveTrajectory;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
 
@@ -31,7 +30,7 @@ public class testAuton extends AutonomousCommand {
     0,
     Rotation2d.fromDegrees(90.0)
   );
-  static PathPlannerTrajectory traj3 = PathPlanner.generatePath(
+  static PathPlannerTrajectory inCodeTrajectory = PathPlanner.generatePath(
     new PathConstraints(4, 3),
     new PathPoint(
       new Translation2d(1.0, 1.0),
@@ -45,22 +44,11 @@ public class testAuton extends AutonomousCommand {
       Rotation2d.fromDegrees(-90) // position, heading(direction of travel), holonomic rotationnew PathPoint(new Translation2d(5.0, 3.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-30) // position, heading(direction of travel), holonomic rotation
     )
   );
-  //private static Pose2d pointThree = new Pose2d(0, 1, Rotation2d.fromDegrees(0.0));
+  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath("", Speeds.Safe.Constraints);
+  
 
   private DrivetrainSubsystem m_drive;
-  private static SwerveTrajectory trajectoryOne = trajectoryCS_swerve(
-    trajectoryConfig(Speeds.Safe),
-    pointOne,
-    pointTwo
-  );
 
-  // private static SwerveTrajectory trajectoryTwo = trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointTwo, pointThree);
-  // private static SwerveTrajectory trajectoryThree= trajectoryCS_swerve(trajectoryConfig(Speeds.Safe), pointThree, pointOne);
-  // public static final Trajectory pathForward = trajectory(
-  //     trajectoryConfig(Speeds.Safe),
-  //     start,
-  //     pickUpBall
-  // );
 
   public testAuton(
     DrivetrainSubsystem drive,
@@ -70,14 +58,8 @@ public class testAuton extends AutonomousCommand {
       drive,
       poseEstimator,
       pointOne,
-      FollowTrajectory(drive, poseEstimator, traj3)
-      //FollowTrajectory(drive, trajectoryTwo),
-      //FollowTrajectory(drive, trajectoryThree)
-
-      // new InstantCommand(() -> drive.driveArcade(0, 0), drive),
-      // new RotateCommand(drive, 180),  // If not working, comment this out and use the brute force method above
-      // FollowTrajectory(drive, pathTurnAround),
-      // new ShootHighGoalAutonCommand(flywheel, hood, feeder, vision, drive, intake, () -> 10.4)
+      FollowTrajectory(drive, poseEstimator, inCodeTrajectory),
+      FollowTrajectory(drive, poseEstimator, preGeneratedTrajectory)
     );
     m_drive = drive;
   }
