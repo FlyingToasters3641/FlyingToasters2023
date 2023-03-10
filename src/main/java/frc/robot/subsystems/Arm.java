@@ -32,16 +32,16 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.0001;
-        public static final double KI = 0.0001;
-        public static final double KD = 0.0;
+        public static final double KP = 0.04;//0.090071;//0.0001;
+        public static final double KI = 0;//0.0001;
+        public static final double KD = 0.017546;//0.0;
         public static final double KF = 0.0;
-        public static final double KS = 0.11814;
-        public static final double KG = 0.49202;
-        public static final double KV = 0.034012;
-        public static final double KA = 0.0020898;
-        public static final int LEFT_CURRENT_LIMIT = 25;
-        public static final int RIGHT_CURRENT_LIMIT = 25;
+        public static final double KS = 0.078474;//0.11814;
+        public static final double KG = 0.53836;//0.49202;
+        public static final double KV = 0.032529;//0.034012;
+        public static final double KA = 0.00078541;//0.0020898;
+        public static final int LEFT_CURRENT_LIMIT = 39;
+        public static final int RIGHT_CURRENT_LIMIT = 39;
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
@@ -162,10 +162,10 @@ public class Arm extends SubsystemBase {
 
         resetArm();
         return run(() -> {
-            m_armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6, 5),
+            m_armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(60, 50),
                     endgoal, m_currentSetpoint);
             m_currentSetpoint = m_armProfile.calculate(0.02);
-
+            moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
             System.out.println("Set point position" + m_currentSetpoint.position); 
             System.out.println("Set point velocity" + m_currentSetpoint.velocity); 
             System.out.println("end goal position" + endgoal.position); 
@@ -248,7 +248,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Setpoint position", m_currentSetpoint.position); 
         SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
 
-        moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
+        // moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
 
         // Resets encoder based off of pot values
          if (Math.abs(getArmAbsolutePosition() - m_leftArmMotor.getEncoder().getPosition()) > 1) {
