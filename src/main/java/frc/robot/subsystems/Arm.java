@@ -32,8 +32,8 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = .01;
-        public static final double KI = 0.0;
+        public static final double KP = 0.0001;
+        public static final double KI = 0.0001;
         public static final double KD = 0.0;
         public static final double KF = 0.0;
         public static final double KS = 0.11814;
@@ -148,32 +148,37 @@ public class Arm extends SubsystemBase {
         m_leftArmMotor.getEncoder().setPosition(getArmAbsolutePosition());
     }
 
-    // public void resetExtender() {
-    //     m_extenderMotor.getEncoder().setPosition(m_exPot.get());
-    // }
+    public void resetExtender() {
+        m_extenderMotor.getEncoder().setPosition(m_exPot.get());
+    }
 
     // Main command to rotate and extend arm to a preset (angle and whether extended or not: enum ArmPos)
     TrapezoidProfile.State m_currentSetpoint;
+    TrapezoidProfile m_armProfile;
+
     public Command moveArm(ArmPos angle) {
         m_currentSetpoint = new TrapezoidProfile.State(getArmAbsolutePosition(),0); //current state
         var endgoal = new TrapezoidProfile.State(angle.getAngle(), 0); //end goal
-        double startTime = Timer.getFPGATimestamp();
 
         resetArm();
         return run(() -> {
-            TrapezoidProfile armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(3, 0.5),
+            m_armProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(6, 5),
                     endgoal, m_currentSetpoint);
-            m_currentSetpoint = armProfile.calculate(0.02);
+            m_currentSetpoint = m_armProfile.calculate(0.02);
 
             System.out.println("Set point position" + m_currentSetpoint.position); 
             System.out.println("Set point velocity" + m_currentSetpoint.velocity); 
             System.out.println("end goal position" + endgoal.position); 
 
-            moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
+            SmartDashboard.putNumber("Arm: Commanded target angle", angle.getAngle());
             System.out.println("TARGET ANGLE (in command): " + angle.getAngle());
-
-            // moveArm(angle.getAngle(), 0);
-        }).finallyDo(end -> m_leftArmMotor.set(0)); //.until(() -> isArmAtPos(angle.getAngle()))
+        }).until(() -> isArmAtPos(angle.getAngle()));
+        // .until(() -> {
+        //     var fin = m_armProfile.isFinished(0.02);
+        //     System.out.println("IS_FINISHED: " + fin);
+        //     return fin;
+        // });
+         //.until(() -> isArmAtPos(angle.getAngle()))
          //       .finallyDo(end -> m_leftArmMotor.set(0));
         // .andThen(() -> extend(angle.getExtended()));
     }
@@ -240,7 +245,12 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());
         SmartDashboard.putNumber("Extender: Absolute Encoder Pos (pot position)", getExtenderAbsolutePosition());
 
-        // Resets enconder based off of pot values
+        SmartDashboard.putNumber("Arm: Setpoint position", m_currentSetpoint.position); 
+        SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
+
+        moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
+
+        // Resets encoder based off of pot values
          if (Math.abs(getArmAbsolutePosition() - m_leftArmMotor.getEncoder().getPosition()) > 1) {
              resetArm();
         }
