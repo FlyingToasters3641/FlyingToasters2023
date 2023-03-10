@@ -118,6 +118,10 @@ public class RobotContainer {
 
         rightBumperD.whileTrue(m_intake.reverseIntake());//run intake backward
 
+        driveController.x().whileTrue(m_Arm.extend(true));
+
+        
+
         //Driver Buttons 
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
