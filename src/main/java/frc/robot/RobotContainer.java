@@ -34,11 +34,11 @@ public class RobotContainer {
     
     Trigger leftTriggerO = operatorController.leftTrigger(); // Creates a new JoystickButton object for the `left bumper` button on exampleController
     
-    Trigger rightTriggerO = operatorController.rightTrigger(); 
+    Trigger rightTriggerO  = operatorController.rightTrigger(); 
     
     Trigger rightTriggerD = driveController.rightTrigger(); 
     
-    Trigger rightBumperD = driveController.rightBumper(); 
+    Trigger leftTriggerD = driveController.leftTrigger(); 
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -116,11 +116,17 @@ public class RobotContainer {
 
         rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
 
-        rightBumperD.whileTrue(m_intake.reverseIntake());//run intake backward
+        leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
 
         driveController.x().whileTrue(m_Arm.extend(true));
 
         
+        
+        driveController.a().onTrue(m_intake.extendIntake()); 
+
+        driveController.b().onTrue(m_intake.retractIntake());
+
+
 
         //Driver Buttons 
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
