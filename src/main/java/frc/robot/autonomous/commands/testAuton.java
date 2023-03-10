@@ -44,7 +44,7 @@ public class testAuton extends AutonomousCommand {
       Rotation2d.fromDegrees(-90) // position, heading(direction of travel), holonomic rotationnew PathPoint(new Translation2d(5.0, 3.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-30) // position, heading(direction of travel), holonomic rotation
     )
   );
-  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath("", Speeds.Safe.Constraints);
+  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath("New Path", Speeds.Safe.Constraints);
   
 
   private DrivetrainSubsystem m_drive;
