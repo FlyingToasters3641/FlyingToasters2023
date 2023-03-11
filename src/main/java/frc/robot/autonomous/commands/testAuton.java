@@ -26,29 +26,29 @@ public class testAuton extends AutonomousCommand {
     Rotation2d.fromDegrees(0.0)
   );
   private static Pose2d pointTwo = new Pose2d(
-    1.82,
+    0.33,
     0,
-    Rotation2d.fromDegrees(90.0)
+    Rotation2d.fromDegrees(0.0)
   );
   static PathPlannerTrajectory inCodeTrajectory = PathPlanner.generatePath(
-    new PathConstraints(4, 3),
+    Speeds.Safe.Constraints,
     new PathPoint(
-      new Translation2d(1.0, 1.0),
+      new Translation2d(0, 0),
       Rotation2d.fromDegrees(0),
-      Rotation2d.fromDegrees(0),
-      2
+      Rotation2d.fromDegrees(0)
     ), // position, heading(direction of travel), holonomic rotation, velocity override
     new PathPoint(
-      new Translation2d(3.0, 3.0),
-      Rotation2d.fromDegrees(45),
-      Rotation2d.fromDegrees(-90) // position, heading(direction of travel), holonomic rotationnew PathPoint(new Translation2d(5.0, 3.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-30) // position, heading(direction of travel), holonomic rotation
+      new Translation2d(-0.333, 0),
+      Rotation2d.fromDegrees(0),
+      Rotation2d.fromDegrees(0) // position, heading(direction of travel), holonomic rotationnew PathPoint(new Translation2d(5.0, 3.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-30) // position, heading(direction of travel), holonomic rotation
     )
   );
-  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath("New Path", Speeds.Safe.Constraints);
-  
+  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath(
+    "New Path",
+    Speeds.Safe.Constraints
+  );
 
   private DrivetrainSubsystem m_drive;
-
 
   public testAuton(
     DrivetrainSubsystem drive,
@@ -57,9 +57,9 @@ public class testAuton extends AutonomousCommand {
     super(
       drive,
       poseEstimator,
-      pointOne,
-      FollowTrajectory(drive, poseEstimator, inCodeTrajectory),
-      FollowTrajectory(drive, poseEstimator, preGeneratedTrajectory)
+      inCodeTrajectory.getInitialPose(),
+      FollowTrajectory(drive, poseEstimator, inCodeTrajectory)
+   
     );
     m_drive = drive;
   }

@@ -3,7 +3,6 @@ package frc.robot.autonomous;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -106,8 +105,6 @@ public class TrajectoryHelpers {
     );
   }
 
-  
-
   public static Pose2d waypoint(double x, double y, double degrees) {
     return new Pose2d(x, y, new Rotation2d(degrees * Math.PI / 180.0));
   }
@@ -132,7 +129,6 @@ public class TrajectoryHelpers {
       config
     );
   }
-
 
   private static Rotation2d getStraightPathAngle(
     Pose2d start,

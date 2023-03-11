@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
+import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -57,6 +58,7 @@ public class RobotContainer {
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
+    
     private final Arm m_Arm = new Arm();
     private final IntakeEffector m_intake = new IntakeEffector();
 
@@ -128,8 +130,8 @@ public class RobotContainer {
 
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
-        // chooser.setDefaultOption("TestAuton", new testAuton(s_Swerve));
-        // chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
+         chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
+         //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
         // System.out.println("CURRENT: " + moduleStates.toString());
 
