@@ -46,8 +46,7 @@ public class HolonomicDriveCommand extends CommandBase {
     Supplier<Pose2d> pose,
     HolonomicDriveController holonomicDriveController,
     SwerveDriveKinematics kinematics,
-    TriConsumer<Double, Double, Double> outputMetersPerSecond,
-    DrivetrainSubsystem driveSubsystem
+    TriConsumer<Double, Double, Double> outputMetersPerSecond
   ) {
     m_trajectory =
       ErrorMessages.requireNonNullParam(
@@ -74,7 +73,6 @@ public class HolonomicDriveCommand extends CommandBase {
         "output",
         "RamseteCommand"
       );
-    addRequirements(driveSubsystem);
   }
 
   public HolonomicDriveCommand(
@@ -82,8 +80,7 @@ public class HolonomicDriveCommand extends CommandBase {
     Supplier<Pose2d> pose,
     HolonomicDriveController holonomicDriveController,
     SwerveDriveKinematics kdrivekinematics,
-    TriConsumer<Double, Double, Double> outputMetersPerSecond,
-    DrivetrainSubsystem drive
+    TriConsumer<Double, Double, Double> outputMetersPerSecond
   ) {}
 
   @Override

@@ -92,16 +92,7 @@ public class TrajectoryHelpers {
         )
       ),
       Constants.DrivetrainConstants.KINEMATICS,
-      (p0, p1, p2) ->
-        drive.drive(
-          ChassisSpeeds.fromFieldRelativeSpeeds(
-            p0,
-            p1,
-            p2,
-            Rotation2d.fromRadians(drive.getGyroscopeHeading())
-          )
-        ),
-      drive
+      (p0, p1, p2) -> drive.setVelocities(p0, p1, p2)
     );
   }
 
@@ -130,7 +121,7 @@ public class TrajectoryHelpers {
     );
   }
 
-  private static Rotation2d getStraightPathAngle(
+  public static Rotation2d getStraightPathAngle(
     Pose2d start,
     Pose2d end,
     boolean isReversed
