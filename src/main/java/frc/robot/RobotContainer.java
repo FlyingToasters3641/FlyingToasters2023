@@ -130,9 +130,9 @@ public class RobotContainer {
         //leftBumperD.onTrue();//TODO: ADD SLOW BUTTON
 
     //TESTING CONTROLS
-        driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
-        driveController.y().onTrue(m_Arm.extend(0));
-        driveController.a().whileTrue(m_Arm.extendOpenLoop());
+        // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
+        // driveController.y().onTrue(m_Arm.extend(0));
+        // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         //driveController.x().onTrue(m_Arm.extend(true));
        //driveController.y().onTrue(m_Arm.extend(false));
         //driveController.a().onTrue(m_intake.extendIntake()); 
