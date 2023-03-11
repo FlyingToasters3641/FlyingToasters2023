@@ -122,7 +122,7 @@ public class RobotContainer {
         leftTriggerD.whileTrue(m_intake.reverseIntake());
         //rightBumperD.whileTrue(new SequentialCommandGroup(
             //m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));//TODO: ADD SLOW BUTTON
-        leftBumperD.whileTrue(new SequentialCommandGroup(
+        leftBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
 
