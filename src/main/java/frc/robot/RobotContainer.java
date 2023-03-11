@@ -108,7 +108,7 @@ public class RobotContainer {
 
 
     //DRIVER BUTTON BINDINGS
-        rightTriggerD.whileTrue(m_intake.runIntake());
+        rightTriggerD.onTrue(m_intake.runIntake());
         leftTriggerD.whileTrue(m_intake.reverseIntake());
 
 
