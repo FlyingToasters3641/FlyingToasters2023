@@ -32,7 +32,7 @@ public class RobotContainer {
     private final CommandXboxController operatorController = new CommandXboxController(1);
     
     
-    Trigger leftTriggerO = operatorController.leftTrigger(); // Creates a new JoystickButton object for the `left bumper` button on exampleController
+    Trigger leftTriggerO = operatorController.leftTrigger(); 
     
     Trigger rightTriggerO  = operatorController.rightTrigger(); 
     
@@ -93,43 +93,33 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // driveController.y().onTrue(new SequentialCommandGroup(
-        //         m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        // driveController.x().onTrue(new SequentialCommandGroup(
-        //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        
-        //Actual TODO: ADD SLOW MODE AND BALENCE
-        driveController.y().onTrue(new SequentialCommandGroup(
+    //OPPERATOR BUTTON BINDINGS
+        operatorController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        // operatorController.a().onTrue(new SequentialCommandGroup(
-        //          m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        // operatorController.b().onTrue(new SequentialCommandGroup(
-        //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        // operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
+        operatorController.a().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        operatorController.b().onTrue(new SequentialCommandGroup(
+                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
+        leftTriggerO.whileTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.L2_SCORING)));
+        rightTriggerO.whileTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.L3_SCORING)));
 
-        // leftTriggerO.whileTrue(new SequentialCommandGroup(
-        //     m_Arm.moveArm(ArmPos.L2_SCORING)));
 
-        // rightTriggerO.whileTrue(new SequentialCommandGroup(
-        //     m_Arm.moveArm(ArmPos.L3_SCORING)));
+    //DRIVER BUTTON BINDINGS
+        rightTriggerD.whileTrue(m_intake.runIntake());
+        leftTriggerD.whileTrue(m_intake.reverseIntake());
 
-        // rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
 
-        // // leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
-        driveController.a().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
-        // driveController.x().onTrue(m_Arm.extend(true));
-        // driveController.y().onTrue(m_Arm.extend(false));
-
+    //TESTING CONTROLS
+        //driveController.x().onTrue(m_Arm.extend(true));
+        //driveController.y().onTrue(m_Arm.extend(false));
         rightTriggerD.whileTrue(m_Arm.extendOpenLoop());
         
         //driveController.a().onTrue(m_intake.extendIntake()); 
-
         //driveController.b().onTrue(m_intake.retractIntake());
-
-
-
-        //Driver Buttons 
-        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private void configureAutonomousChooser() {
