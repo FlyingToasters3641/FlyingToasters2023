@@ -10,25 +10,27 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.lib.util.MotorHelper;
 import frc.lib.util.TunableNumber;
+import frc.lib.util.COTSFalconSwerveConstants.driveGearRatios;
 
 public class Arm extends SubsystemBase {
     private SparkMaxPIDController m_leftMotorPid;
     private CANSparkMax m_leftArmMotor;
     private CANSparkMax m_rightArmMotor;
     private CANSparkMax m_extenderMotor;
-
     private AnalogPotentiometer m_pot;
     private AnalogPotentiometer m_exPot;
-
     private ArmFeedforward m_armFeedforward;
+    double extenderTarget;
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
@@ -45,11 +47,11 @@ public class Arm extends SubsystemBase {
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.01;
+        public static final double EX_KP = 0.015;
         public static final double EX_KI = 0.0;
         public static final double EX_KD = 0.0;
-        public static final double EX_KF = 0.0;
-        public static final double EXTENDED_POSITION = 0.076; // TODO: measure analog pot for extender.
+        public static final double EX_KF = 0.0001;
+        public static final double EXTENDED_POSITION = 26.23; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
@@ -109,8 +111,8 @@ public class Arm extends SubsystemBase {
         m_leftArmMotor.getEncoder().setVelocityConversionFactor(
                 (360.0 / kArm.GEAR_RATIO) / 60.0); // degrees per second
 
-         m_extenderMotor.getEncoder().setPositionConversionFactor(
-                0.324 / kArm.GEAR_RATIO_EX); 
+        //m_extenderMotor.getEncoder().setPositionConversionFactor(
+        //        0.324 / kArm.GEAR_RATIO_EX); 
 
         // m_extenderMotor.getEncoder().setVelocityConversionFactor(
         //         (100.0 / kArm.GEAR_RATIO_EX) / 60.0); // degrees per second
@@ -217,12 +219,23 @@ public class Arm extends SubsystemBase {
 
     // Waits until the PID loop gets the extender to a set point
     public Command extend(boolean extended) {
-        return run(() -> {
+        return runOnce(() -> {
             // m_extenderMotor.set(0.3);
-            setExtenderPosition(extended ? kArm.EXTENDED_POSITION : 0, .1);
-            System.out.println("yes that");
-        }).until(() -> isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0))
-                .finallyDo(end -> m_extenderMotor.set(0));
+            extenderTarget = kArm.EXTENDED_POSITION;
+            //System.out.println("yes that");
+        });
+        // .until(() -> {
+        //     var isDone = isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0);
+        //     SmartDashboard.putBoolean("ARM Extender at setpoint (command finished)", extended);
+        //     return isDone;
+        // });
+                //.finallyDo(end -> m_extenderMotor.set(0));
+    }
+
+    public Command extendOpenLoop() {
+        return run(() -> {
+            m_extenderMotor.set(0.20);
+        }).finallyDo(end -> m_extenderMotor.set(0));
     }
 
     // Gives you a max and min angle range for arm rotation
@@ -247,7 +260,11 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm: Setpoint position", m_currentSetpoint.position); 
         SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
-
+        if (RobotState.isEnabled()) {
+            setExtenderPosition(extenderTarget, 0.15);
+        } else if (!RobotState.isEnabled()) {
+            extenderTarget = m_extenderMotor.getEncoder().getPosition();
+        }
         // moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
 
         // Resets encoder based off of pot values

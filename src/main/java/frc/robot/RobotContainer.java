@@ -114,13 +114,14 @@ public class RobotContainer {
         rightTriggerO.whileTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L3_SCORING)));
 
-        rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
+        // rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
 
-        leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
+        // leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
 
-        driveController.x().whileTrue(m_Arm.extend(true));
+        driveController.x().onTrue(m_Arm.extend(true));
+        driveController.y().onTrue(m_Arm.extend(false));
 
-        
+        // rightTriggerD.whileTrue(m_Arm.extendOpenLoop());
         
         driveController.a().onTrue(m_intake.extendIntake()); 
 
