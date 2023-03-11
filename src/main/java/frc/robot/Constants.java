@@ -223,12 +223,12 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-40, false), 
+    STORED_POSITION(-45, false), 
     GROUND_INTAKE_POSITION(-30, false), 
     SOLO_PLAYERSTATION_PICKUP(-10, false), //+-180 TODO: confirm extended or not
     DOUBLE_PLAYERSTATION_PICKUP(90,false), //TODO: confim extended or not
-    L2_SCORING(142, false), //TODO: confim extended or not
-    L3_SCORING(160, false); //TODO: confim extended or not
+    L2_SCORING(142, false); //TODO: confim extended or not
+    //L3_SCORING(90, false); //TODO: confim extended or not
 
     private double angle;
     private boolean extended;

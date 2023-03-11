@@ -180,9 +180,13 @@ public class Arm extends SubsystemBase {
 
     // Main command to rotate and extend arm to a preset (angle and whether extended or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        return runOnce(() -> {
+        // return runOnce(() -> {
+        //     m_targetArmPosition = normalizeAngle(angle.getAngle());
+        // });
+        return run(() -> {
             m_targetArmPosition = normalizeAngle(angle.getAngle());
-        });
+        }).until(() -> isArmAtPos(angle.getAngle()))
+        .andThen(() -> extend(angle.getExtended()));
     }
 
     // A convinence function for moveArm method
