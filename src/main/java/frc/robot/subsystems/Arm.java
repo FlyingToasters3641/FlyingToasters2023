@@ -179,7 +179,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void resetExtender() {
-        m_extenderMotor.getEncoder().setPosition((getExtenderAbsolutePosition() / 2.259920049) + 0.114723);
+        m_extenderMotor.getEncoder().setPosition(((getExtenderAbsolutePosition() / 2.259920049) / 1.02526223259) + 0.114723);
     }
 
     // Main command to rotate and extend arm to a preset (angle and whether extended or not: enum ArmPos)
@@ -273,11 +273,11 @@ public class Arm extends SubsystemBase {
         if (Math.abs(getArmAbsolutePositionDegrees() - getArmEncoderPositionDegrees()) > 1) {
              resetArm();
         }
-        if (Math.abs(m_exPot.get() - getExtenderEncoderPosition()) > 1) {
-                resetExtender();
-            }
-
-        setExtenderPosition(extenderTarget, 0.6);
+        if (Math.abs(getExtenderAbsolutePosition() - getExtenderEncoderPosition()) > 0.25) {
+            resetExtender();
+        }
+            
+        setExtenderPosition((((extenderTarget / 2.259920049) / 1.02526223259) + 0.114723), 0.4);
          if (!RobotState.isEnabled()) {
             m_targetArmPosition = getArmAbsolutePositionDegrees();
            //  extenderTarget = m_extenderMotor.getEncoder().getPosition();
@@ -300,9 +300,7 @@ public class Arm extends SubsystemBase {
                 ControlType.kSmartMotion, 0, armFeedForward, ArbFFUnits.kVoltage);
           }
       
-         if (Math.abs(getExtenderAbsolutePosition() - getExtenderEncoderPosition()) > 0.25) {
-             resetExtender();
-         }
+
 
          SmartDashboard.putNumber("Extender target",extenderTarget);
     }
