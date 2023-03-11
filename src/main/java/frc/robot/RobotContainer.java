@@ -120,7 +120,7 @@ public class RobotContainer {
         // driveController.x().onTrue(m_Arm.extend(true));
         // driveController.y().onTrue(m_Arm.extend(false));
 
-        // rightTriggerD.whileTrue(m_Arm.extendOpenLoop());
+        rightTriggerD.whileTrue(m_Arm.extendOpenLoop());
         
         //driveController.a().onTrue(m_intake.extendIntake()); 
 
