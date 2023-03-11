@@ -31,7 +31,7 @@ public class RobotContainer {
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
     
-    
+    //triggers
     Trigger leftTriggerO = operatorController.leftTrigger(); 
     
     Trigger rightTriggerO  = operatorController.rightTrigger(); 
@@ -39,6 +39,16 @@ public class RobotContainer {
     Trigger rightTriggerD = driveController.rightTrigger(); 
     
     Trigger leftTriggerD = driveController.leftTrigger(); 
+
+    //bumpers
+    Trigger leftBumperO = operatorController.leftBumper(); 
+    
+    Trigger rightBumperO  = operatorController.rightBumper(); 
+    
+    Trigger rightBumperD = driveController.rightBumper(); 
+    
+    Trigger leftBumperD = driveController.leftBumper(); 
+
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -94,22 +104,26 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
     //OPPERATOR BUTTON BINDINGS
-        driveController.y().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.a().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        driveController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
-        leftTriggerO.whileTrue(new SequentialCommandGroup(
+        
+        leftTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+        //rightTriggerO.whileTrue(new SequentialCommandGroup(
+            //m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
+        leftBumperO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
+        rightBumperO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L2_SCORING)));
-        rightTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));
 
 
     //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.runIntake());
         leftTriggerD.whileTrue(m_intake.reverseIntake());
+        //rightBumperD.whileTrue(new SequentialCommandGroup(
+            //m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));//TODO: ADD SLOW BUTTON
+        leftBumperD.whileTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
 
     //TESTING CONTROLS
