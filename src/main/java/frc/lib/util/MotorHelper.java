@@ -146,6 +146,7 @@ public class MotorHelper {
         motor.restoreFactoryDefaults();
         motor.setInverted(inverted);
         motor.setSmartCurrentLimit(currentLimit);
+        motor.enableVoltageCompensation(12);
         motor.setIdleMode(idleMode);
 
         if (motorType == CANSparkMaxLowLevel.MotorType.kBrushless) {

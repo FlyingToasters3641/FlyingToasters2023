@@ -99,33 +99,32 @@ public class RobotContainer {
         //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
         
         //Actual TODO: ADD SLOW MODE AND BALENCE
-        operatorController.y().onTrue(new SequentialCommandGroup(
+        driveController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        operatorController.x().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+        // operatorController.a().onTrue(new SequentialCommandGroup(
+        //          m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        // operatorController.b().onTrue(new SequentialCommandGroup(
+        //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        // operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
 
-        leftTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L2_SCORING)));
+        // leftTriggerO.whileTrue(new SequentialCommandGroup(
+        //     m_Arm.moveArm(ArmPos.L2_SCORING)));
 
-        rightTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));
+        // rightTriggerO.whileTrue(new SequentialCommandGroup(
+        //     m_Arm.moveArm(ArmPos.L3_SCORING)));
 
         // rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
 
-        // leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
-
-        driveController.x().onTrue(m_Arm.extend(true));
-        driveController.y().onTrue(m_Arm.extend(false));
+        // // leftTriggerD.whileTrue(m_intake.reverseIntake());//run intake backward
+        driveController.a().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
+        // driveController.x().onTrue(m_Arm.extend(true));
+        // driveController.y().onTrue(m_Arm.extend(false));
 
         // rightTriggerD.whileTrue(m_Arm.extendOpenLoop());
         
-        driveController.a().onTrue(m_intake.extendIntake()); 
+        //driveController.a().onTrue(m_intake.extendIntake()); 
 
-        driveController.b().onTrue(m_intake.retractIntake());
+        //driveController.b().onTrue(m_intake.retractIntake());
 
 
 
