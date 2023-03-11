@@ -40,7 +40,7 @@ public class RobotContainer {
 
     Trigger leftTriggerD = driveController.leftTrigger();
 
-    private double joystickSensitivity = 1;
+    private double joystickSensitivity = 1; 
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -110,6 +110,7 @@ public class RobotContainer {
         rightTriggerO.whileTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.L3_SCORING)));
 
+        //Gives the right bumper a "toggle" mode (press it to activate and press it again to deactivate)
         driveController.rightBumper().onTrue(new InstantCommand(() -> {
             if (joystickSensitivity == 1) {
                 joystickSensitivity = 0.5;
