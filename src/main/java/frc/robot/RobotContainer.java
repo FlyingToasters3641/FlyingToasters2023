@@ -112,14 +112,12 @@ public class RobotContainer {
 
         //Gives the right bumper a "toggle" mode (press it to activate and press it again to deactivate)
         driveController.rightBumper().onTrue(new InstantCommand(() -> {
-            if (joystickSensitivity == 1) {
-                joystickSensitivity = 0.5;
-            } else {
-                joystickSensitivity = 1;
-            }
+            joystickSensitivity = 0.5;
 
+        }))
+        .onFalse(new InstantCommand(() -> {
+            joystickSensitivity = 1.0;
         }));
-
         // DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.runIntake());
         leftTriggerD.whileTrue(m_intake.reverseIntake());
