@@ -53,21 +53,21 @@ public class IntakeEffector extends SubsystemBase {
     return intakeRetracted;
   }
 
-  boolean thing;
-  double avgCurrent;
-  double currentStore;
-  int i = 1;
-
+  private double avgCurrent = 0;
+  private double currentStore = 0;
+  private int intakeIteration = 1;
   public Command runIntake() {
+
     return run(() -> {
-        if (i < 5) {
+        
+        if (intakeIteration < 5) {
           currentStore += m_rollers.getOutputCurrent();
-          i++;
-        } else if (i == 5) {
-          avgCurrent = currentStore / i;
-          i++;
+          intakeIteration++;
+        } else if (intakeIteration == 5) {
+          avgCurrent = currentStore / intakeIteration;
+          intakeIteration++;
         } else {
-          i = 1;
+          intakeIteration = 1;
           currentStore = 0;
         }
         System.out.println("Average current" + avgCurrent);
@@ -87,7 +87,7 @@ public class IntakeEffector extends SubsystemBase {
         );
         avgCurrent = 0;
         currentStore = 0;
-        i = 1;
+        intakeIteration = 1;
         SmartDashboard.putBoolean("Intake is finished", true);
 
       });
