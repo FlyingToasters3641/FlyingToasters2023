@@ -10,6 +10,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.autonomous.TrajectoryHelpers.Speeds;
+import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.swerve.ModuleConfiguration;
 
 public final class Constants {
@@ -223,23 +224,23 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-40, false), 
-    GROUND_INTAKE_POSITION(-30, false), 
-    SOLO_PLAYERSTATION_PICKUP(-10, false), //+-180 TODO: confirm extended or not
-    DOUBLE_PLAYERSTATION_PICKUP(90,false), //TODO: confim extended or not
-    L2_SCORING(142, false), //TODO: confim extended or not
-    L3_SCORING(160, false); //TODO: confim extended or not
+    STORED_POSITION(-50, 0), 
+    GROUND_INTAKE_POSITION(-30, kArm.EXTENDED_POSITION * 0.4), 
+    SOLO_PLAYERSTATION_PICKUP(-10, kArm.EXTENDED_POSITION * 0.4), 
+    DOUBLE_PLAYERSTATION_PICKUP(90, 0), 
+    L2_SCORING(142, 0), 
+    L3_SCORING(142, kArm.EXTENDED_POSITION); 
 
     private double angle;
-    private boolean extended;
+    private double extendedPosition;
 
-    private ArmPos(double angle, boolean extended) {
+    private ArmPos(double angle, double extended) {
       this.angle = angle;
-      this.extended = extended;
+      this.extendedPosition = extended;
     }
 
-    public boolean getExtended() {
-      return extended;
+    public double getExtended() {
+      return extendedPosition;
     }
 
     public double getAngle() {

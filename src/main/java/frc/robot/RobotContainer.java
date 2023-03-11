@@ -15,6 +15,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm.kArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -31,7 +32,7 @@ public class RobotContainer {
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
     
-    
+    //triggers
     Trigger leftTriggerO = operatorController.leftTrigger(); 
     
     Trigger rightTriggerO  = operatorController.rightTrigger(); 
@@ -39,6 +40,16 @@ public class RobotContainer {
     Trigger rightTriggerD = driveController.rightTrigger(); 
     
     Trigger leftTriggerD = driveController.leftTrigger(); 
+
+    //bumpers
+    Trigger leftBumperO = operatorController.leftBumper(); 
+    
+    Trigger rightBumperO  = operatorController.rightBumper(); 
+    
+    Trigger rightBumperD = driveController.rightBumper(); 
+    
+    Trigger leftBumperD = driveController.leftBumper(); 
+
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -94,25 +105,35 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
     //OPPERATOR BUTTON BINDINGS
-        driveController.y().onTrue(new SequentialCommandGroup(
+        operatorController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+        operatorController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        driveController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
-        leftTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L2_SCORING)));
-        rightTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));
-
+                 m_Arm.moveArm(ArmPos.L2_SCORING)));
+        
+        leftTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        rightTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
+        
+            /* TODO: LED LIGHTS
+        leftBumperO.onTrue();
+        rightBumperO.onTrue();
+        */
 
     //DRIVER BUTTON BINDINGS
-        rightTriggerD.onTrue(m_intake.runIntake());
-        leftTriggerD.whileTrue(m_intake.reverseIntake());
+        rightTriggerD.whileTrue(m_intake.reverseIntake());
+        leftTriggerD.whileTrue(m_intake.runIntake());
+        rightBumperD.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        //leftBumperD.onTrue();//TODO: ADD SLOW BUTTON
 
 
     //TESTING CONTROLS
+        // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
+        // driveController.y().onTrue(m_Arm.extend(0));
+        // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         //driveController.x().onTrue(m_Arm.extend(true));
        //driveController.y().onTrue(m_Arm.extend(false));
         //driveController.a().onTrue(m_intake.extendIntake()); 
