@@ -50,11 +50,11 @@ public class Arm extends SubsystemBase {
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.015;
+        public static final double EX_KP = 0.025;//0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.0;
+        public static final double EX_KD = 0.0001;
         public static final double EX_KF = 0.0005;
-        public static final double EXTENDED_POSITION = 26.23; // TODO: measure analog pot for extender.
+        public static final double EXTENDED_POSITION = 90;//26.23; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
@@ -158,6 +158,10 @@ public class Arm extends SubsystemBase {
         return m_leftArmMotor.getEncoder().getPosition() * 360.0 / kArm.GEAR_RATIO - kArm.MIN_POSITION;
     }
 
+    protected double getExtenderEncoderPosition() {
+        return ((m_extenderMotor.getEncoder().getPosition()-0.0) * 2.30898432171);// - 2.520537;
+    }
+
     protected double degreesToArmEncoderRotations(double degrees) {
         return (degrees + kArm.MIN_POSITION) / 360.0 * kArm.GEAR_RATIO;
     }
@@ -167,7 +171,7 @@ public class Arm extends SubsystemBase {
     }
 
     protected double getExtenderAbsolutePosition() {
-        return (m_exPot.get()); //* -(90.0 / (217.6 - 173.06)) + 360);
+        return (((m_exPot.get()- 0.114723)* 2.259920049) * 1.02526223259);// - 2.208095; 
     }
 
     public void resetArm() {
@@ -175,7 +179,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void resetExtender() {
-        m_extenderMotor.getEncoder().setPosition(m_exPot.get() * (43.309/44.134630));
+        m_extenderMotor.getEncoder().setPosition((getExtenderAbsolutePosition() / 2.259920049) + 0.114723);
     }
 
     // Main command to rotate and extend arm to a preset (angle and whether extended or not: enum ArmPos)
@@ -259,22 +263,26 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
         
         SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
-        SmartDashboard.putNumber("Extender: Relative Encoder Pos", m_extenderMotor.getEncoder().getPosition());
+        SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
         SmartDashboard.putNumber("Extender: Absolute Encoder Pos (pot position)", getExtenderAbsolutePosition());
 
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0); 
         // SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
-        setExtenderPosition(extenderTarget, 0.5);
+    
+        // Resets encoder based off of pot values
+        if (Math.abs(getArmAbsolutePositionDegrees() - getArmEncoderPositionDegrees()) > 1) {
+             resetArm();
+        }
+        if (Math.abs(m_exPot.get() - getExtenderEncoderPosition()) > 1) {
+                resetExtender();
+            }
+
+        setExtenderPosition(extenderTarget, 0.6);
          if (!RobotState.isEnabled()) {
             m_targetArmPosition = getArmAbsolutePositionDegrees();
            //  extenderTarget = m_extenderMotor.getEncoder().getPosition();
          }
         // moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
-
-        // Resets encoder based off of pot values
-        if (Math.abs(getArmAbsolutePositionDegrees() - getArmEncoderPositionDegrees()) > 1) {
-             resetArm();
-        }
 
         if (m_targetArmPosition != null) {
             m_targetArmPosition = normalizeAngle(m_targetArmPosition);
@@ -292,9 +300,11 @@ public class Arm extends SubsystemBase {
                 ControlType.kSmartMotion, 0, armFeedForward, ArbFFUnits.kVoltage);
           }
       
-        // if (Math.abs(m_exPot.get() - m_extenderMotor.getEncoder().getPosition()) > 1) {
-        //     resetExtender();
-        // }
+         if (Math.abs(getExtenderAbsolutePosition() - getExtenderEncoderPosition()) > 0.25) {
+             resetExtender();
+         }
+
+         SmartDashboard.putNumber("Extender target",extenderTarget);
     }
 
 }
