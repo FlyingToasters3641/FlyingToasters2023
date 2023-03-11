@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -30,15 +31,16 @@ public class RobotContainer {
     // private final Joystick driver = new Joystick(0);
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
-    
-    
-    Trigger leftTriggerO = operatorController.leftTrigger(); 
-    
-    Trigger rightTriggerO  = operatorController.rightTrigger(); 
-    
-    Trigger rightTriggerD = driveController.rightTrigger(); 
-    
-    Trigger leftTriggerD = driveController.leftTrigger(); 
+
+    Trigger leftTriggerO = operatorController.leftTrigger();
+
+    Trigger rightTriggerO = operatorController.rightTrigger();
+
+    Trigger rightTriggerD = driveController.rightTrigger();
+
+    Trigger leftTriggerD = driveController.leftTrigger();
+
+    private double joystickSensitivity = 1;
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -71,9 +73,11 @@ public class RobotContainer {
                 new FieldOrientedDriveCommand(
                         m_drivetrainSubsystem,
                         () -> m_poseEstimator.getCurrentPose().getRotation(),
-                        () -> -modifyAxis(driveController.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getRightX())
+                        () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getRightX() * joystickSensitivity)
                                 * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
 
         // Configure the button bindings
@@ -93,31 +97,38 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-    //OPPERATOR BUTTON BINDINGS
+        // OPPERATOR BUTTON BINDINGS
         operatorController.y().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
+                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
         operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
         leftTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L2_SCORING)));
+                m_Arm.moveArm(ArmPos.L2_SCORING)));
         rightTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));
+                m_Arm.moveArm(ArmPos.L3_SCORING)));
 
+        driveController.rightBumper().onTrue(new InstantCommand(() -> {
+            if (joystickSensitivity == 1) {
+                joystickSensitivity = 0.5;
+            } else {
+                joystickSensitivity = 1;
+            }
 
-    //DRIVER BUTTON BINDINGS
+        }));
+
+        // DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.runIntake());
         leftTriggerD.whileTrue(m_intake.reverseIntake());
 
-
-    //TESTING CONTROLS
-        //driveController.x().onTrue(m_Arm.extend(true));
-        //driveController.y().onTrue(m_Arm.extend(false));
-        //driveController.a().onTrue(m_intake.extendIntake()); 
-        //driveController.b().onTrue(m_intake.retractIntake());
-        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        // TESTING CONTROLS
+        // driveController.x().onTrue(m_Arm.extend(true));
+        // driveController.y().onTrue(m_Arm.extend(false));
+        // driveController.a().onTrue(m_intake.extendIntake());
+        // driveController.b().onTrue(m_intake.retractIntake());
+        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private void configureAutonomousChooser() {
@@ -165,4 +176,5 @@ public class RobotContainer {
 
         return value;
     }
+
 }
