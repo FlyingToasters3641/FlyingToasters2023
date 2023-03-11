@@ -53,7 +53,7 @@ public class Arm extends SubsystemBase {
         public static final double EX_KP = 0.015;
         public static final double EX_KI = 0.0;
         public static final double EX_KD = 0.0;
-        public static final double EX_KF = 0.0001;
+        public static final double EX_KF = 0.0005;
         public static final double EXTENDED_POSITION = 26.23; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
@@ -175,7 +175,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void resetExtender() {
-        m_extenderMotor.getEncoder().setPosition(m_exPot.get());
+        m_extenderMotor.getEncoder().setPosition(m_exPot.get() * (43.309/44.134630));
     }
 
     // Main command to rotate and extend arm to a preset (angle and whether extended or not: enum ArmPos)
@@ -221,11 +221,11 @@ public class Arm extends SubsystemBase {
     public Command extend(boolean extended) {
         return runOnce(() -> {
             // m_extenderMotor.set(0.3);
-            extenderTarget = kArm.EXTENDED_POSITION;
+            extenderTarget = extended ? kArm.EXTENDED_POSITION : 0;
             //System.out.println("yes that");
         });
         // .until(() -> {
-        //     var isDone = isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0);
+            // var isDone = isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0
         //     SmartDashboard.putBoolean("ARM Extender at setpoint (command finished)", extended);
         //     return isDone;
         // });
@@ -261,7 +261,7 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0); 
         // SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
-        setExtenderPosition(extenderTarget, 0.15);
+        setExtenderPosition(extenderTarget, 0.5);
          if (!RobotState.isEnabled()) {
             m_targetArmPosition = getArmAbsolutePositionDegrees();
            //  extenderTarget = m_extenderMotor.getEncoder().getPosition();

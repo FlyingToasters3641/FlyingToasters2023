@@ -94,13 +94,13 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
     //OPPERATOR BUTTON BINDINGS
-        operatorController.y().onTrue(new SequentialCommandGroup(
+        driveController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.a().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
+        driveController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
         leftTriggerO.whileTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L2_SCORING)));
         rightTriggerO.whileTrue(new SequentialCommandGroup(
@@ -114,7 +114,7 @@ public class RobotContainer {
 
     //TESTING CONTROLS
         //driveController.x().onTrue(m_Arm.extend(true));
-        //driveController.y().onTrue(m_Arm.extend(false));
+       //driveController.y().onTrue(m_Arm.extend(false));
         //driveController.a().onTrue(m_intake.extendIntake()); 
         //driveController.b().onTrue(m_intake.retractIntake());
         //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
