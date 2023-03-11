@@ -267,11 +267,11 @@ public class Arm extends SubsystemBase {
 
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0); 
         // SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity); 
-        // if (RobotState.isEnabled()) {
-            setExtenderPosition(extenderTarget, 0.15);
-        // } else if (!RobotState.isEnabled()) {
-        //     extenderTarget = m_extenderMotor.getEncoder().getPosition();
-        // }
+        setExtenderPosition(extenderTarget, 0.15);
+         if (!RobotState.isEnabled()) {
+            m_targetArmPosition = getArmAbsolutePositionDegrees();
+           //  extenderTarget = m_extenderMotor.getEncoder().getPosition();
+         }
         // moveArm(m_currentSetpoint.position, m_currentSetpoint.velocity);
 
         // Resets encoder based off of pot values
