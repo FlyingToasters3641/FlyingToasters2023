@@ -136,8 +136,8 @@ public class RobotContainer {
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         //driveController.x().onTrue(m_Arm.extend(true));
        //driveController.y().onTrue(m_Arm.extend(false));
-        //driveController.a().onTrue(m_intake.extendIntake()); 
-        //driveController.b().onTrue(m_intake.retractIntake());
+        driveController.a().onTrue(m_intake.extendIntake()); 
+        driveController.b().onTrue(m_intake.retractIntake());
         //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
