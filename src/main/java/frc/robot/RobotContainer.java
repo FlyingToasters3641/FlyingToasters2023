@@ -104,26 +104,29 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
     //OPPERATOR BUTTON BINDINGS
-        operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        operatorController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+        operatorController.y().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
+        operatorController.b().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.L2_SCORING)));
         
         leftTriggerO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
-        //rightTriggerO.whileTrue(new SequentialCommandGroup(
-            //m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
-        leftBumperO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        rightBumperO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L2_SCORING)));
-
+            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        rightTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
+        
+            /* TODO: LED LIGHTS
+        leftBumperO.onTrue();
+        rightBumperO.onTrue();
+        */
 
     //DRIVER BUTTON BINDINGS
-        rightTriggerD.whileTrue(m_intake.runIntake());
-        leftTriggerD.whileTrue(m_intake.reverseIntake());
-        //rightBumperD.whileTrue(new SequentialCommandGroup(
-            //m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));//TODO: ADD SLOW BUTTON
-        leftBumperD.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        rightTriggerD.whileTrue(m_intake.reverseIntake());
+        leftTriggerD.whileTrue(m_intake.runIntake());
+        rightBumperD.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        //leftBumperD.onTrue();//TODO: ADD SLOW BUTTON
 
 
     //TESTING CONTROLS

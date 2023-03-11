@@ -221,11 +221,10 @@ public class Arm extends SubsystemBase {
                 extFF);
     }
 
-    // Waits until the PID loop gets the extender to a set point
-    public Command extend(boolean extended) {
+    public Command extend(double extendedPosition) {
         return runOnce(() -> {
             // m_extenderMotor.set(0.3);
-            extenderTarget = extended ? kArm.EXTENDED_POSITION : 0;
+            extenderTarget = extendedPosition;
             //System.out.println("yes that");
         });
         // .until(() -> {
