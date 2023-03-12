@@ -123,12 +123,12 @@ public class RobotContainer {
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));//TODO: ADD EXTEND DEADMAN
 
 
-        controller.rightBumper().onTrue(new InstantCommand(() -> {
+        operatorController.rightBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(3);
         }))
         .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
 
-        controller.leftBumper().onTrue(new InstantCommand(() -> {
+        operatorController.leftBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(2);
         }))
         .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
