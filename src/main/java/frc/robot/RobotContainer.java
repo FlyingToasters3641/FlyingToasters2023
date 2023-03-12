@@ -16,6 +16,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm.kArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,6 +42,16 @@ public class RobotContainer {
     Trigger leftTriggerD = driveController.leftTrigger();
 
     private double joystickSensitivity = 1; 
+
+    //bumpers
+    Trigger leftBumperO = operatorController.leftBumper(); 
+    
+    Trigger rightBumperO  = operatorController.rightBumper(); 
+    
+    Trigger rightBumperD = driveController.rightBumper(); 
+    
+    Trigger leftBumperD = driveController.leftBumper(); 
+
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -97,37 +108,50 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // OPPERATOR BUTTON BINDINGS
+    //OPPERATOR BUTTON BINDINGS
+        operatorController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
         operatorController.y().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        operatorController.a().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        operatorController.x().onTrue(m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
-        leftTriggerO.whileTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.L2_SCORING)));
-        rightTriggerO.whileTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.L3_SCORING)));
+                 m_Arm.moveArm(ArmPos.L2_SCORING)));
+        
+        leftTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        rightTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
 
-        //Gives the right bumper a "toggle" mode (press it to activate and press it again to deactivate)
-        driveController.rightBumper().onTrue(new InstantCommand(() -> {
+
+            /* TODO: LED LIGHTS
+        leftBumperO.onTrue();
+        rightBumperO.onTrue();
+        */
+
+    //DRIVER BUTTON BINDINGS
+        rightTriggerD.whileTrue(m_intake.reverseIntake());
+        leftTriggerD.whileTrue(m_intake.runIntake());
+        rightBumperD.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+            
+        //Gives the left bumper a "toggle" mode (press it to activate and press it again to deactivate)
+        driveController.leftBumper().onTrue(new InstantCommand(() -> {
             joystickSensitivity = 0.5;
 
         }))
         .onFalse(new InstantCommand(() -> {
             joystickSensitivity = 1.0;
         }));
-        // DRIVER BUTTON BINDINGS
-        rightTriggerD.whileTrue(m_intake.runIntake());
-        leftTriggerD.whileTrue(m_intake.reverseIntake());
 
-        // TESTING CONTROLS
-        // driveController.x().onTrue(m_Arm.extend(true));
-        // driveController.y().onTrue(m_Arm.extend(false));
-        // driveController.a().onTrue(m_intake.extendIntake());
-        // driveController.b().onTrue(m_intake.retractIntake());
-        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+
+    //TESTING CONTROLS
+        // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
+        // driveController.y().onTrue(m_Arm.extend(0));
+        // driveController.a().whileTrue(m_Arm.extendOpenLoop());
+        //driveController.x().onTrue(m_Arm.extend(true));
+       //driveController.y().onTrue(m_Arm.extend(false));
+        driveController.a().onTrue(m_intake.extendIntake()); 
+        driveController.b().onTrue(m_intake.retractIntake());
+        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private void configureAutonomousChooser() {
