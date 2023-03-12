@@ -26,11 +26,11 @@ public class testAuton extends AutonomousCommand {
     Rotation2d.fromDegrees(0.0)
   );
   private static Pose2d pointTwo = new Pose2d(
-    0.33,
+    1,
     0,
     Rotation2d.fromDegrees(0.0)
   );
-  static PathPlannerTrajectory inCodeTrajectory = PathPlanner.generatePath(
+   static PathPlannerTrajectory inCodeTrajectory = PathPlanner.generatePath(
     Speeds.Safe.Constraints,
     new PathPoint(
       new Translation2d(0, 0),
@@ -38,14 +38,10 @@ public class testAuton extends AutonomousCommand {
       Rotation2d.fromDegrees(0)
     ), // position, heading(direction of travel), holonomic rotation, velocity override
     new PathPoint(
-      new Translation2d(-0.333, 0),
+      new Translation2d(2, 0),
       Rotation2d.fromDegrees(0),
       Rotation2d.fromDegrees(0) // position, heading(direction of travel), holonomic rotationnew PathPoint(new Translation2d(5.0, 3.0), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-30) // position, heading(direction of travel), holonomic rotation
     )
-  );
-  static PathPlannerTrajectory preGeneratedTrajectory = PathPlanner.loadPath(
-    "New Path",
-    Speeds.Safe.Constraints
   );
 
   private DrivetrainSubsystem m_drive;
@@ -57,9 +53,9 @@ public class testAuton extends AutonomousCommand {
     super(
       drive,
       poseEstimator,
-      inCodeTrajectory.getInitialPose(),
+      inCodeTrajectory.getInitialHolonomicPose(),
       FollowTrajectory(drive, poseEstimator, inCodeTrajectory)
-   
+
     );
     m_drive = drive;
   }

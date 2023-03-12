@@ -100,6 +100,7 @@ public class HolonomicDriveCommand extends CommandBase {
   public void execute() {
     double curTime = m_timer.get();
     State targetPosition = m_trajectory.sample(curTime);
+    SmartDashboard.putNumber("Target Position", targetPosition.poseMeters.getX());
     ChassisSpeeds targetWheelSpeeds = m_follower.calculate(
       m_pose.get(),
       targetPosition,
@@ -132,6 +133,7 @@ public class HolonomicDriveCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_timer.stop();
+    SmartDashboard.putBoolean("Auton stopped", interrupted);
   }
 
   @Override

@@ -1,0 +1,13 @@
+{
+  "NetworkTables": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Vision/Field": "Field2d",
+      "/SmartDashboard/Chooser": "String Chooser"
+    }
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "3641"
+  }
+}
