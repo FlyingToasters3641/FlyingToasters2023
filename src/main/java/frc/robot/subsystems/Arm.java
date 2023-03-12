@@ -51,9 +51,9 @@ public class Arm extends SubsystemBase {
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.000071; //0.025;// 0.015;
+        public static final double EX_KP = 0.000071; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.004; //0.0001;
+        public static final double EX_KD = 0.004; // 0.0001;
         public static final double EX_KF = 0.0005;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
 
@@ -105,14 +105,8 @@ public class Arm extends SubsystemBase {
         m_leftMotorPid = m_leftArmMotor.getPIDController();
         m_extenderPid = m_extenderMotor.getPIDController();
 
-        m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44)); // -(350
-                                                                                                                    // -
-                                                                                                                    // 90)
-                                                                                                                    // /
-                                                                                                                    // (90
-                                                                                                                    // /
-                                                                                                                    // 44)
-        m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);// TODO: Change
+        m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
+        m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
         m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
         m_leftMotorPid.setSmartMotionMaxVelocity(kArm.SMART_MOTION_MAX_VELOCITY, 0);
@@ -121,7 +115,7 @@ public class Arm extends SubsystemBase {
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
 
         m_extenderPid.setOutputRange(-0.5, 0.5);
-        m_extenderPid.setSmartMotionMaxVelocity(2000/*1500*/, 0);
+        m_extenderPid.setSmartMotionMaxVelocity(2000/* 1500 */, 0);
         m_extenderPid.setSmartMotionMaxAccel(1500/* 1000 */, 0);
         m_extenderPid.setSmartMotionAllowedClosedLoopError(1.0, 0); // 0.002
 
