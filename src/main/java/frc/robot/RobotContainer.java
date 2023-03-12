@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -120,9 +119,9 @@ public class RobotContainer {
         
         leftTriggerO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));//TODO: ADD EXTEND DEADMAN
+        rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
-
+        //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(3);
         }))
@@ -140,7 +139,7 @@ public class RobotContainer {
         rightBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
             
-        //Gives the left bumper a "toggle" mode (press it to activate and press it again to deactivate)
+        //SLOW MODE
         driveController.leftBumper().onTrue(new InstantCommand(() -> {
             joystickSensitivity = 0.5;
         }))
