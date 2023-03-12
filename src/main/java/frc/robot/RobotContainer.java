@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,6 +68,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Timer reseedTimer = new Timer();
 
+    private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
@@ -121,10 +123,16 @@ public class RobotContainer {
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));//TODO: ADD EXTEND DEADMAN
 
 
-            /* TODO: LED LIGHTS
-        leftBumperO.onTrue();
-        rightBumperO.onTrue();
-        */
+        controller.rightBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(3);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+        controller.leftBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(2);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
 
     //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
@@ -164,6 +172,7 @@ public class RobotContainer {
         // new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
         // });
         // }));;
+
     }
 
     /**
