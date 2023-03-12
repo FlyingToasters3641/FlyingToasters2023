@@ -126,6 +126,7 @@ public final class Constants {
     // intake pneumatic
     public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
     public static final int EFFECTOR_EXTENDED_CHANNEL = 1;
+    public static final int PNEUMATIC_HUB = 7; 
 
     public static final int PIGEON_ID = 9;
 

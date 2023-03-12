@@ -118,8 +118,7 @@ public class RobotContainer {
         
         leftTriggerO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        rightTriggerO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
+        rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));//TODO: ADD EXTEND DEADMAN
 
 
             /* TODO: LED LIGHTS
@@ -136,7 +135,6 @@ public class RobotContainer {
         //Gives the left bumper a "toggle" mode (press it to activate and press it again to deactivate)
         driveController.leftBumper().onTrue(new InstantCommand(() -> {
             joystickSensitivity = 0.5;
-
         }))
         .onFalse(new InstantCommand(() -> {
             joystickSensitivity = 1.0;
@@ -147,10 +145,8 @@ public class RobotContainer {
         // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
         // driveController.y().onTrue(m_Arm.extend(0));
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
-        //driveController.x().onTrue(m_Arm.extend(true));
-       //driveController.y().onTrue(m_Arm.extend(false));
-        driveController.a().onTrue(m_intake.extendIntake()); 
-        driveController.b().onTrue(m_intake.retractIntake());
+        // driveController.a().onTrue(m_intake.extendIntake()); 
+        // driveController.b().onTrue(m_intake.retractIntake());
         //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 

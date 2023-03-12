@@ -25,6 +25,7 @@ public class IntakeEffector extends SubsystemBase {
   public IntakeEffector() {
     solenoid =
       new DoubleSolenoid(
+        DrivetrainConstants.PNEUMATIC_HUB,
         PneumaticsModuleType.REVPH,
         DrivetrainConstants.EFFECTOR_EXTENDED_CHANNEL,
         DrivetrainConstants.EFFECTOR_RETRACTED_CHANNEL
