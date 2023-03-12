@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -31,15 +32,16 @@ public class RobotContainer {
     // private final Joystick driver = new Joystick(0);
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
-    
-    //triggers
-    Trigger leftTriggerO = operatorController.leftTrigger(); 
-    
-    Trigger rightTriggerO  = operatorController.rightTrigger(); 
-    
-    Trigger rightTriggerD = driveController.rightTrigger(); 
-    
-    Trigger leftTriggerD = driveController.leftTrigger(); 
+
+    Trigger leftTriggerO = operatorController.leftTrigger();
+
+    Trigger rightTriggerO = operatorController.rightTrigger();
+
+    Trigger rightTriggerD = driveController.rightTrigger();
+
+    Trigger leftTriggerD = driveController.leftTrigger();
+
+    private double joystickSensitivity = 1; 
 
     //bumpers
     Trigger leftBumperO = operatorController.leftBumper(); 
@@ -82,9 +84,11 @@ public class RobotContainer {
                 new FieldOrientedDriveCommand(
                         m_drivetrainSubsystem,
                         () -> m_poseEstimator.getCurrentPose().getRotation(),
-                        () -> -modifyAxis(driveController.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getRightX())
+                        () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getRightX() * joystickSensitivity)
                                 * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
 
         // Configure the button bindings
@@ -116,7 +120,8 @@ public class RobotContainer {
             m_Arm.moveArm(ArmPos.STORED_POSITION)));
         rightTriggerO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.L3_SCORING)));//TODO: ADD EXTEND DEADMAN
-        
+
+
             /* TODO: LED LIGHTS
         leftBumperO.onTrue();
         rightBumperO.onTrue();
@@ -127,7 +132,15 @@ public class RobotContainer {
         leftTriggerD.whileTrue(m_intake.runIntake());
         rightBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        //leftBumperD.onTrue();//TODO: ADD SLOW BUTTON
+            
+        //Gives the left bumper a "toggle" mode (press it to activate and press it again to deactivate)
+        driveController.leftBumper().onTrue(new InstantCommand(() -> {
+            joystickSensitivity = 0.5;
+
+        }))
+        .onFalse(new InstantCommand(() -> {
+            joystickSensitivity = 1.0;
+        }));
 
 
     //TESTING CONTROLS
@@ -186,4 +199,5 @@ public class RobotContainer {
 
         return value;
     }
+
 }
