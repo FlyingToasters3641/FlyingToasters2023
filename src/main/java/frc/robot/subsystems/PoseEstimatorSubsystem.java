@@ -34,6 +34,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   //private final PhotonCamera photonCamera;
   private final DrivetrainSubsystem drivetrainSubsystem;
+  
   //private final PhotonPoseEstimator photonPoseEstimator;
 
   // Kalman Filter Configuration. These can be "tuned-to-taste" based on how much
@@ -102,22 +103,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // photonEstimatedRobotPose = photonPoseEstimator.update();
-    // if (photonEstimatedRobotPose.isPresent()) {
-    //   EstimatedRobotPose pose = photonEstimatedRobotPose.get();
-    //   // Max distance you want a tag to be read at. Found issues after 15 feet away
-    //   // from tag while moving.
-    //   if (Math.hypot(pose.estimatedPose.getX(), pose.estimatedPose.getY()) < 5.25) {
-    //     // Error with WPI code https://github.com/wpilibsuite/allwpilib/issues/4952
-    //     try {
-    //       poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-    //     } catch (ConcurrentModificationException e) {
-    //     }
-    //   }
-
-    // }
-    // Update pose estimator with drivetrain sensors
-    poseEstimator.update(
+      poseEstimator.update(
         drivetrainSubsystem.getGyroscopeRotation(),
         drivetrainSubsystem.getModulePositions());
 
@@ -131,6 +117,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     } else {
       field2d.setRobotPose(getCurrentPose());
     }
+    System.out.println(getFomattedPose());
   }
 
   private String getFomattedPose() {
