@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotState;
@@ -55,6 +56,7 @@ public class Arm extends SubsystemBase {
         public static final double EX_KI = 0.0;
         public static final double EX_KD = 0.004; // 0.0001;
         public static final double EX_KF = 0.0005;
+        public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
 
         public static final double ERROR = 5.0; // degrees
@@ -133,11 +135,11 @@ public class Arm extends SubsystemBase {
     }
 
     protected double getExtError(double target) {
-        return target - getArmAbsolutePositionDegrees();
+        return target - getExtenderAbsolutePosition();
     }
 
-    protected boolean isExtAtPos(double angle) {
-        return Math.abs(getExtError(angle)) < kArm.ERROR;
+    protected boolean isExtAtPos(double pos) {
+        return Math.abs(getExtError(pos)) < 1;
     }
 
     protected double getArmAbsolutePositionDegrees() {
@@ -274,8 +276,19 @@ public class Arm extends SubsystemBase {
             m_extenderTarget = 0;
         }
 
-        setExtenderPosition(m_extenderTarget, 0.4);
+        // Maintain extender setpoint and compute feedforward.
+        //  Compute a feedforward based on the arm's rotation angle.
+        //   We only want to add a feedforward if the elevator needs help against gravity.
+        var armAngleDegrees = getArmEncoderPositionDegrees();
+        double extenderFeedForward = 0.4 * Math.sin(Units.degreesToRadians(armAngleDegrees));
+        if ((m_extenderTarget == 0.0 && Math.signum(extenderFeedForward) == 1.0) ||
+            (m_extenderTarget > 0.0 && Math.signum(extenderFeedForward) == -1.0)) {
+                extenderFeedForward = 0.0;  // don't fight gravity if its helping us
+        }
+        SmartDashboard.putNumber("EXTENDER: Feedforward", extenderFeedForward);
+        setExtenderPosition(m_extenderTarget, extenderFeedForward);
 
+        // Maintain arm setpoint and compute feedforward
         if (m_targetArmPosition != null) {
             m_targetArmPosition = normalizeAngle(m_targetArmPosition);
 
