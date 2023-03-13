@@ -279,10 +279,10 @@ public class Arm extends SubsystemBase {
         //  Compute a feedforward based on the arm's rotation angle.
         //   We only want to add a feedforward if the elevator needs help against gravity.
         var armAngleDegrees = getArmEncoderPositionDegrees();
-        double extenderFeedForward = 0.4 * Math.sin(Units.degreesToRadians(armAngleDegrees));
+        double extenderFeedForward = kArm.EX_KG * Math.sin(Units.degreesToRadians(armAngleDegrees));
         if ((m_extenderTarget == 0.0 && Math.signum(extenderFeedForward) == 1.0) ||
             (m_extenderTarget > 0.0 && Math.signum(extenderFeedForward) == -1.0)) {
-                extenderFeedForward = 0.0;  // don't fight gravity if its helping us
+                extenderFeedForward = 0.0;  // don't fight gravity if it's helping us
         }
         setExtenderPosition(m_extenderTarget, extenderFeedForward);
 
