@@ -1,12 +1,20 @@
 package frc.robot;
 
+import java.util.Map;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,6 +35,8 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    public Alliance alliance = Alliance.Invalid;
+
     /* Controllers */
     // private final Joystick driver = new Joystick(0);
     private final CommandXboxController driveController = new CommandXboxController(0);
@@ -128,9 +138,49 @@ public class RobotContainer {
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
+    private Map<String, Command> eventMap = Map.of(
+        // "extendHigh",
+        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.HIGH_CUBE)
+        //     .alongWith(new RunIntakeCommand(intakeSubsystem))
+        //     .withTimeout(1.5),
+        // "extendMid",
+        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.MID_CUBE)
+        //     .withTimeout(1),
+        // "outtake",
+        // new WaitCommand(0.5).deadlineWith(new ReverseIntakeCommand(intakeSubsystem)),
+        // "extendIn",
+        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, new ArmSetpoint(30, 0, 45))
+        //     .withTimeout(0.5).andThen(
+        //         new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.TRANSIT)
+        //             .withTimeout(0.5)),
+        // // "autoBalance",
+        // // new AutoBalance(drivetrainSubsystem, poseEstimator));
+        // "autoBalance",
+        // new AutoBalance(drivetrainSubsystem, poseEstimator),
+        // "goToIntakeMode",
+        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem,
+        //     Constants.ArmSetpoints.GROUND_CUBE_PICKUP),
+        // "startIntake",
+        // new WaitCommand(1.5).deadlineWith(new RunIntakeCommand(intakeSubsystem)),
+        // "cone",
+        // new InstantCommand(() -> {
+        //   PiecePicker.toggle(false);
+        //   ledSubsystem.setGamePiece(GamePiece.CONE);
+        // }),
+        // "cube",
+        // new InstantCommand(() -> {
+        //   PiecePicker.toggle(true);
+        //   ledSubsystem.setGamePiece(GamePiece.CUBE);
+        // })
+        );
+  
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
-         chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
+        // chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
+
+        chooser.setDefaultOption("TestAuton",
+            makeAutoBuilderCommand("New Path", new PathConstraints(1.5, 1)));
+ 
          //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
         // System.out.println("CURRENT: " + moduleStates.toString());
@@ -173,4 +223,32 @@ public class RobotContainer {
 
         return value;
     }
+
+    private CommandBase makeAutoBuilderCommand(String pathName, PathConstraints constraints) {
+        // return new PPAutoBuilder(drivetrainSubsystem, poseEstimator, pathName,
+        //     constraints,
+        //     true, eventMap);
+        var path = PathPlanner.loadPath(pathName, constraints);
+        
+        m_poseEstimator.addTrajectory(path);
+        // controllerCommand = DrivetrainSubsystem.followTrajectory(driveSystem,
+        // poseEstimatorSystem, alliancePath);
+        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+            m_poseEstimator::getCurrentPose,
+            m_poseEstimator::setCurrentPose,
+            Constants.DrivetrainConstants.KINEMATICS,
+            Constants.PPAutoConstants.translationConstants,
+            Constants.PPAutoConstants.rotationConstants,
+            m_drivetrainSubsystem::setModuleStates,
+            eventMap,
+            true,
+            m_drivetrainSubsystem);
+        return autoBuilder.fullAuto(path);
+    
+      }
+      
+    public void onAllianceChanged(Alliance currentAlliance) {
+        alliance = currentAlliance;
+        // m_poseEstimator.setAlliance(currentAlliance);
+      }
 }
