@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,6 +25,7 @@ import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Arm.kArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,15 +43,26 @@ public class RobotContainer {
     // private final Joystick driver = new Joystick(0);
     private final CommandXboxController driveController = new CommandXboxController(0);
     private final CommandXboxController operatorController = new CommandXboxController(1);
+
+    Trigger leftTriggerO = operatorController.leftTrigger();
+
+    Trigger rightTriggerO = operatorController.rightTrigger();
+
+    Trigger rightTriggerD = driveController.rightTrigger();
+
+    Trigger leftTriggerD = driveController.leftTrigger();
+
+    private double joystickSensitivity = 1; 
+
+    //bumpers
+    Trigger leftBumperO = operatorController.leftBumper(); 
     
-    
-    Trigger leftTriggerO = operatorController.leftTrigger(); // Creates a new JoystickButton object for the `left bumper` button on exampleController
-    
-    Trigger rightTriggerO = operatorController.rightTrigger(); 
-    
-    Trigger rightTriggerD = driveController.rightTrigger(); 
+    Trigger rightBumperO  = operatorController.rightBumper(); 
     
     Trigger rightBumperD = driveController.rightBumper(); 
+    
+    Trigger leftBumperD = driveController.leftBumper(); 
+
 
     /* Drive Controls */
     // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -65,6 +78,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Timer reseedTimer = new Timer();
 
+    private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem();
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
@@ -83,9 +97,11 @@ public class RobotContainer {
                 new FieldOrientedDriveCommand(
                         m_drivetrainSubsystem,
                         () -> m_poseEstimator.getCurrentPose().getRotation(),
-                        () -> -modifyAxis(driveController.getLeftY()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getLeftX()) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getRightX())
+                        () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity)
+                                * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getRightX() * joystickSensitivity)
                                 * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
 
         // Configure the button bindings
@@ -105,37 +121,52 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // driveController.y().onTrue(new SequentialCommandGroup(
-        //         m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        // driveController.x().onTrue(new SequentialCommandGroup(
-        //         m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        
-        //Actual TODO: ADD SLOW MODE AND BALENCE
+    //OPPERATOR BUTTON BINDINGS
+        operatorController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
         operatorController.y().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
-        operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
-        operatorController.x().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
-
-        leftTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L2_SCORING)));
-
-        rightTriggerO.whileTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.L3_SCORING)));
-
-        rightTriggerD.whileTrue(m_intake.runIntake());//run intake forward
-
-        rightBumperD.whileTrue(m_intake.reverseIntake());//run intake backward
-
-        driveController.x().whileTrue(m_Arm.extend(true));
-
+                 m_Arm.moveArm(ArmPos.L2_SCORING)));
         
+        leftTriggerO.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
-        //Driver Buttons 
-        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //LED Lights
+        operatorController.rightBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(3);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+        operatorController.leftBumper().onTrue(new InstantCommand(() -> {
+            m_LEDSubsystem.ledSwitch(2);
+        }))
+        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+
+
+    //DRIVER BUTTON BINDINGS
+        rightTriggerD.whileTrue(m_intake.reverseIntake());
+        leftTriggerD.whileTrue(m_intake.runIntake());
+        rightBumperD.onTrue(new SequentialCommandGroup(
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+            
+        //SLOW MODE
+        driveController.leftBumper().onTrue(new InstantCommand(() -> {
+            joystickSensitivity = 0.5;
+        }))
+        .onFalse(new InstantCommand(() -> {
+            joystickSensitivity = 1.0;
+        }));
+
+
+    //TESTING CONTROLS
+        // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
+        // driveController.y().onTrue(m_Arm.extend(0));
+        // driveController.a().whileTrue(m_Arm.extendOpenLoop());
+        // driveController.a().onTrue(m_intake.extendIntake()); 
+        // driveController.b().onTrue(m_intake.retractIntake());
+        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private Map<String, Command> eventMap = Map.of(
@@ -192,6 +223,7 @@ public class RobotContainer {
         // new SwerveModuleState(0.5, Rotation2d.fromDegrees(225))
         // });
         // }));;
+
     }
 
     /**
