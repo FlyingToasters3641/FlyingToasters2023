@@ -2,6 +2,9 @@ package frc.robot;
 
 import java.util.Map;
 
+import com.pathplanner.lib.auto.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -65,6 +68,48 @@ public final class Constants {
   }
 
   public static final double stickDeadband = 0.1;
+
+  // Original auton constants
+  public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+
+    public static final double kPXController = 1;
+    public static final double kPYController = 1;
+    public static final double kPThetaController = 1;
+
+    /* Constraint for the motion profilied robot angle controller */
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+  }
+
+  // PathPlanner constants
+  public static class PPAutoConstants {
+    public static TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI, 2 / Math.PI);
+    public static double THETA_kP = 2;
+    public static double THETA_kI = 0.0;
+    public static double THETA_kD = 0.0;
+
+    public static double X_kP = 5;
+    public static double X_kI = 0.0;
+    public static double X_kD = 0.0;
+
+    public static double Y_kP = 5;
+    public static double Y_kI = 0.0;
+    public static double Y_kD = 0.0;
+
+    public static PIDConstants translationConstants = new PIDConstants(X_kP, X_kI, X_kD);
+    public static PIDConstants rotationConstants = new PIDConstants(THETA_kP, THETA_kI, THETA_kD);
+
+    public static PIDController translationController = new PIDController(Constants.PPAutoConstants.X_kP,
+        Constants.PPAutoConstants.X_kI, Constants.PPAutoConstants.X_kD);
+    public static PIDController strafeController = new PIDController(Constants.PPAutoConstants.Y_kP,
+        Constants.PPAutoConstants.Y_kI, Constants.PPAutoConstants.Y_kD);
+    public static PIDController thetaController = new PIDController(Constants.PPAutoConstants.THETA_kP,
+        Constants.PPAutoConstants.THETA_kI, Constants.PPAutoConstants.THETA_kD);
+  }
 
   public static final class DrivetrainConstants {
 
@@ -201,21 +246,6 @@ public final class Constants {
     public static final ProfiledPIDController xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
     public static final ProfiledPIDController yController = new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
     public static final ProfiledPIDController omegaController = new ProfiledPIDController(2, 0, 0, OMEGA_CONSTRAINTS);
-  }
-
-  public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
-
-    public static final double kPXController = 1;
-    public static final double kPYController = 1;
-    public static final double kPThetaController = 1;
-
-    /* Constraint for the motion profilied robot angle controller */
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
-        kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 
   /* Default settings for trajectories */

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 //import com.pathplanner.lib.PathPlannerTrajectory;
 //import com.pathplanner.lib.commands.PPSwerveControllerCommand;
@@ -286,6 +287,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void reseedSteerMotorOffsets() {
     Arrays.stream(swerveModules).forEach(SwerveModule::reseedSteerMotorOffset);
   }
+
+public void setVelocities(Double p0, Double p1, Double p2) {
+    drive(new ChassisSpeeds(p0, p1, p2));
+    SmartDashboard.putNumber("Commanded speeds x", p0);
+    SmartDashboard.putNumber("Commanded speeds x", p1);
+    SmartDashboard.putNumber("Commanded speeds x", p2);
+}
+
 
   /**
    * Creates a command to follow a Trajectory on the drivetrain.

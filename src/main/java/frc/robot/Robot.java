@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -185,6 +187,7 @@ private final Alert logReceiverQueueAlert =
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    checkDriverStationUpdate();
   }
 
   /** This function is called periodically during operator control. */
@@ -200,4 +203,21 @@ private final Alert logReceiverQueueAlert =
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+
+    /**
+   * Checks the driverstation alliance. We have have to check repeatedly because
+   * we don't know when the
+   * driverstation/FMS will connect, and the alliance can change at any time in
+   * the shop.
+   */
+  private void checkDriverStationUpdate() {
+    // https://www.chiefdelphi.com/t/getalliance-always-returning-red/425782/27
+    Alliance currentAlliance = DriverStation.getAlliance();
+
+    // If we have data, and have a new alliance from last time
+    if (DriverStation.isDSAttached() && currentAlliance != m_robotContainer.alliance) {
+      m_robotContainer.onAllianceChanged(currentAlliance);
+      //Constants.DrivetrainConstants.alliance = currentAlliance;
+    }
+  }
 }
