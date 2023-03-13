@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotState;
@@ -285,7 +284,6 @@ public class Arm extends SubsystemBase {
             (m_extenderTarget > 0.0 && Math.signum(extenderFeedForward) == -1.0)) {
                 extenderFeedForward = 0.0;  // don't fight gravity if its helping us
         }
-        SmartDashboard.putNumber("EXTENDER: Feedforward", extenderFeedForward);
         setExtenderPosition(m_extenderTarget, extenderFeedForward);
 
         // Maintain arm setpoint and compute feedforward
