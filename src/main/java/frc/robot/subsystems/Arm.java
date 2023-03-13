@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.IntakePos;
 import frc.lib.util.MotorHelper;
 
 public class Arm extends SubsystemBase {
@@ -28,8 +29,11 @@ public class Arm extends SubsystemBase {
     private AnalogPotentiometer m_exPot;
     private ArmFeedforward m_armFeedforward;
 
+    private IntakeEffector m_intake;
+
     double m_extenderTarget;
     private Double m_targetArmPosition = null;
+    private ArmPos m_targetArmState = null;
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
@@ -63,7 +67,9 @@ public class Arm extends SubsystemBase {
         public static final double MAX_POSITION = 180; // degrees
     }
 
-    public Arm() {
+    public Arm(IntakeEffector intake) {
+        m_intake = intake;
+
         m_armFeedforward = new ArmFeedforward(
                 kArm.KS,
                 kArm.KG,
@@ -177,13 +183,19 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        // return runOnce(() -> {
-        // m_targetArmPosition = normalizeAngle(angle.getAngle());
-        // });
+        return extend(0)  // always retract elevator before rotating arm
+        .andThen(() -> m_intake.retractIntake())  // always make sure in "Default" position before rotating
+        .andThen(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(1.0)
+        .andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+        .andThen(() -> extend(angle.getExtended()));
+    }
+
+    public Command extend(double position) {
         return run(() -> {
-            m_targetArmPosition = normalizeAngle(angle.getAngle());
-        }).until(() -> isArmAtPos(angle.getAngle()))
-                .andThen(() -> extend(angle.getExtended()));
+            m_extenderTarget = position;
+        }).until(() -> isExtAtPos(position))
+        .withTimeout(0.5); // don't wait forever - assume its close and bail
     }
 
     // A convinence function for moveArm method
@@ -214,21 +226,6 @@ public class Arm extends SubsystemBase {
                 0,
                 extFF,
                 ArbFFUnits.kVoltage);
-    }
-
-    public Command extend(double extendedPosition) {
-        return runOnce(() -> {
-            // m_extenderMotor.set(0.3);
-            m_extenderTarget = extendedPosition;
-            // System.out.println("yes that");
-        });
-        // .until(() -> {
-        // var isDone = isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0
-        // SmartDashboard.putBoolean("ARM Extender at setpoint (command finished)",
-        // extended);
-        // return isDone;
-        // });
-        // .finallyDo(end -> m_extenderMotor.set(0));
     }
 
     public Command extendOpenLoop() {

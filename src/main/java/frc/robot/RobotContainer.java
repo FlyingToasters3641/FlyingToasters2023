@@ -82,9 +82,8 @@ public class RobotContainer {
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
-    
-    private final Arm m_Arm = new Arm();
     private final IntakeEffector m_intake = new IntakeEffector();
+    private final Arm m_Arm = new Arm(m_intake);
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -128,6 +127,7 @@ public class RobotContainer {
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.L2_SCORING)));
+        operatorController.a().onTrue(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION));
         
         leftTriggerO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.STORED_POSITION)));

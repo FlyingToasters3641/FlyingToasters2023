@@ -254,20 +254,27 @@ public final class Constants {
     public static final Speeds defaultSpeed = Speeds.Med;
   }
 
+  public enum IntakePos {
+    DEFAULT,
+    FLOOR
+  }
+
   public enum ArmPos {
-    STORED_POSITION(-50, 0), 
-    GROUND_INTAKE_POSITION(-30, 0), 
-    SOLO_PLAYERSTATION_PICKUP(-10, 0), 
-    DOUBLE_PLAYERSTATION_PICKUP(90, 0), 
-    L2_SCORING(142, 0);
+    STORED_POSITION(-50, 0, IntakePos.DEFAULT), 
+    GROUND_INTAKE_POSITION(-30, kArm.EXTENDED_POSITION * 0.4, IntakePos.FLOOR), 
+    SOLO_PLAYERSTATION_PICKUP(-10, 0, IntakePos.DEFAULT), 
+    DOUBLE_PLAYERSTATION_PICKUP(90, 0, IntakePos.DEFAULT), 
+    L2_SCORING(142, 0, IntakePos.DEFAULT);
     // L3_SCORING(142, kArm.EXTENDED_POSITION); 
 
     private double angle;
     private double extendedPosition;
+    private IntakePos intakePosition;
 
-    private ArmPos(double angle, double extended) {
+    private ArmPos(double angle, double extended, IntakePos intakePosition) {
       this.angle = angle;
       this.extendedPosition = extended;
+      this.intakePosition = intakePosition;
     }
 
     public double getExtended() {
@@ -276,6 +283,10 @@ public final class Constants {
 
     public double getAngle() {
       return angle;
+    }
+
+    public IntakePos getIntakePosition() {
+      return intakePosition;
     }
   }
 
