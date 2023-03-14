@@ -18,6 +18,7 @@ public class LEDSubsystem extends SubsystemBase {
     //Two different timers for the code. Led Timer is for the coordinating of the stripes while Sparkle Timer coordinates the sparkles.
     private final Timer ledTimer = new Timer();
     private final Timer sparkleTimer = new Timer();
+    private final Timer greenTimer = new Timer();
 
     //Changes the status of the LED
     private boolean ledStatusSwitch;
@@ -69,6 +70,7 @@ public class LEDSubsystem extends SubsystemBase {
 
         ledTimer.start();
         sparkleTimer.start();
+        greenTimer.start();
     }
 
     
@@ -184,7 +186,6 @@ public class LEDSubsystem extends SubsystemBase {
             //Blinks Yellow every .2 seconds
             if (ledTimer.advanceIfElapsed(.2)) {
                 ledBlink++;
-                System.out.println(ledBlink);
                 }
             
                 if (ledBlink % 2 == 0){
@@ -192,7 +193,6 @@ public class LEDSubsystem extends SubsystemBase {
                 } else {
                 ledStatusSwitch = true;
                 }
-                System.out.println(ledStatusSwitch);
             
                 if (ledStatusSwitch) {
                 setColorSimplified("yellow", 8, 152);
@@ -204,7 +204,6 @@ public class LEDSubsystem extends SubsystemBase {
             //Blinks Purple every .2 seconds
             if (ledTimer.advanceIfElapsed(.2)) {
                 ledBlink++;
-                System.out.println(ledBlink);
                 }
             
                 if (ledBlink % 2 == 0){
@@ -212,7 +211,6 @@ public class LEDSubsystem extends SubsystemBase {
                 } else {
                 ledStatusSwitch = true;
                 }
-                System.out.println(ledStatusSwitch);
             
                 if (ledStatusSwitch) {
                 setColorSimplified("purple", 8, 152);
@@ -223,13 +221,27 @@ public class LEDSubsystem extends SubsystemBase {
             case 4:
             //Solid blue
                 setColorSimplified("blue", 8, 152);
+            case 5:
+            //blinks green every .2 seconds
+            if (greenTimer.advanceIfElapsed(2)) {
+                if (ledTimer.advanceIfElapsed(.2)) {
+                    ledBlink++;
+                    }
+                
+                    if (ledBlink % 2 == 0){
+                    ledStatusSwitch = false;
+                    } else {
+                    ledStatusSwitch = true;
+                    }
+                
+                    if (ledStatusSwitch) {
+                    setColorSimplified("green", 8, 152);
+                    } if (!ledStatusSwitch) {
+                    setColorSimplified("none", 8, 152);
+                }
+                ledSwitch(1);
         }
-
-        // System.out.println(ledTimer.get());
-
-        //Sets the CANdle led's to not activate at all
-        setColorSimplified("none", 0, 8);
-
+    }
     }
 
     
@@ -238,7 +250,7 @@ public class LEDSubsystem extends SubsystemBase {
     // }
 
     //This function just sets the colors using a string instead of using the specific RGBW values
-    public void setColorSimplified(String color, int index, int count) {
+    private void setColorSimplified(String color, int index, int count) {
         if (color.equals("blue")) {
             candle.setLEDs(0, 80, 255, 0, index, count);
         } else if (color.equals("orange")) {
@@ -247,6 +259,8 @@ public class LEDSubsystem extends SubsystemBase {
             candle.setLEDs(225, 80, 0, 0, index, count);
         } else if (color.equals("purple")) {
             candle.setLEDs(35, 0, 60, 0, index, count);
+        } else if (color.equals("green")) {
+            candle.setLEDs(47, 125, 41, 0, index, count);
         } else if (color.equals("none")) {
             candle.setLEDs(0, 0, 0, 0, index, count);
         } else if (color.equals("blue-white")) {
@@ -268,6 +282,8 @@ public class LEDSubsystem extends SubsystemBase {
             ledStatus = 3;
         } else if (status == 4) { //blue
             ledStatus = 4;
+        } else if (status == 5) { //timed green flash
+            ledStatus = 5;
         }
 
     }

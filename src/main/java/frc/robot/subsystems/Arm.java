@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.IntakePos;
 import frc.lib.util.MotorHelper;
 
 public class Arm extends SubsystemBase {
@@ -28,12 +29,15 @@ public class Arm extends SubsystemBase {
     private AnalogPotentiometer m_exPot;
     private ArmFeedforward m_armFeedforward;
 
+    private IntakeEffector m_intake;
+
     double m_extenderTarget;
     private Double m_targetArmPosition = null;
+    private ArmPos m_targetArmState = null;
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.0004; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.00009; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
         public static final double KD = 0;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
@@ -43,17 +47,17 @@ public class Arm extends SubsystemBase {
         public static final double KA = 0.00078541;// 0.0020898;
         public static final int LEFT_CURRENT_LIMIT = 39;
         public static final int RIGHT_CURRENT_LIMIT = 39;
-        public static final double MIN_PID_OUTPUT = -0.3;
-        public static final double MAX_PID_OUTPUT = 0.3;
-        public static final double SMART_MOTION_MAX_VELOCITY = 1500; // rpm
-        public static final double SMART_MOTION_MAX_ACCEL = 1000;
+        public static final double MIN_PID_OUTPUT = -0.5;
+        public static final double MAX_PID_OUTPUT = 0.5;
+        public static final double SMART_MOTION_MAX_VELOCITY = 9000; // rpm
+        public static final double SMART_MOTION_MAX_ACCEL = 14000;
         public static final double SMART_MOTION_MIN_VELOCITY = 0; // rpm
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.000071; // 0.025;// 0.015;
+        public static final double EX_KP = 0.000070; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.004; // 0.0001;
+        public static final double EX_KD = 0.0000004; // 0.0001;
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
@@ -63,7 +67,9 @@ public class Arm extends SubsystemBase {
         public static final double MAX_POSITION = 180; // degrees
     }
 
-    public Arm() {
+    public Arm(IntakeEffector intake) {
+        m_intake = intake;
+
         m_armFeedforward = new ArmFeedforward(
                 kArm.KS,
                 kArm.KG,
@@ -109,7 +115,7 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
+        //m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
         m_leftMotorPid.setSmartMotionMaxVelocity(kArm.SMART_MOTION_MAX_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(kArm.SMART_MOTION_MIN_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMaxAccel(kArm.SMART_MOTION_MAX_ACCEL, 0);
@@ -138,10 +144,10 @@ public class Arm extends SubsystemBase {
     }
 
     protected boolean isExtAtPos(double pos) {
-        return Math.abs(getExtError(pos)) < 1;
+        return Math.abs(getExtError(pos)) < 2;
     }
 
-    protected double getArmAbsolutePositionDegrees() {
+    public double getArmAbsolutePositionDegrees() {
         return (m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360);
     }
 
@@ -177,13 +183,31 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        // return runOnce(() -> {
-        // m_targetArmPosition = normalizeAngle(angle.getAngle());
-        // });
+        // return extend(0)  // always retract elevator before rotating arm
+        // //.andThen(() -> m_intake.retractIntake())  // always make sure in "Default" position before rotating
+        // .andThen(run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+        // .until(() -> {
+        //     var done = isArmAtPos(angle.getAngle());
+        //     System.out.println("Done: " + done + ", Target: " + angle.getAngle() + ", Current Angle: " + getArmAbsolutePositionDegrees());
+        //     return done;
+        // })
+        // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+        // .andThen(() -> extend(angle.getExtended())));
+
+        return extend(0).andThen(
+            run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+            .until(() -> isArmAtPos(angle.getAngle())).withTimeout(7)
+                .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+                    .andThen(extend(angle.getExtended())))
+        );
+    
+    }
+
+    public Command extend(double position) {
         return run(() -> {
-            m_targetArmPosition = normalizeAngle(angle.getAngle());
-        }).until(() -> isArmAtPos(angle.getAngle()))
-                .andThen(() -> extend(angle.getExtended()));
+            m_extenderTarget = position;
+        }).until(() -> isExtAtPos(position)).withTimeout(.5);
+        //.withTimeout(0.5); // don't wait forever - assume its close and bail
     }
 
     // A convinence function for moveArm method
@@ -216,21 +240,6 @@ public class Arm extends SubsystemBase {
                 ArbFFUnits.kVoltage);
     }
 
-    public Command extend(double extendedPosition) {
-        return runOnce(() -> {
-            // m_extenderMotor.set(0.3);
-            m_extenderTarget = extendedPosition;
-            // System.out.println("yes that");
-        });
-        // .until(() -> {
-        // var isDone = isExtAtPos(extended ? kArm.EXTENDED_POSITION : 0
-        // SmartDashboard.putBoolean("ARM Extender at setpoint (command finished)",
-        // extended);
-        // return isDone;
-        // });
-        // .finallyDo(end -> m_extenderMotor.set(0));
-    }
-
     public Command extendOpenLoop() {
         return run(() -> {
             m_extenderMotor.set(0.20);
@@ -254,9 +263,9 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
 
-        SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
+        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
         SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
-        SmartDashboard.putNumber("Extender: Absolute Encoder Pos (pot position)", getExtenderAbsolutePosition());
+        SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
 
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0);
         // SmartDashboard.putNumber("Arm: Setpoint velocity",

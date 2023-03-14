@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.commands.*;
 import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
@@ -83,9 +84,8 @@ public class RobotContainer {
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
-    
-    private final Arm m_Arm = new Arm();
     private final IntakeEffector m_intake = new IntakeEffector();
+    private final Arm m_Arm = new Arm(m_intake);
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -124,37 +124,57 @@ public class RobotContainer {
     private void configureButtonBindings() {
     //OPPERATOR BUTTON BINDINGS
         operatorController.x().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)));
+                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)))
+                 .onFalse(new SequentialCommandGroup(
+                    m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.y().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
+                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)))
+                 .onFalse(new SequentialCommandGroup(
+                    m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.L2_SCORING)));
+                //  .onFalse(new SequentialCommandGroup(
+                //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        operatorController.a().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
         
-        leftTriggerO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
+        leftTriggerO.onTrue(m_intake.runIntake(m_LEDSubsystem));
+            
+        rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
+            var pos = m_Arm.getArmAbsolutePositionDegrees();
+            var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) || 
+                (pos > (ArmPos.L2_SCORING.getAngle() + 10));
+                System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+            return outOfRange;
+        }
+        )).whileFalse(m_Arm.extend(0));
 
         
-        driveController.start().onTrue(new InstantCommand(() -> {
-            m_poseEstimator.resetFieldPosition();
-        }));
-        //LED Lights
+       //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(3);
         }))
         .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+        //purple
 
         operatorController.leftBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(2);
         }))
         .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+        //yellow
 
 
     //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
-        leftTriggerD.whileTrue(m_intake.runIntake());
+        leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
+        // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         rightBumperD.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
+        driveController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+
+        //todo: ground intake position B
+        //todo: reset Gyro; start button 8
             
         //SLOW MODE
         driveController.leftBumper().onTrue(new InstantCommand(() -> {
@@ -163,7 +183,10 @@ public class RobotContainer {
         .onFalse(new InstantCommand(() -> {
             joystickSensitivity = 1.0;
         }));
-
+        
+        driveController.start().onTrue(new InstantCommand(() -> {
+            m_poseEstimator.resetFieldPosition();
+        }));
 
     //TESTING CONTROLS
         // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
@@ -171,7 +194,7 @@ public class RobotContainer {
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         // driveController.a().onTrue(m_intake.extendIntake()); 
         // driveController.b().onTrue(m_intake.retractIntake());
-        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //driveController.b().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private Map<String, Command> eventMap = Map.of(
