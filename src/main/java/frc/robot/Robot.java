@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -34,6 +37,8 @@ import edu.wpi.first.hal.AllianceStationID;
  */
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
+  private NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+
 
   private RobotContainer m_robotContainer;
 

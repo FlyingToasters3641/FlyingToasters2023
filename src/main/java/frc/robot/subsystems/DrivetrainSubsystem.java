@@ -32,6 +32,7 @@ import com.ctre.phoenix.sensors.WPI_Pigeon2;
 //import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -60,10 +61,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private ChassisSpeeds desiredChassisSpeeds;
 
+  Rotation3d gyroOffset;
+
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
     pigeon.configMountPoseRoll(0);
     pigeon.configMountPoseYaw(0);
+
 
     ShuffleboardLayout frontLeftLayout = null;
     ShuffleboardLayout frontRightLayout = null;
@@ -137,6 +141,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
       }
       drive(new ChassisSpeeds());
     }));
+    gyroOffset = null;
+
   }
 
   /**
@@ -166,6 +172,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public Rotation2d getGyroscopeRotation() {
     return pigeon.getRotation2d();
   }
+  public Rotation3d getGyroscopeRotation3d() {
+    var rotation = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI).minus(gyroOffset);
+    SmartDashboard.putNumber("Roll2", rotation.getX());
+    SmartDashboard.putNumber("Pitch2", rotation.getY());
+    return rotation;
+  }
 
   public void setGyroscopeRotation(double angleDeg) {
     pigeon.setYaw(angleDeg);
@@ -175,6 +187,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return pigeon.getYaw();
 
   }
+
 
   public void resetGyro() {
     setGyroscopeRotation(0);
@@ -216,7 +229,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    if (gyroOffset == null) {gyroOffset = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI);}
+  SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
     // Set the swerve module states
     if (desiredChassisSpeeds != null) {
       var desiredStates = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(desiredChassisSpeeds);
