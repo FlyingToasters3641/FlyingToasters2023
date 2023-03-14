@@ -131,7 +131,7 @@ public class RobotContainer {
         operatorController.a().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.STORED_POSITION)));
         
-        //leftTriggerO.onTrue();
+        leftTriggerO.whileTrue(m_intake.runIntake());
             
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
