@@ -10,7 +10,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
     public class AutoBalance extends CommandBase {
         DrivetrainSubsystem drive;
         PoseEstimatorSubsystem poseEstimator;
-        PIDController pid = new PIDController(0.1, 0, 0);
+        PIDController pid = new PIDController(2, 0, 0);
         double pitch = 0.0;
         double roll = 0.0;
 
@@ -25,12 +25,12 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
         @Override
         public void execute() {
             pitch = drive.getGyroscopeRotation3d().getY();
-            roll = drive.getGyroscopeRotation3d().getZ();
+            roll = drive.getGyroscopeRotation3d().getX();
             SmartDashboard.putBoolean("Balancing", true);
-            SmartDashboard.putNumber("Calculated Balance pid", pid.calculate(roll));
-            SmartDashboard.putNumber("Pitch", pitch);
-            SmartDashboard.putNumber("Roll", roll);
-            drive.drive(new ChassisSpeeds(-pid.calculate(roll), 0, 0));
+            SmartDashboard.putNumber("Calculated Balance pid", pid.calculate(pitch + roll));
+            SmartDashboard.putNumber("Pitch", pitch * 180);
+            SmartDashboard.putNumber("Roll", roll * 180);
+            drive.drive(new ChassisSpeeds(-pid.calculate(pitch + roll), 0, 0));
         }
 
         @Override

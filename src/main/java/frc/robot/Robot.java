@@ -192,6 +192,7 @@ private final Alert logReceiverQueueAlert =
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
     checkDriverStationUpdate();
   }
 
