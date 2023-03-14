@@ -144,7 +144,7 @@ public class Arm extends SubsystemBase {
     }
 
     protected boolean isExtAtPos(double pos) {
-        return Math.abs(getExtError(pos)) < 1;
+        return Math.abs(getExtError(pos)) < 2;
     }
 
     protected double getArmAbsolutePositionDegrees() {
@@ -183,19 +183,31 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        return extend(0)  // always retract elevator before rotating arm
-        .andThen(() -> m_intake.retractIntake())  // always make sure in "Default" position before rotating
-        .andThen(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
-        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(1.0)
-        .andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
-        .andThen(() -> extend(angle.getExtended()));
+        // return extend(0)  // always retract elevator before rotating arm
+        // //.andThen(() -> m_intake.retractIntake())  // always make sure in "Default" position before rotating
+        // .andThen(run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+        // .until(() -> {
+        //     var done = isArmAtPos(angle.getAngle());
+        //     System.out.println("Done: " + done + ", Target: " + angle.getAngle() + ", Current Angle: " + getArmAbsolutePositionDegrees());
+        //     return done;
+        // })
+        // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+        // .andThen(() -> extend(angle.getExtended())));
+
+        return extend(0).andThen(
+            run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+            .until(() -> isArmAtPos(angle.getAngle())).withTimeout(7)
+                .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+                    .andThen(extend(angle.getExtended())))
+        );
+    
     }
 
     public Command extend(double position) {
         return run(() -> {
             m_extenderTarget = position;
-        }).until(() -> isExtAtPos(position))
-        .withTimeout(0.5); // don't wait forever - assume its close and bail
+        }).until(() -> isExtAtPos(position)).withTimeout(.5);
+        //.withTimeout(0.5); // don't wait forever - assume its close and bail
     }
 
     // A convinence function for moveArm method
@@ -251,9 +263,9 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
 
-        SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
+        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
         SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
-        SmartDashboard.putNumber("Extender: Absolute Encoder Pos (pot position)", getExtenderAbsolutePosition());
+        SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
 
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0);
         // SmartDashboard.putNumber("Arm: Setpoint velocity",

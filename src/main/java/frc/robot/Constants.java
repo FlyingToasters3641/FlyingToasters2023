@@ -207,11 +207,11 @@ public final class Constants {
         new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
     /** Voltage needed to overcome the motor’s static friction. kS */
-    public static final double DRIVE_kS = 0.6716;
+    public static final double DRIVE_kS = 0.28399267231;//0.6716;
     /** Voltage needed to hold (or "cruise") at a given constant velocity. kV */
-    public static final double DRIVE_kV = 2.5913;
+    public static final double DRIVE_kV = 2.190886470165;//2.5913;
     /** Voltage needed to induce a given acceleration in the motor shaft. kA */
-    public static final double DRIVE_kA = 0.19321;
+    public static final double DRIVE_kA = 0.178125854;//0.19321;
 
     public static final double STEER_kP = 0.2; // .3
     public static final double STEER_kI = 0.0;
@@ -260,10 +260,10 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-50, 0, IntakePos.DEFAULT), 
-    GROUND_INTAKE_POSITION(-30, kArm.EXTENDED_POSITION * 0.4, IntakePos.FLOOR), 
-    SOLO_PLAYERSTATION_PICKUP(-10, 0, IntakePos.DEFAULT), 
-    DOUBLE_PLAYERSTATION_PICKUP(90, 0, IntakePos.DEFAULT), 
+    STORED_POSITION(-61, 0, IntakePos.DEFAULT), 
+    GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR), 
+    SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT), 
+    DOUBLE_PLAYERSTATION_PICKUP(129, 0, IntakePos.DEFAULT), 
     L2_SCORING(142, 0, IntakePos.DEFAULT);
     // L3_SCORING(142, kArm.EXTENDED_POSITION); 
 

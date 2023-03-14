@@ -127,7 +127,6 @@ public class RobotContainer {
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.L2_SCORING)));
-        operatorController.a().onTrue(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION));
         
         leftTriggerO.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.STORED_POSITION)));
@@ -158,6 +157,7 @@ public class RobotContainer {
         .onFalse(new InstantCommand(() -> {
             joystickSensitivity = 1.0;
         }));
+        
 
 
     //TESTING CONTROLS
@@ -166,7 +166,7 @@ public class RobotContainer {
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         // driveController.a().onTrue(m_intake.extendIntake()); 
         // driveController.b().onTrue(m_intake.retractIntake());
-        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //driveController.b().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private Map<String, Command> eventMap = Map.of(

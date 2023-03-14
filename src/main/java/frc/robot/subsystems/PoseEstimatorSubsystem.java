@@ -103,32 +103,32 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
    * 
    * @param alliance alliance
    */
-  // public void setAlliance(Alliance alliance) {
-  //   var fieldTags = photonPoseEstimator.getFieldTags();
-  //   boolean allianceChanged = false;
-  //   switch (alliance) {
-  //     case Blue:
-  //       fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-  //       allianceChanged = (originPosition == OriginPosition.kRedAllianceWallRightSide);
-  //       originPosition = OriginPosition.kBlueAllianceWallRightSide;
-  //       break;
-  //     case Red:
-  //       fieldTags.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-  //       allianceChanged = (originPosition == OriginPosition.kBlueAllianceWallRightSide);
-  //       originPosition = OriginPosition.kRedAllianceWallRightSide;
-  //       break;
-  //     default:
-  //       // No valid alliance data. Nothing we can do about it
-  //   }
-  //   if (allianceChanged) {
-  //     // The alliance changed, which changes the coordinate system.
-  //     // Since a tag may have been seen and the tags are all relative to the
-  //     // coordinate system, the estimated pose
-  //     // needs to be transformed to the new coordinate system.
-  //     var newPose = flipAlliance(poseEstimator.getEstimatedPosition());
-  //     setCurrentPose(newPose);
-  //   }
-  // }
+  public void setAlliance(Alliance alliance) {
+    //var fieldTags = photonPoseEstimator.getFieldTags();
+    boolean allianceChanged = false;
+    switch (alliance) {
+      case Blue:
+        //fieldTags.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+        allianceChanged = (originPosition == OriginPosition.kRedAllianceWallRightSide);
+        originPosition = OriginPosition.kBlueAllianceWallRightSide;
+        break;
+      case Red:
+        //fieldTags.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+        allianceChanged = (originPosition == OriginPosition.kBlueAllianceWallRightSide);
+        originPosition = OriginPosition.kRedAllianceWallRightSide;
+        break;
+      default:
+        // No valid alliance data. Nothing we can do about it
+    }
+    if (allianceChanged) {
+      // The alliance changed, which changes the coordinate system.
+      // Since a tag may have been seen and the tags are all relative to the
+      // coordinate system, the estimated pose
+      // needs to be transformed to the new coordinate system.
+      var newPose = flipAlliance(poseEstimator.getEstimatedPosition());
+      setCurrentPose(newPose);
+    }
+  }
 
   @Override
   public void periodic() {
