@@ -135,7 +135,7 @@ public class RobotContainer {
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
         
-        driveController.b().onTrue(new InstantCommand(() -> {
+        driveController.start().onTrue(new InstantCommand(() -> {
             m_poseEstimator.resetFieldPosition();
         }));
         //LED Lights
