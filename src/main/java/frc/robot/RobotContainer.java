@@ -26,6 +26,7 @@ import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -134,6 +135,10 @@ public class RobotContainer {
             
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
+        
+        driveController.b().onTrue(new InstantCommand(() -> {
+            m_drivetrainSubsystem.resetGyro();
+        }));
         //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(3);
