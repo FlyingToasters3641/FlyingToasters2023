@@ -139,7 +139,7 @@ public class RobotContainer {
         operatorController.a().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.STORED_POSITION)));
         
-        leftTriggerO.onTrue(m_intake.runIntake());
+        leftTriggerO.onTrue(m_intake.runIntake(m_LEDSubsystem));
             
         rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
             var pos = m_Arm.getArmAbsolutePositionDegrees();
@@ -170,7 +170,7 @@ public class RobotContainer {
 
     //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
-        leftTriggerD.onTrue(m_intake.runIntake());
+        leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
         // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         rightBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman

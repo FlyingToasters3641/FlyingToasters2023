@@ -18,6 +18,7 @@ public class IntakeEffector extends SubsystemBase {
 
     private final DoubleSolenoid solenoid;
     int intakeFilterIteration = 5;
+
     private CANSparkMax m_rollers;
     private boolean intakeRetracted;
     SparkMaxPIDController PIDController;
@@ -59,7 +60,7 @@ public class IntakeEffector extends SubsystemBase {
     private double currentStore = 0;
     private int intakeIteration = 1;
 
-    public Command runIntake() {
+    public Command runIntake(LEDSubsystem m_leds) {
 
         return run(() -> {
 
@@ -85,6 +86,7 @@ public class IntakeEffector extends SubsystemBase {
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
+                    //Add led stuff here
                     PIDController.setReference(
                             m_rollers.getEncoder().getPosition(),
                             ControlType.kPosition
