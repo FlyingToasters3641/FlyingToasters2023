@@ -136,7 +136,7 @@ public class RobotContainer {
 
         
         driveController.b().onTrue(new InstantCommand(() -> {
-            m_drivetrainSubsystem.resetGyro();
+            m_poseEstimator.resetFieldPosition();
         }));
         //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
