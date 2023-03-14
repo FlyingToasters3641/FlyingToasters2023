@@ -21,12 +21,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.commands.*;
 import frc.robot.Constants.TeleopDriveConstants;
 import frc.robot.autonomous.commands.testAuton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.DrivetrainSubsystem;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -169,6 +171,7 @@ public class RobotContainer {
     //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake());
+        // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         rightBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         driveController.x().onTrue(new SequentialCommandGroup(
