@@ -186,7 +186,6 @@ public class LEDSubsystem extends SubsystemBase {
             //Blinks Yellow every .2 seconds
             if (ledTimer.advanceIfElapsed(.2)) {
                 ledBlink++;
-                System.out.println(ledBlink);
                 }
             
                 if (ledBlink % 2 == 0){
@@ -194,7 +193,6 @@ public class LEDSubsystem extends SubsystemBase {
                 } else {
                 ledStatusSwitch = true;
                 }
-                System.out.println(ledStatusSwitch);
             
                 if (ledStatusSwitch) {
                 setColorSimplified("yellow", 8, 152);
@@ -206,7 +204,6 @@ public class LEDSubsystem extends SubsystemBase {
             //Blinks Purple every .2 seconds
             if (ledTimer.advanceIfElapsed(.2)) {
                 ledBlink++;
-                System.out.println(ledBlink);
                 }
             
                 if (ledBlink % 2 == 0){
@@ -214,7 +211,6 @@ public class LEDSubsystem extends SubsystemBase {
                 } else {
                 ledStatusSwitch = true;
                 }
-                System.out.println(ledStatusSwitch);
             
                 if (ledStatusSwitch) {
                 setColorSimplified("purple", 8, 152);
@@ -230,7 +226,6 @@ public class LEDSubsystem extends SubsystemBase {
             if (greenTimer.advanceIfElapsed(2)) {
                 if (ledTimer.advanceIfElapsed(.2)) {
                     ledBlink++;
-                    System.out.println(ledBlink);
                     }
                 
                     if (ledBlink % 2 == 0){
@@ -238,7 +233,6 @@ public class LEDSubsystem extends SubsystemBase {
                     } else {
                     ledStatusSwitch = true;
                     }
-                    System.out.println(ledStatusSwitch);
                 
                     if (ledStatusSwitch) {
                     setColorSimplified("green", 8, 152);
