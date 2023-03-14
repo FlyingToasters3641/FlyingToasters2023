@@ -37,7 +37,7 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.0004; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.00009; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
         public static final double KD = 0;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
@@ -47,17 +47,17 @@ public class Arm extends SubsystemBase {
         public static final double KA = 0.00078541;// 0.0020898;
         public static final int LEFT_CURRENT_LIMIT = 39;
         public static final int RIGHT_CURRENT_LIMIT = 39;
-        public static final double MIN_PID_OUTPUT = -0.3;
-        public static final double MAX_PID_OUTPUT = 0.3;
-        public static final double SMART_MOTION_MAX_VELOCITY = 1500; // rpm
-        public static final double SMART_MOTION_MAX_ACCEL = 1000;
+        public static final double MIN_PID_OUTPUT = -0.5;
+        public static final double MAX_PID_OUTPUT = 0.5;
+        public static final double SMART_MOTION_MAX_VELOCITY = 9000; // rpm
+        public static final double SMART_MOTION_MAX_ACCEL = 14000;
         public static final double SMART_MOTION_MIN_VELOCITY = 0; // rpm
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.000071; // 0.025;// 0.015;
+        public static final double EX_KP = 0.000070; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.004; // 0.0001;
+        public static final double EX_KD = 0.0000004; // 0.0001;
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
@@ -115,7 +115,7 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
+        //m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
         m_leftMotorPid.setSmartMotionMaxVelocity(kArm.SMART_MOTION_MAX_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(kArm.SMART_MOTION_MIN_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMaxAccel(kArm.SMART_MOTION_MAX_ACCEL, 0);
@@ -147,7 +147,7 @@ public class Arm extends SubsystemBase {
         return Math.abs(getExtError(pos)) < 2;
     }
 
-    protected double getArmAbsolutePositionDegrees() {
+    public double getArmAbsolutePositionDegrees() {
         return (m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360);
     }
 
