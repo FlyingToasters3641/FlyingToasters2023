@@ -82,9 +82,8 @@ public class RobotContainer {
     private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
-    
-    private final Arm m_Arm = new Arm();
     private final IntakeEffector m_intake = new IntakeEffector();
+    private final Arm m_Arm = new Arm(m_intake);
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
@@ -158,6 +157,7 @@ public class RobotContainer {
         .onFalse(new InstantCommand(() -> {
             joystickSensitivity = 1.0;
         }));
+        
 
 
     //TESTING CONTROLS
@@ -166,7 +166,7 @@ public class RobotContainer {
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
         // driveController.a().onTrue(m_intake.extendIntake()); 
         // driveController.b().onTrue(m_intake.retractIntake());
-        //zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
+        //driveController.b().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
     }
 
     private Map<String, Command> eventMap = Map.of(
