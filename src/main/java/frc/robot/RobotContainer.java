@@ -127,9 +127,11 @@ public class RobotContainer {
                  m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                  m_Arm.moveArm(ArmPos.L2_SCORING)));
+        operatorController.a().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
         
-        leftTriggerO.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        //leftTriggerO.onTrue();
+            
         rightTriggerO.onTrue(m_Arm.extend(kArm.EXTENDED_POSITION)).onFalse(m_Arm.extend(0));
 
         //LED Lights
@@ -149,6 +151,8 @@ public class RobotContainer {
         leftTriggerD.whileTrue(m_intake.runIntake());
         rightBumperD.onTrue(new SequentialCommandGroup(
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+        driveController.x().onTrue(new SequentialCommandGroup(
+                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
             
         //SLOW MODE
         driveController.leftBumper().onTrue(new InstantCommand(() -> {
