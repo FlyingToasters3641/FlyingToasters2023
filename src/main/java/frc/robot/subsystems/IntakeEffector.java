@@ -17,7 +17,7 @@ import frc.robot.Constants.DrivetrainConstants;
 public class IntakeEffector extends SubsystemBase {
 
     private final DoubleSolenoid solenoid;
-    int intakeFilterIteration = 5;
+    int intakeFilterIteration = 20;
 
     private CANSparkMax m_rollers;
     private boolean intakeRetracted;
