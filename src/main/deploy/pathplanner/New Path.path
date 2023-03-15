@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 3.818994021916615,
-        "y": 6.428080562510332
+        "x": 1.881780622936246,
+        "y": 3.2457022761267744
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.818994021916616,
-        "y": 6.428080562510332
+        "x": 2.6123709712697205,
+        "y": 3.266461966951711
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -16,45 +16,25 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "ScoreL2",
+          "ScoreL3",
+          "Retract",
+          "RetractToRest"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 0
+        "waitTime": 0.0
       }
     },
     {
       "anchorPoint": {
-        "x": 2.1664298011135705,
-        "y": 2.9840376555753116
+        "x": 3.9230149154742757,
+        "y": 3.25
       },
       "prevControl": {
-        "x": 1.0892961134382504,
-        "y": 3.011687851472974
-      },
-      "nextControl": {
-        "x": 3.1592400496308928,
-        "y": 2.958552055993001
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": true,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.8476305633166823,
-        "y": 2.9282761655801086
-      },
-      "prevControl": {
-        "x": 2.6413976478746615,
-        "y": 2.9289427909212953
+        "x": 3.0027459395196567,
+        "y": 3.2582856641407725
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -63,12 +43,17 @@
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "AutoBalance"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     }
   ],
+  "maxVelocity": 1.0,
+  "maxAcceleration": 0.5,
+  "isReversed": null,
   "markers": []
 }

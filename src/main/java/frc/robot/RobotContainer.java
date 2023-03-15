@@ -55,16 +55,16 @@ public class RobotContainer {
 
     Trigger leftTriggerD = driveController.leftTrigger();
 
-    private double joystickSensitivity = 1; 
+    private double joystickSensitivity = 1;
 
     //bumpers
-    Trigger leftBumperO = operatorController.leftBumper(); 
-    
-    Trigger rightBumperO  = operatorController.rightBumper(); 
-    
-    Trigger rightBumperD = driveController.rightBumper(); 
-    
-    Trigger leftBumperD = driveController.leftBumper(); 
+    Trigger leftBumperO = operatorController.leftBumper();
+
+    Trigger rightBumperO = operatorController.rightBumper();
+
+    Trigger rightBumperD = driveController.rightBumper();
+
+    Trigger leftBumperD = driveController.leftBumper();
 
 
     /* Drive Controls */
@@ -123,74 +123,73 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-    //OPPERATOR BUTTON BINDINGS
+        //OPPERATOR BUTTON BINDINGS
         operatorController.x().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)))
-                 .onFalse(new SequentialCommandGroup(
-                    m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                        m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP)))
+                .onFalse(new SequentialCommandGroup(
+                        m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.y().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)))
-                 .onFalse(new SequentialCommandGroup(
-                    m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                        m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)))
+                .onFalse(new SequentialCommandGroup(
+                        m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.L2_SCORING)));
-                //  .onFalse(new SequentialCommandGroup(
-                //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                m_Arm.moveArm(ArmPos.L2_SCORING)));
+        //  .onFalse(new SequentialCommandGroup(
+        //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.a().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
-        
+                m_Arm.moveArm(ArmPos.STORED_POSITION)));
+
         leftTriggerO.onTrue(m_intake.runIntake(m_LEDSubsystem));
-            
+
         rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
-            var pos = m_Arm.getArmAbsolutePositionDegrees();
-            var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) || 
-                (pos > (ArmPos.L2_SCORING.getAngle() + 10));
-                System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
-            return outOfRange;
-        }
+                    var pos = m_Arm.getArmAbsolutePositionDegrees();
+                    var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) ||
+                            (pos > (ArmPos.L2_SCORING.getAngle() + 10));
+                    System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+                    return outOfRange;
+                }
         )).whileFalse(m_Arm.extend(0));
 
-        
+
         //driveController.b().onTrue(new InstantCommand(() -> {
-            //m_drivetrainSubsystem.resetGyro();
-       // }));
+        //m_drivetrainSubsystem.resetGyro();
+        // }));
         //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
-            m_LEDSubsystem.ledSwitch(3);
-        }))
-        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+                    m_LEDSubsystem.ledSwitch(3);
+                }))
+                .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
         //purple
 
         operatorController.leftBumper().onTrue(new InstantCommand(() -> {
-            m_LEDSubsystem.ledSwitch(2);
-        }))
-        .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+                    m_LEDSubsystem.ledSwitch(2);
+                }))
+                .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
         //yellow
 
 
-    //DRIVER BUTTON BINDINGS
+        //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
         // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         rightBumperD.onTrue(new SequentialCommandGroup(
-            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
+                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         driveController.x().onTrue(new SequentialCommandGroup(
-                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
         //todo: ground intake position B
         //todo: reset Gyro; start button 8
-            
+
         //SLOW MODE
         driveController.leftBumper().onTrue(new InstantCommand(() -> {
-            joystickSensitivity = 0.5;
-        }))
-        .onFalse(new InstantCommand(() -> {
-            joystickSensitivity = 1.0;
-        }));
-        
+                    joystickSensitivity = 0.5;
+                }))
+                .onFalse(new InstantCommand(() -> {
+                    joystickSensitivity = 1.0;
+                }));
 
 
-    //TESTING CONTROLS
+        //TESTING CONTROLS
         // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
         // driveController.y().onTrue(m_Arm.extend(0));
         // driveController.a().whileTrue(m_Arm.extendOpenLoop());
@@ -200,49 +199,23 @@ public class RobotContainer {
     }
 
     private Map<String, Command> eventMap = Map.of(
-        // "extendHigh",
-        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.HIGH_CUBE)
-        //     .alongWith(new RunIntakeCommand(intakeSubsystem))
-        //     .withTimeout(1.5),
-        // "extendMid",
-        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.MID_CUBE)
-        //     .withTimeout(1),
-        // "outtake",
-        // new WaitCommand(0.5).deadlineWith(new ReverseIntakeCommand(intakeSubsystem)),
-        // "extendIn",
-        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, new ArmSetpoint(30, 0, 45))
-        //     .withTimeout(0.5).andThen(
-        //         new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem, Constants.ArmSetpoints.TRANSIT)
-        //             .withTimeout(0.5)),
-        // // "autoBalance",
-        // // new AutoBalance(drivetrainSubsystem, poseEstimator));
-        // "autoBalance",
-        // new AutoBalance(drivetrainSubsystem, poseEstimator),
-        // "goToIntakeMode",
-        // new MoveToSetpoint(elevatorSubsystem, extensionSubsystem, wristSubsystem,
-        //     Constants.ArmSetpoints.GROUND_CUBE_PICKUP),
-        // "startIntake",
-        // new WaitCommand(1.5).deadlineWith(new RunIntakeCommand(intakeSubsystem)),
-        // "cone",
-        // new InstantCommand(() -> {
-        //   PiecePicker.toggle(false);
-        //   ledSubsystem.setGamePiece(GamePiece.CONE);
-        // }),
-        // "cube",
-        // new InstantCommand(() -> {
-        //   PiecePicker.toggle(true);
-        //   ledSubsystem.setGamePiece(GamePiece.CUBE);
-        // })
-        );
-  
+            "ScoreL3", m_Arm.extend(ArmPos.L3_SCORING.getExtended()).andThen(m_intake.reverseIntake().withTimeout(.75)),
+            "AutoBalance", new AutoBalance(m_drivetrainSubsystem, m_poseEstimator),
+            "ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING),//.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION))
+            "Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()),
+            "Outtake", m_intake.reverseIntake().withTimeout(0.5),
+            "Retract", m_Arm.extend(0),
+            "RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION)
+    );
+
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         // chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
 
         chooser.setDefaultOption("TestAuton",
-            makeAutoBuilderCommand("New Path", new PathConstraints(1.5, 1)));
- 
-         //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
+                makeAutoBuilderCommand("New Path", new PathConstraints(1, 0.5)));
+
+        //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
         // System.out.println("CURRENT: " + moduleStates.toString());
 
@@ -291,26 +264,26 @@ public class RobotContainer {
         //     constraints,
         //     true, eventMap);
         var path = PathPlanner.loadPath(pathName, constraints);
-        
+
         m_poseEstimator.addTrajectory(path);
         // controllerCommand = DrivetrainSubsystem.followTrajectory(driveSystem,
         // poseEstimatorSystem, alliancePath);
         SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-            m_poseEstimator::getCurrentPose,
-            m_poseEstimator::setCurrentPose,
-            Constants.DrivetrainConstants.KINEMATICS,
-            Constants.PPAutoConstants.translationConstants,
-            Constants.PPAutoConstants.rotationConstants,
-            m_drivetrainSubsystem::setModuleStates,
-            eventMap,
-            true,
-            m_drivetrainSubsystem);
+                m_poseEstimator::getCurrentPose,
+                m_poseEstimator::setCurrentPose,
+                Constants.DrivetrainConstants.KINEMATICS,
+                Constants.PPAutoConstants.translationConstants,
+                Constants.PPAutoConstants.rotationConstants,
+                m_drivetrainSubsystem::setModuleStates,
+                eventMap,
+                true,
+                m_drivetrainSubsystem);
         return autoBuilder.fullAuto(path);
-    
-      }
-      
+
+    }
+
     public void onAllianceChanged(Alliance currentAlliance) {
         alliance = currentAlliance;
         // m_poseEstimator.setAlliance(currentAlliance);
-      }
+    }
 }

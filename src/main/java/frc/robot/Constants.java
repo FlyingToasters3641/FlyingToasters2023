@@ -264,8 +264,8 @@ public final class Constants {
     GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR), 
     SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT), 
     DOUBLE_PLAYERSTATION_PICKUP(131, 14, IntakePos.DEFAULT), 
-    L2_SCORING(142, 0, IntakePos.DEFAULT);
-    // L3_SCORING(142, kArm.EXTENDED_POSITION); 
+    L2_SCORING(142, 0, IntakePos.DEFAULT),
+    L3_SCORING(142, kArm.EXTENDED_POSITION, IntakePos.DEFAULT);
 
     private double angle;
     private double extendedPosition;
