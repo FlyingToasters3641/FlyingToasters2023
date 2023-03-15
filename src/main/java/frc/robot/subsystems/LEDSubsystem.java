@@ -19,6 +19,7 @@ public class LEDSubsystem extends SubsystemBase {
     private final Timer ledTimer = new Timer();
     private final Timer sparkleTimer = new Timer();
     private final Timer greenTimer = new Timer();
+    private final Timer checkTimer = new Timer();
 
     //Changes the status of the LED
     private boolean ledStatusSwitch;
@@ -71,6 +72,7 @@ public class LEDSubsystem extends SubsystemBase {
         ledTimer.start();
         sparkleTimer.start();
         greenTimer.start();
+        checkTimer.start();
     }
 
     
@@ -96,6 +98,9 @@ public class LEDSubsystem extends SubsystemBase {
             ledDisable = false;
         }
 
+        if (checkTimer.advanceIfElapsed(1.0)) {
+            System.out.println(ledStatus);
+        }
         
           
         //This switch statement controls the color the LED's will be displaying at the time
