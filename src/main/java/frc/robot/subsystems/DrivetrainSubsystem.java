@@ -139,7 +139,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
       for (SwerveModule swerveModule : swerveModules) {
         swerveModule.setNeutralMode(NeutralMode.Brake);
       }
-      drive(new ChassisSpeeds());
+      drive(new ChassisSpeeds(0,0,0));
     }));
     gyroOffset = null;
 

@@ -205,7 +205,9 @@ public class RobotContainer {
             "Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()),
             "Outtake", m_intake.reverseIntake().withTimeout(0.5),
             "Retract", m_Arm.extend(0),
-            "RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION)
+            "RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION),
+            "GroundIntake", new SequentialCommandGroup(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION), m_intake.runIntake(m_LEDSubsystem)),
+            "StartIntake", m_intake.runIntake(m_LEDSubsystem).withTimeout(2)  // TODO: Tune timeout! this should stop before we try to score   );
     );
 
     private void configureAutonomousChooser() {
@@ -214,6 +216,9 @@ public class RobotContainer {
 
         chooser.setDefaultOption("TestAuton",
                 makeAutoBuilderCommand("New Path", new PathConstraints(1, 0.5)));
+
+                chooser.addOption("2GPBarrier",
+        makeAutoBuilderCommand("2GPBarrier", new PathConstraints(1, 0.5)));
 
         //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();

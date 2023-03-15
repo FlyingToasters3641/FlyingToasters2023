@@ -86,7 +86,7 @@ public class IntakeEffector extends SubsystemBase {
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
-                    m_leds.ledSwitch(5);
+                    //m_leds.ledSwitch(5);
                     PIDController.setReference(
                             m_rollers.getEncoder().getPosition(),
                             ControlType.kPosition
@@ -97,13 +97,13 @@ public class IntakeEffector extends SubsystemBase {
                     SmartDashboard.putBoolean("Intake is finished", true);
 
                 }).finallyDo(end -> {
-                    if (!end) {
+                   
                         m_rollers.set(0);
                         PIDController.setReference(
                                 m_rollers.getEncoder().getPosition(),
                                 ControlType.kPosition
                         );
-                    }
+                    
                 });
         // TODO: MAP TO A BUTTON FOR RUNNING THE ROLLERS
     }
