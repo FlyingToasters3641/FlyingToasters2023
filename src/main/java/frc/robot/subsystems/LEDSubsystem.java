@@ -283,7 +283,6 @@ public class LEDSubsystem extends SubsystemBase {
         } else if (status == 4) { //blue
             ledStatus = 4;
         } else if (status == 5) { //timed green flash
-            greenTimer.start();
             ledStatus = 5;
         }
 
