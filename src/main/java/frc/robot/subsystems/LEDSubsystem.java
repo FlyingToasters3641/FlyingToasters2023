@@ -98,9 +98,6 @@ public class LEDSubsystem extends SubsystemBase {
             ledDisable = false;
         }
 
-        if (checkTimer.advanceIfElapsed(1.0)) {
-            System.out.println(ledStatus);
-        }
         
           
         //This switch statement controls the color the LED's will be displaying at the time
@@ -227,6 +224,7 @@ public class LEDSubsystem extends SubsystemBase {
             //Solid blue
                 setColorSimplified("blue", 8, 152);
             case 5:
+            System.out.println("case 5 is being called");
             //blinks green every .2 seconds
             if (greenTimer.advanceIfElapsed(2.0)) {
                 if (ledTimer.advanceIfElapsed(.2)) {
