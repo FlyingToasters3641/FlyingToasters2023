@@ -174,8 +174,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   public Rotation3d getGyroscopeRotation3d() {
     var rotation = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI).minus(gyroOffset);
-    SmartDashboard.putNumber("Roll2", rotation.getX());
-    SmartDashboard.putNumber("Pitch2", rotation.getY());
+    // SmartDashboard.putNumber("Roll2", rotation.getX());
+    // SmartDashboard.putNumber("Pitch2", rotation.getY());
     return rotation;
   }
 
@@ -230,7 +230,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (gyroOffset == null) {gyroOffset = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI);}
-  SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
+  // SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
     // Set the swerve module states
     if (desiredChassisSpeeds != null) {
       var desiredStates = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(desiredChassisSpeeds);
@@ -246,13 +246,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
       setModuleStates(desiredStates);
     }
-    SmartDashboard.putNumberArray("Drivetrain/SwerveStates", swerveModulesToNTValues(swerveModules));
+    // SmartDashboard.putNumberArray("Drivetrain/SwerveStates", swerveModulesToNTValues(swerveModules));
 
     int i = 0;
     for(SwerveModule mod : swerveModules){
-      SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
-      SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);    
+      // SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
+      // SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
+      // SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);
       i++;
   }
 
@@ -304,9 +304,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 public void setVelocities(Double p0, Double p1, Double p2) {
     drive(new ChassisSpeeds(p0, p1, p2));
-    SmartDashboard.putNumber("Commanded speeds x", p0);
-    SmartDashboard.putNumber("Commanded speeds x", p1);
-    SmartDashboard.putNumber("Commanded speeds x", p2);
+    // SmartDashboard.putNumber("Commanded speeds x", p0);
+    // SmartDashboard.putNumber("Commanded speeds x", p1);
+    // SmartDashboard.putNumber("Commanded speeds x", p2);
 }
 
 

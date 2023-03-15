@@ -194,11 +194,12 @@ public class Arm extends SubsystemBase {
         // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
         // .andThen(() -> extend(angle.getExtended())));
 
-        return extend(0).andThen(
-            run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
-            .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
-                .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
-                    .andThen(extend(angle.getExtended())))
+        return run(() -> m_intake.retractIntake())
+                .andThen(extend(0).andThen(
+                    run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+                    .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
+                        .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+                            .andThen(extend(angle.getExtended()))))
         );
     
     }
@@ -217,8 +218,8 @@ public class Arm extends SubsystemBase {
                 CANSparkMax.ControlType.kPosition,
                 0,
                 armFF);
-        SmartDashboard.putNumber("reference target", target);
-        SmartDashboard.putNumber("Computed FF", armFF);
+//        SmartDashboard.putNumber("reference target", target);
+//        SmartDashboard.putNumber("Computed FF", armFF);
     }
 
     // Sets a target for the arm to reach for the PID loop
@@ -258,16 +259,16 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
-        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Raw)", m_leftArmMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
-        SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
-
-        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
-        SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
-        SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
-
-        SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0);
+//        SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
+//        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Raw)", m_leftArmMotor.getEncoder().getPosition());
+//        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
+//        SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
+//
+//        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
+//        SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
+//        SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
+//
+//        SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0);
         // SmartDashboard.putNumber("Arm: Setpoint velocity",
         // m_currentSetpoint.velocity);
 
@@ -306,13 +307,13 @@ public class Arm extends SubsystemBase {
                     Units.degreesToRadians(getArmEncoderPositionDegrees()),
                     getArmEncoderVelocityDegreesSec() * Math.PI / 180.0);
 
-            SmartDashboard.putNumber("Arm: Computed feedforward", armFeedForward);
+            // SmartDashboard.putNumber("Arm: Computed feedforward", armFeedForward);
 
             m_leftMotorPid.setReference(degreesToArmEncoderRotations(m_targetArmPosition),
                     ControlType.kSmartMotion, 0, armFeedForward, ArbFFUnits.kVoltage);
         }
 
-        SmartDashboard.putNumber("Extender target", m_extenderTarget);
+        // SmartDashboard.putNumber("Extender target", m_extenderTarget);
     }
 
 }
