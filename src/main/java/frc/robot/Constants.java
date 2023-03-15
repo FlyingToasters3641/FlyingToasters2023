@@ -16,7 +16,7 @@ import frc.robot.subsystems.swerve.ModuleConfiguration;
 
 public final class Constants {
   public static final double stickDeadband = 0.1;
-  public static final String LOGS_FOLDER = "/media/sda2/";
+  public static final String LOGS_FOLDER = "/home/lvuser/";
   // Original auton constants
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
     public static final double kMaxSpeedMetersPerSecond = 3;

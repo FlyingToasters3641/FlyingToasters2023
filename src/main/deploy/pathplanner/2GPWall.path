@@ -1,0 +1,91 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.9000468313436627,
+        "y": 4.9028822884034655
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.520981941269439,
+        "y": 4.932456149634522
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ScoreL2",
+          "Outtake",
+          "Retract",
+          "RetractToRest"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.390634701408292,
+        "y": 4.642226393827788
+      },
+      "prevControl": {
+        "x": 5.391676059393786,
+        "y": 4.639906875299863
+      },
+      "nextControl": {
+        "x": 5.391676059393786,
+        "y": 4.639906875299863
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.888449238704033,
+        "y": 4.448082693040386
+      },
+      "prevControl": {
+        "x": 2.585406568382584,
+        "y": 4.491109761733412
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ScoreL2",
+          "Outtake",
+          "RetractToRest"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.7774857954545455,
+      "names": [
+        "GroundIntake",
+        "StartIntake"
+      ]
+    }
+  ]
+}
