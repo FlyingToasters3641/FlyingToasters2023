@@ -86,7 +86,7 @@ public class IntakeEffector extends SubsystemBase {
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
-                    //TODO: Add led stuff here
+                    m_leds.ledSwitch(5);
                     PIDController.setReference(
                             m_rollers.getEncoder().getPosition(),
                             ControlType.kPosition
