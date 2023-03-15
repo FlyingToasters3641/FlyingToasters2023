@@ -29,7 +29,6 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -151,10 +150,7 @@ public class RobotContainer {
         )).whileFalse(m_Arm.extend(0));
 
         
-        //driveController.b().onTrue(new InstantCommand(() -> {
-            //m_drivetrainSubsystem.resetGyro();
-       // }));
-        //LED Lights
+       //LED Lights
         operatorController.rightBumper().onTrue(new InstantCommand(() -> {
             m_LEDSubsystem.ledSwitch(3);
         }))
@@ -188,7 +184,9 @@ public class RobotContainer {
             joystickSensitivity = 1.0;
         }));
         
-
+        driveController.start().onTrue(new InstantCommand(() -> {
+            m_poseEstimator.resetFieldPosition();
+        }));
 
     //TESTING CONTROLS
         // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
