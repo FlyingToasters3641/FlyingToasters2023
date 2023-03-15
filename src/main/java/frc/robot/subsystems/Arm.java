@@ -144,7 +144,7 @@ public class Arm extends SubsystemBase {
     }
 
     protected boolean isExtAtPos(double pos) {
-        return Math.abs(getExtError(pos)) < 2;
+        return Math.abs(getExtError(pos)) < 4;
     }
 
     public double getArmAbsolutePositionDegrees() {
