@@ -70,6 +70,7 @@ public class LEDSubsystem extends SubsystemBase {
 
         ledTimer.start();
         sparkleTimer.start();
+        greenTimer.start();
     }
 
     
@@ -239,7 +240,6 @@ public class LEDSubsystem extends SubsystemBase {
                     setColorSimplified("none", 8, 152);
                 }
                 ledSwitch(1);
-                greenTimer.stop();
         }
     }
     }
