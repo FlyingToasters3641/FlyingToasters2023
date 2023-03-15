@@ -70,7 +70,6 @@ public class LEDSubsystem extends SubsystemBase {
 
         ledTimer.start();
         sparkleTimer.start();
-        greenTimer.start();
     }
 
     
@@ -223,7 +222,7 @@ public class LEDSubsystem extends SubsystemBase {
                 setColorSimplified("blue", 8, 152);
             case 5:
             //blinks green every .2 seconds
-            if (greenTimer.advanceIfElapsed(2)) {
+            if (greenTimer.advanceIfElapsed(2.0)) {
                 if (ledTimer.advanceIfElapsed(.2)) {
                     ledBlink++;
                     }
@@ -240,6 +239,7 @@ public class LEDSubsystem extends SubsystemBase {
                     setColorSimplified("none", 8, 152);
                 }
                 ledSwitch(1);
+                greenTimer.stop();
         }
     }
     }
@@ -283,6 +283,7 @@ public class LEDSubsystem extends SubsystemBase {
         } else if (status == 4) { //blue
             ledStatus = 4;
         } else if (status == 5) { //timed green flash
+            greenTimer.start();
             ledStatus = 5;
         }
 
