@@ -220,6 +220,9 @@ public class RobotContainer {
         chooser.addOption("2GPBarrier",
         makeAutoBuilderCommand("2GPBarrier", new PathConstraints(3, 2)));
 
+        chooser.addOption("2GPWall",
+                makeAutoBuilderCommand("2GPWall", new PathConstraints(3, 2)));
+
         //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();
         // System.out.println("CURRENT: " + moduleStates.toString());
