@@ -102,7 +102,8 @@ public class RobotContainer {
                         () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity)
                                 * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
                         () -> -modifyAxis(driveController.getRightX() * joystickSensitivity)
-                                * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
+                                * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2,
+                        () -> driveController.getHID().getRightBumper()));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -179,7 +180,7 @@ public class RobotContainer {
         //todo: reset Gyro; start button 8
 
         //SLOW MODE
-        driveController.leftBumper().onTrue(new InstantCommand(() -> {
+        driveController.leftBumper().or(driveController.rightBumper()).onTrue(new InstantCommand(() -> {
                     joystickSensitivity = 0.5;
                 }))
                 .onFalse(new InstantCommand(() -> {

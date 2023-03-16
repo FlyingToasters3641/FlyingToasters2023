@@ -4,6 +4,7 @@ import static frc.robot.Constants.TeleopDriveConstants.ROTATION_RATE_LIMIT;
 import static frc.robot.Constants.TeleopDriveConstants.X_RATE_LIMIT;
 import static frc.robot.Constants.TeleopDriveConstants.Y_RATE_LIMIT;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -29,6 +30,7 @@ public class FieldOrientedDriveCommand extends CommandBase {
   private final DoubleSupplier translationXSupplier;
   private final DoubleSupplier translationYSupplier;
   private final DoubleSupplier rotationSupplier;
+  private final BooleanSupplier robotOrientedSupplier;
 
   private final SlewRateLimiter translateXRateLimiter = new SlewRateLimiter(X_RATE_LIMIT);
   private final SlewRateLimiter translateYRateLimiter = new SlewRateLimiter(Y_RATE_LIMIT);
@@ -51,12 +53,14 @@ public class FieldOrientedDriveCommand extends CommandBase {
       Supplier<Rotation2d> robotAngleSupplier,
       DoubleSupplier translationXSupplier,
       DoubleSupplier translationYSupplier,
-      DoubleSupplier rotationSupplier) {
+      DoubleSupplier rotationSupplier,
+      BooleanSupplier robotOrientedSupplier) {
     this.drivetrainSubsystem = drivetrainSubsystem;
     this.robotAngleSupplier = robotAngleSupplier;
     this.translationXSupplier = translationXSupplier;
     this.translationYSupplier = translationYSupplier;
     this.rotationSupplier = rotationSupplier;
+    this.robotOrientedSupplier = robotOrientedSupplier;
 
     addRequirements(drivetrainSubsystem);
   }
@@ -79,12 +83,15 @@ public class FieldOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
+    var x = translateXRateLimiter.calculate(translationXSupplier.getAsDouble());
+    var y = translateYRateLimiter.calculate(translationYSupplier.getAsDouble());
+    var rot = rotationRateLimiter.calculate(rotationSupplier.getAsDouble());
+
     drivetrainSubsystem.drive(
+      robotOrientedSupplier.getAsBoolean() ?
+        new ChassisSpeeds(x, y, rot) :
         ChassisSpeeds.fromFieldRelativeSpeeds(
-            translateXRateLimiter.calculate(translationXSupplier.getAsDouble()),
-            translateYRateLimiter.calculate(translationYSupplier.getAsDouble()),
-            rotationRateLimiter.calculate(rotationSupplier.getAsDouble()),
-            robotAngleSupplier.get()));
+            x, y, rot, robotAngleSupplier.get()));
   }
 
   @Override
