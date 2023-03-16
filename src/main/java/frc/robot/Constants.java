@@ -17,57 +17,9 @@ import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.swerve.ModuleConfiguration;
 
 public final class Constants {
-  private static final RobotType robot = RobotType.ROBOT_SIMBOT;
-  public static final double loopPeriodSecs = 0.02;
-  public static final boolean tuningMode = true; //set to false at competitions
-
-  public static RobotType getRobot() {
-    if (!disableHAL && RobotBase.isReal()) {
-      if (robot == RobotType.ROBOT_SIMBOT) { // Invalid robot selected
-        DriverStation.reportError("Invalid robot selected, using competition robot as default.", false);
-        return RobotType.ROBOT_2023;
-      } else {
-        return robot;
-      }
-    } else {
-      return robot;
-    }
-  }
-
-  public static Mode getMode() {
-    switch (getRobot()) {
-      case ROBOT_2023:
-        return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
-
-      case ROBOT_SIMBOT:
-        return Mode.SIM;
-
-      default:
-        return Mode.REAL;
-    }
-  }
-
-  public static final Map<RobotType, String> logFolders = Map.of(RobotType.ROBOT_2023, "/home/lvuser/");
-
-  public static enum RobotType {
-    ROBOT_2023,
-    ROBOT_SIMBOT
-  }
-
-  public static enum Mode {
-    REAL,
-    REPLAY,
-    SIM
-  }
-
-  // Function to disable HAL interaction when running without native libs
-  private static boolean disableHAL = false;
-
-  public static void disableHAL() {
-    disableHAL = true;
-  }
-
   public static final double stickDeadband = 0.1;
+  public static final String LOGS_FOLDER = "/home/lvuser/";
+ 
 
   // Original auton constants
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
@@ -113,7 +65,7 @@ public final class Constants {
 
   public static final class DrivetrainConstants {
 
-    public static final boolean ADD_TO_DASHBOARD = true;
+    public static final boolean ADD_TO_DASHBOARD = false;
 
     /**
      * The left-to-right distance between the drivetrain wheels
@@ -167,7 +119,7 @@ public final class Constants {
     public static final int EX_POT_CHANNEL = 1; // Port for the extender pot
 
     public static final int ROLLER_MOTOR = 24;
-    public static final int ROLLER_MOTOR_LIMIT = 20; 
+    public static final int ROLLER_MOTOR_LIMIT = 30; 
     // intake pneumatic
     public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
     public static final int EFFECTOR_EXTENDED_CHANNEL = 1;

@@ -82,7 +82,7 @@ public class IntakeEffector extends SubsystemBase {
             SmartDashboard.putBoolean("Intake is finished", false);
         })
                 .until(() -> {
-                    return avgCurrent >= 15;
+                    return avgCurrent >= 20;
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
