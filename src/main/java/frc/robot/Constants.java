@@ -10,8 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.autonomous.TrajectoryHelpers.Speeds;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.swerve.ModuleConfiguration;
@@ -20,7 +18,6 @@ public final class Constants {
   public static final double stickDeadband = 0.1;
   public static final String LOGS_FOLDER = "/home/lvuser/";
  
-
   // Original auton constants
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
     public static final double kMaxSpeedMetersPerSecond = 3;
@@ -64,7 +61,6 @@ public final class Constants {
   }
 
   public static final class DrivetrainConstants {
-
     public static final boolean ADD_TO_DASHBOARD = false;
 
     /**

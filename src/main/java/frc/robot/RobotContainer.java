@@ -23,8 +23,6 @@ import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.*;
 import frc.robot.Constants.TeleopDriveConstants;
-import frc.robot.autonomous.commands.testAuton;
-import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.DrivetrainSubsystem;
