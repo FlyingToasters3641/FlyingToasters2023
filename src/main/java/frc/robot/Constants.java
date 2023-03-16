@@ -17,6 +17,7 @@ import frc.robot.subsystems.swerve.ModuleConfiguration;
 public final class Constants {
   public static final double stickDeadband = 0.1;
   public static final String LOGS_FOLDER = "/home/lvuser/";
+ 
   // Original auton constants
   public static final class AutoConstants { // TODO: The below constants are used in the example auto, and must be tuned to specific robot
     public static final double kMaxSpeedMetersPerSecond = 3;
@@ -114,7 +115,7 @@ public final class Constants {
     public static final int EX_POT_CHANNEL = 1; // Port for the extender pot
 
     public static final int ROLLER_MOTOR = 24;
-    public static final int ROLLER_MOTOR_LIMIT = 20; 
+    public static final int ROLLER_MOTOR_LIMIT = 30; 
     // intake pneumatic
     public static final int EFFECTOR_RETRACTED_CHANNEL = 0;
     public static final int EFFECTOR_EXTENDED_CHANNEL = 1;

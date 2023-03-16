@@ -19,7 +19,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
             this.drive = drive;
             this.poseEstimator = poseEstimator;
             pid.setSetpoint(0);
-            pid.setTolerance(0);
+            pid.setTolerance(7 / 180 * Math.PI);
         }
 
         @Override

@@ -23,8 +23,6 @@ import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.*;
 import frc.robot.Constants.TeleopDriveConstants;
-import frc.robot.autonomous.commands.testAuton;
-import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -169,10 +167,10 @@ public class RobotContainer {
 
 
         //DRIVER BUTTON BINDINGS
-        rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
+        rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
         // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
-        rightBumperD.onTrue(new SequentialCommandGroup(
+        driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         driveController.x().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
@@ -205,20 +203,23 @@ public class RobotContainer {
             "Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()),
             "Outtake", m_intake.reverseIntake().withTimeout(0.5),
             "Retract", m_Arm.extend(0),
-            "RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION),
-            "GroundIntake", m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION),
-            "StartIntake", m_intake.runIntake(m_LEDSubsystem).withTimeout(2)  // TODO: Tune timeout! this should stop before we try to score
-
+            "RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION).withTimeout(0.75),
+            "GroundIntake", new SequentialCommandGroup(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION), m_intake.runIntake(m_LEDSubsystem).withTimeout(4)),
+            "StartIntake", m_intake.runIntake(m_LEDSubsystem).withTimeout(2)  // TODO: Tune timeout! this should stop before we try to score   );
     );
 
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         // chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
 
-        chooser.setDefaultOption("TestAuton",
-                makeAutoBuilderCommand("New Path", new PathConstraints(1, 0.5)));
+        chooser.setDefaultOption("OneConeBalance",
+                makeAutoBuilderCommand("1ConeBalance", new PathConstraints(1.5, 1)));
+
+        chooser.addOption("2GPBarrier",
+        makeAutoBuilderCommand("2GPBarrier", new PathConstraints(3, 2)));
+
         chooser.addOption("2GPWall",
-                makeAutoBuilderCommand("2GPWall", new PathConstraints(1, 0.5)));
+                makeAutoBuilderCommand("2GPWall", new PathConstraints(3, 2)));
 
         //chooser.setDefaultOption("rotate wheel", new RunCommand(() -> {
         // SwerveModuleState[] moduleStates = s_Swerve.getModuleStates();

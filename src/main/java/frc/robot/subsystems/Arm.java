@@ -194,12 +194,13 @@ public class Arm extends SubsystemBase {
         // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
         // .andThen(() -> extend(angle.getExtended())));
 
-        return extend(0).andThen(
-            run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
+        return m_intake.retractIntake().andThen(extend(0).andThen(
+            run(() -> {m_targetArmPosition = normalizeAngle(angle.getAngle()); System.out.println("Moving arm to: " + angle.getAngle()
+            );})
             .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
                 .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
                     .andThen(extend(angle.getExtended())))
-        );
+        ));
     
     }
 
