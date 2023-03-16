@@ -172,7 +172,7 @@ public class RobotContainer {
         rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
         // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
-        rightBumperD.onTrue(new SequentialCommandGroup(
+        driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         driveController.x().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
