@@ -47,6 +47,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
         @Override
         public void end(boolean interrupted) {
             drive.drive(new ChassisSpeeds(0,0,0));
+            drive.setWheelsToX();
         }
 
          @Override
