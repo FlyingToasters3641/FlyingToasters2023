@@ -14,7 +14,7 @@ public class VisionHelpers {
             this.ambiguity = ambiguity;
         }
     }
-
+    //NOTE: You must place the theta components in a quaternion
     public enum NorthStarNetworkTables {
         NUMBER_OF_POSES(0),
         ERROR_0(1),
