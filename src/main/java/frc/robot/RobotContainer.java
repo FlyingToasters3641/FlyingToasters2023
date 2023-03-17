@@ -141,9 +141,11 @@ public class RobotContainer {
 
         rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
                     var pos = m_Arm.getArmAbsolutePositionDegrees();
-                    var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) ||
-                            (pos > (ArmPos.L2_SCORING.getAngle() + 10));
-                    System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+                    var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 30)) ||
+                            (pos > (ArmPos.L2_SCORING.getAngle() + 30));
+                    // System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+                    SmartDashboard.putBoolean("EXTEND: Out of range", outOfRange);
+                    SmartDashboard.putNumber("EXTEND: Angle", pos);
                     return outOfRange;
                 }
         )).whileFalse(m_Arm.extend(0));
