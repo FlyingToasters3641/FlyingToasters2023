@@ -169,7 +169,7 @@ public class RobotContainer {
         //DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
-        driveController.y().whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
+        driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
         driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         // driveController.x().onTrue(new SequentialCommandGroup(

@@ -14,8 +14,8 @@ public class AutoBalanceAlt extends CommandBase {
     double roll = 0.0;
     double angularVelocity;
     double angleDegrees;
-    final int POSITION_THRESHOLD = 3; // degrees
-    final int VELOCITY_THRESHOLD = 8; // degrees/sec
+    final double POSITION_THRESHOLD = 3; // degrees
+    final double VELOCITY_THRESHOLD = 0.1; // degrees/sec
 
     public AutoBalanceAlt(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator) {
         this.drive = drive;
@@ -37,7 +37,7 @@ public class AutoBalanceAlt extends CommandBase {
                 || (angleDegrees > 0.0
                         && angleVelocityDegreesPerSec < -VELOCITY_THRESHOLD);
 
-        correction = angleDegrees > 0 ? -0.4 : 0.4;
+        correction = angleDegrees > 0 ? -0.3 : 0.3;
 
         SmartDashboard.putNumber("Balancing: Robot Rotation", rotation.getDegrees());
         SmartDashboard.putNumber("Balancing: Pitch", pitch);
@@ -52,7 +52,7 @@ public class AutoBalanceAlt extends CommandBase {
         } else {
             drive.drive(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                            correction,
+                            -correction,
                             0.0,
                             0.0,
                             rotation));
