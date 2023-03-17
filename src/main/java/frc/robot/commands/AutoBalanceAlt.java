@@ -42,7 +42,7 @@ public class AutoBalanceAlt extends CommandBase {
                 || (angleDegrees > 0.0
                 && angleVelocityDegreesPerSec < -VELOCITY_THRESHOLD);
 
-        correction = angleDegrees > 0 ? -0.4 : 0.4;
+        correction = angleDegrees > 0 ? -0.3 : 0.3;
 
         SmartDashboard.putNumber("Balancing: Robot Rotation", rotation.getDegrees());
         SmartDashboard.putNumber("Balancing: Pitch", pitch);
