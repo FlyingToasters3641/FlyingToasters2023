@@ -198,7 +198,7 @@ public class RobotContainer {
 
     private Map<String, Command> eventMap = Map.of(
             "ScoreL3", m_Arm.extend(ArmPos.L3_SCORING.getExtended()).andThen(m_intake.reverseIntake().withTimeout(.75)),
-            "AutoBalance", new AutoBalance(m_drivetrainSubsystem, m_poseEstimator),
+            "AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator),
             "ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING),//.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION))
             "Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()),
             "Outtake", m_intake.reverseIntake().withTimeout(0.5),
