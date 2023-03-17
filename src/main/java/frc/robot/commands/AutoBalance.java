@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -12,7 +13,9 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
         PoseEstimatorSubsystem poseEstimator;
         double pitch = 0.0;
         double correction;
+        double prevTime;
         double roll = 0.0;
+        double timeCorrection = -Timer.getFPGATimestamp();
 
 
         public AutoBalance(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator) {
@@ -22,7 +25,10 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
 
         @Override
         public void execute() {
-            correction = roll + pitch < 0 ? 0.1 : 0.1;
+            double time = Timer.getFPGATimestamp() - timeCorrection;
+            correction = roll + pitch < 0 ? -0.4 : 0.4;
+
+            correction = Math.abs(correction) < 0.222 ? 0 : correction;
             pitch = drive.getGyroscopeRotation3d().getY();
             roll = drive.getGyroscopeRotation3d().getX();
             SmartDashboard.putBoolean("Balancing", true);
@@ -30,7 +36,8 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
             SmartDashboard.putNumber("Pitch", pitch * 180);
             SmartDashboard.putNumber("Roll", roll * 180);
 
-            drive.drive(new ChassisSpeeds(0.1, 0, 0));
+            drive.drive(new ChassisSpeeds(correction, 0, 0));
+            prevTime = time;
         }
 
         @Override
@@ -38,9 +45,9 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
             drive.drive(new ChassisSpeeds(0,0,0));
         }
 
-        @Override
-        public boolean isFinished() {
-            return Math.abs(pitch + roll) <= 0.05;
-        }
+        // @Override
+        // public boolean isFinished() {
+        //     return Math.abs(pitch + roll) <= 0.222;
+        // }
     }
 

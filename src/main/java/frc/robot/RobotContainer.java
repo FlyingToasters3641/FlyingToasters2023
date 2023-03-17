@@ -167,13 +167,13 @@ public class RobotContainer {
 
 
         //DRIVER BUTTON BINDINGS
-       rightTriggerD.whileTrue(m_intake.reverseIntake());
+       //rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
-        // rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
+        rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
-        driveController.x().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.STORED_POSITION)));
+        // driveController.x().onTrue(new SequentialCommandGroup(
+        //         m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
         //todo: ground intake position B
         //todo: reset Gyro; start button 8
