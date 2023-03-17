@@ -36,12 +36,14 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
             double time = Timer.getFPGATimestamp();
             double deltaTime = time - prevTime;
             angularVelocity = ((roll - prevRoll) + (pitch - prevPitch)) / deltaTime;
-            correction = Math.abs(roll + pitch) > 0 ? -0.4 : 0.4;
+            correction = roll + pitch > 0 ? -0.4 : 0.4;
             SmartDashboard.putBoolean("Balancing", true);
             SmartDashboard.putNumber("Pitch", pitch * 180);
             SmartDashboard.putNumber("Roll", roll * 180);
             drive.drive(new ChassisSpeeds(correction, 0, 0));
             prevTime = time;
+            prevRoll = roll;
+            prevPitch = pitch;
         }
 
         @Override
