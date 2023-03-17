@@ -10,5 +10,6 @@ import java.util.TreeMap;
 public interface AprilTagInputs {
     public TreeMap<Double, AprilTagMeasurement> getQueue();
     public void flushQueue();
+    public void update();
 }
 
