@@ -30,6 +30,7 @@ public class Arm extends SubsystemBase {
     private ArmFeedforward m_armFeedforward;
 
     private IntakeEffector m_intake;
+    private LEDSubsystem m_leds;
 
     double m_extenderTarget;
     private Double m_targetArmPosition = null;
@@ -67,8 +68,9 @@ public class Arm extends SubsystemBase {
         public static final double MAX_POSITION = 180; // degrees
     }
 
-    public Arm(IntakeEffector intake) {
+    public Arm(IntakeEffector intake, LEDSubsystem leds) {
         m_intake = intake;
+        m_leds = leds;
 
         m_armFeedforward = new ArmFeedforward(
                 kArm.KS,
@@ -115,7 +117,7 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        //m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
+        // m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
         m_leftMotorPid.setSmartMotionMaxVelocity(kArm.SMART_MOTION_MAX_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(kArm.SMART_MOTION_MIN_VELOCITY, 0);
         m_leftMotorPid.setSmartMotionMaxAccel(kArm.SMART_MOTION_MAX_ACCEL, 0);
@@ -183,32 +185,38 @@ public class Arm extends SubsystemBase {
     // Main command to rotate and extend arm to a preset (angle and whether extended
     // or not: enum ArmPos)
     public Command moveArm(ArmPos angle) {
-        // return extend(0)  // always retract elevator before rotating arm
-        // //.andThen(() -> m_intake.retractIntake())  // always make sure in "Default" position before rotating
+        // return extend(0) // always retract elevator before rotating arm
+        // //.andThen(() -> m_intake.retractIntake()) // always make sure in "Default"
+        // position before rotating
         // .andThen(run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
         // .until(() -> {
-        //     var done = isArmAtPos(angle.getAngle());
-        //     System.out.println("Done: " + done + ", Target: " + angle.getAngle() + ", Current Angle: " + getArmAbsolutePositionDegrees());
-        //     return done;
+        // var done = isArmAtPos(angle.getAngle());
+        // System.out.println("Done: " + done + ", Target: " + angle.getAngle() + ",
+        // Current Angle: " + getArmAbsolutePositionDegrees());
+        // return done;
         // })
-        // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
+        // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ?
+        // m_intake.retractIntake() : m_intake.extendIntake())
         // .andThen(() -> extend(angle.getExtended())));
 
-        return m_intake.retractIntake().andThen(extend(0).andThen(
-            run(() -> {m_targetArmPosition = normalizeAngle(angle.getAngle()); System.out.println("Moving arm to: " + angle.getAngle()
-            );})
-            .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
-                .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake() : m_intake.extendIntake())
-                    .andThen(extend(angle.getExtended())))
-        ));
-    
+        return m_intake.stopIntake().andThen(m_intake.retractIntake().andThen(extend(0).andThen(
+                run(() -> {
+                    m_targetArmPosition = normalizeAngle(angle.getAngle());
+                    //System.out.println("Moving arm to: " + angle.getAngle());
+                })
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
+                        .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
+                                : m_intake.extendIntake())
+                                .andThen(extend(angle.getExtended()).andThen(
+                                        angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake()))))));
+
     }
 
     public Command extend(double position) {
         return run(() -> {
             m_extenderTarget = position;
         }).until(() -> isExtAtPos(position)).withTimeout(2.0);
-        //.withTimeout(0.5); // don't wait forever - assume its close and bail
+        // .withTimeout(0.5); // don't wait forever - assume its close and bail
     }
 
     // A convinence function for moveArm method
@@ -264,7 +272,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
 
-        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
+        // SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
         SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
         SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
 
@@ -286,13 +294,13 @@ public class Arm extends SubsystemBase {
         }
 
         // Maintain extender setpoint and compute feedforward.
-        //  Compute a feedforward based on the arm's rotation angle.
-        //   We only want to add a feedforward if the elevator needs help against gravity.
+        // Compute a feedforward based on the arm's rotation angle.
+        // We only want to add a feedforward if the elevator needs help against gravity.
         var armAngleDegrees = getArmEncoderPositionDegrees();
         double extenderFeedForward = kArm.EX_KG * Math.sin(Units.degreesToRadians(armAngleDegrees));
         if ((m_extenderTarget == 0.0 && Math.signum(extenderFeedForward) == 1.0) ||
-            (m_extenderTarget > 0.0 && Math.signum(extenderFeedForward) == -1.0)) {
-                extenderFeedForward = 0.0;  // don't fight gravity if it's helping us
+                (m_extenderTarget > 0.0 && Math.signum(extenderFeedForward) == -1.0)) {
+            extenderFeedForward = 0.0; // don't fight gravity if it's helping us
         }
         setExtenderPosition(m_extenderTarget, extenderFeedForward);
 

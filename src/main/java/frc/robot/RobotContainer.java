@@ -84,7 +84,7 @@ public class RobotContainer {
     private final PoseEstimatorSubsystem m_poseEstimator = new PoseEstimatorSubsystem(
             /* photonCamera, */ m_drivetrainSubsystem);
     private final IntakeEffector m_intake = new IntakeEffector();
-    private final Arm m_Arm = new Arm(m_intake);
+    private final Arm m_Arm = new Arm(m_intake, m_LEDSubsystem);
 
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();

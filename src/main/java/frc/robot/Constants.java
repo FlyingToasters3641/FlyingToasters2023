@@ -208,21 +208,23 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-56, 0, IntakePos.DEFAULT), 
-    GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR), 
-    SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT), 
-    DOUBLE_PLAYERSTATION_PICKUP(131, 14, IntakePos.DEFAULT), 
-    L2_SCORING(142, 0, IntakePos.DEFAULT),
-    L3_SCORING(142, kArm.EXTENDED_POSITION, IntakePos.DEFAULT);
+    STORED_POSITION(-56, 0, IntakePos.DEFAULT, false), 
+    GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true), 
+    SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true), 
+    DOUBLE_PLAYERSTATION_PICKUP(131, 14, IntakePos.DEFAULT, true), 
+    L2_SCORING(142, 0, IntakePos.DEFAULT, false),
+    L3_SCORING(142, kArm.EXTENDED_POSITION, IntakePos.DEFAULT, false);
 
     private double angle;
     private double extendedPosition;
     private IntakePos intakePosition;
+    private boolean runIntake;
 
-    private ArmPos(double angle, double extended, IntakePos intakePosition) {
+    private ArmPos(double angle, double extended, IntakePos intakePosition, boolean runIntake) {
       this.angle = angle;
       this.extendedPosition = extended;
       this.intakePosition = intakePosition;
+      this.runIntake = runIntake;
     }
 
     public double getExtended() {
@@ -235,6 +237,10 @@ public final class Constants {
 
     public IntakePos getIntakePosition() {
       return intakePosition;
+    }
+
+    public boolean getRunIntake() {
+      return runIntake;
     }
   }
 
