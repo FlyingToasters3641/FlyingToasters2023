@@ -10,27 +10,27 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
     public class AutoBalance extends CommandBase {
         DrivetrainSubsystem drive;
         PoseEstimatorSubsystem poseEstimator;
-        PIDController pid = new PIDController(2, 0, 0);
         double pitch = 0.0;
+        double correction;
         double roll = 0.0;
 
 
         public AutoBalance(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator) {
             this.drive = drive;
             this.poseEstimator = poseEstimator;
-            pid.setSetpoint(0);
-            pid.setTolerance(7 / 180 * Math.PI);
         }
 
         @Override
         public void execute() {
+            correction = roll + pitch < 0 ? 0.1 : 0.1;
             pitch = drive.getGyroscopeRotation3d().getY();
             roll = drive.getGyroscopeRotation3d().getX();
             SmartDashboard.putBoolean("Balancing", true);
-            SmartDashboard.putNumber("Calculated Balance pid", pid.calculate(pitch + roll));
+
             SmartDashboard.putNumber("Pitch", pitch * 180);
             SmartDashboard.putNumber("Roll", roll * 180);
-            drive.drive(new ChassisSpeeds(-pid.calculate(pitch + roll), 0, 0));
+
+            drive.drive(new ChassisSpeeds(0.1, 0, 0));
         }
 
         @Override
@@ -40,7 +40,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
 
         @Override
         public boolean isFinished() {
-            return pid.atSetpoint();
+            return Math.abs(pitch + roll) <= 0.05;
         }
     }
 
