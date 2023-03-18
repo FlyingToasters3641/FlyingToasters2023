@@ -139,17 +139,27 @@ public class RobotContainer {
 
         leftTriggerO.onTrue(m_intake.runIntake(m_LEDSubsystem));
 
-        rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
-                    var pos = m_Arm.getArmAbsolutePositionDegrees();
-                    var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 30)) ||
-                            (pos > (ArmPos.L2_SCORING.getAngle() + 30));
-                    // System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
-                    SmartDashboard.putBoolean("EXTEND: Out of range", outOfRange);
-                    SmartDashboard.putNumber("EXTEND: Angle", pos);
-                    return outOfRange;
-                }
-        )).whileFalse(m_Arm.extend(0));
 
+
+        // rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
+        //             var pos = m_Arm.getArmAbsolutePositionDegrees();
+        //             var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) ||
+        //                     (pos > (ArmPos.L2_SCORING.getAngle() + 10));
+        //             System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+        //             return outOfRange;
+        //         }
+        // )).whileFalse(m_Arm.extend(0));
+
+
+        rightTriggerO.whileTrue(m_Arm.extendL3())
+            .whileFalse(m_Arm.extend(0));
+
+        // rightTriggerO.whileTrue(() -> {
+        //         if (!extendRange){
+        //                 .extend(kArm.EXTENDED_POSITION);
+        //         }
+        //         }
+        //  );
 
         //driveController.b().onTrue(new InstantCommand(() -> {
         //m_drivetrainSubsystem.resetGyro();
