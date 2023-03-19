@@ -72,11 +72,11 @@ public class NorthStarInputs implements AprilTagInputs {
             for (int tag = 0; tag < queue.length; tag++) {
                 double timestamp = timestamps[tag];
                 double[] frame = frames[tag];
-                //If there's a duplicate tag, the tag id moves to position 17 in the frame (double array) and position 9 becomes
-                //the error of the second tag.
+                //If there's a duplicate tag pose, the tag id moves to position 17 in the frame (double array) and
+                //position 9 becomes the error of the second tag pose.
                 int id = frame[0] == 2 ? (int) frame[17] : (int) frame[9];
                 double ambiguity = frame[NorthStarNetworkTables.ERROR_0.getValue()];
-                var position =
+                var cameraPosition =
                         new Pose3d(
                                 frame[NorthStarNetworkTables.CAMERA_POSE_0_X_COMPONENT.getValue()],
                                 frame[NorthStarNetworkTables.CAMERA_POSE_0_Y_COMPONENT.getValue()],
@@ -90,13 +90,13 @@ public class NorthStarInputs implements AprilTagInputs {
                                         )
                                 )
                         );
-                //If there are multiple camera poses for the same tag in one frame, pick the best one (this will happen in a multi-camera setup).
+                //If there are multiple camera poses for the same tag in one frame, pick the best one.
                 if (
                         (int) frame[0] == 2 &&
                                 frame[NorthStarNetworkTables.ERROR_1.getValue()] < ambiguity
                 ) {
                     ambiguity = frame[NorthStarNetworkTables.ERROR_1.getValue()];
-                    position =
+                    cameraPosition =
                             new Pose3d(
                                     frame[NorthStarNetworkTables.CAMERA_POSE_1_X_COMPONENT.getValue()],
                                     frame[NorthStarNetworkTables.CAMERA_POSE_1_Y_COMPONENT.getValue()],
@@ -114,7 +114,7 @@ public class NorthStarInputs implements AprilTagInputs {
                 var measure = new AprilTagMeasurement(
                         timestamp,
                         id,
-                        position,
+                        cameraPosition,
                         ambiguity,
                         fps
                 );
