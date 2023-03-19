@@ -1,0 +1,9 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Vision/Field": "Field2d",
+      "/SmartDashboard/Chooser": "String Chooser"
+    }
+  }
+}
