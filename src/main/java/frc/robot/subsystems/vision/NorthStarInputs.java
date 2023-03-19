@@ -13,6 +13,7 @@ package frc.robot.subsystems.vision;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.*;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
@@ -116,7 +117,12 @@ public class NorthStarInputs implements AprilTagInputs {
                 var measure = new AprilTagMeasurement(
                         timestamp,
                         id,
-                        cameraPosition,
+                        cameraPosition.transformBy(
+                                new Transform3d(
+                                        relativeCameraPosition.getTranslation(),
+                                        relativeCameraPosition.getRotation())
+                                        .inverse()
+                        ),
                         ambiguity,
                         fps
                 );
