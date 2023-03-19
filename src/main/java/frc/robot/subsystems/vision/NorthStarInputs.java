@@ -27,9 +27,11 @@ public class NorthStarInputs implements AprilTagInputs {
     IntegerSubscriber fpsSubscriber;
     TimestampedDoubleArray[] queue;
     HashMap<Double, AprilTagMeasurement> measurements = new HashMap<Double, AprilTagMeasurement>();
+    private final Pose3d relativeCameraPosition;
 
-    public NorthStarInputs(String NT4Id) {
+    public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
         this.NT4Id = NT4Id;
+        this.relativeCameraPosition = relativeCameraPosition;
         northStarNT4 = NetworkTableInstance.getDefault().getTable(NT4Id);
         var outputTable = northStarNT4.getSubTable("output");
         observationSubscriber =
@@ -121,5 +123,10 @@ public class NorthStarInputs implements AprilTagInputs {
                 measurements.put(timestamp, measure);
             }
         }
+    }
+
+    @Override
+    public Pose3d getRelativeCameraPose() {
+        return relativeCameraPosition;
     }
 }

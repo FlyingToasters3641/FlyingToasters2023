@@ -14,5 +14,7 @@ public interface AprilTagInputs {
     public void flushQueue();
 
     public void update();
+
+    public Pose3d getRelativeCameraPose();
 }
 
