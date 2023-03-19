@@ -8,7 +8,7 @@ public class VisionHelpers {
         double Timestamp;
         double ambiguity;
 
-        public AprilTagMeasurement(double Timestamp, int ID, Pose3d pose, double ambiguity) {
+        public AprilTagMeasurement(double timestamp, int ID, Pose3d pose, double ambiguity) {
             super(ID, pose);
             this.Timestamp = Timestamp;
             this.ambiguity = ambiguity;
