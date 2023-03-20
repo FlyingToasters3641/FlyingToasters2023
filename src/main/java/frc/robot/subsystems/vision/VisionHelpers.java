@@ -4,16 +4,18 @@ import edu.wpi.first.math.geometry.Pose3d;
 
 public class VisionHelpers {
     public static class AprilTagMeasurement {
-        double Timestamp;
+        double timestamp;
         double ambiguity;
         int ID;
+        long fps;
         Pose3d pose;
 
         public AprilTagMeasurement(double timestamp, int ID, Pose3d pose, double ambiguity, long fps) {
             this.ID = ID;
             this.pose = pose;
-            this.Timestamp = Timestamp;
+            this.timestamp = timestamp;
             this.ambiguity = ambiguity;
+            this.fps = fps;
         }
     }
     //NOTE: You must place the theta components in a quaternion

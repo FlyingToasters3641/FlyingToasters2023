@@ -5,8 +5,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import org.junit.jupiter.api.*;
 import edu.wpi.first.hal.HAL;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AprilTagSubsystemTest {
     @BeforeEach
         // this method will run before each test
