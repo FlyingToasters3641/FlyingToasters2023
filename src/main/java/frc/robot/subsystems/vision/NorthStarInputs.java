@@ -77,7 +77,7 @@ public class NorthStarInputs implements AprilTagInputs {
                 double[] frame = frames[tag];
                 //If there's a duplicate tag pose, the tag id moves to position 17 in the frame (double array) and
                 //position 9 becomes the error of the second tag pose.
-                int id = frame[0] == 2 ? (int) frame[17] : (int) frame[9];
+                int id = (int) frame[0] == 2 ? (int) frame[17] : (int) frame[9];
                 double ambiguity = frame[NorthStarNetworkTables.ERROR_0.getValue()];
                 var cameraPosition =
                         new Pose3d(
