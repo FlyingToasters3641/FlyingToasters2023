@@ -61,8 +61,7 @@ public class Arm extends SubsystemBase {
         public static final double EX_KD = 0.0000004; // 0.0001;
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
-        public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
-
+        public static final double EXTE 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
         public static final double MAX_POSITION = 180; // degrees

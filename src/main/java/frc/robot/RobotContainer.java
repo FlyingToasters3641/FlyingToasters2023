@@ -53,7 +53,7 @@ public class RobotContainer {
 
     Trigger leftTriggerD = driveController.leftTrigger();
 
-    private double joystickSensitivity = 1;
+    public static double joystickSensitivity = 1;
 
     //bumpers
     Trigger leftBumperO = operatorController.leftBumper();
@@ -102,7 +102,8 @@ public class RobotContainer {
                         () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity)
                                 * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
                         () -> -modifyAxis(driveController.getRightX() * joystickSensitivity)
-                                * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
+                         
+                        * DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND / 2));
 
         // Configure the button bindings
         configureButtonBindings();
@@ -127,11 +128,12 @@ public class RobotContainer {
                 .onFalse(new SequentialCommandGroup(
                         m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.y().onTrue(new SequentialCommandGroup(
-                        m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)))
+                        m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP), new InstantCommand(() -> joystickSensitivity = 0.5)))
                 .onFalse(new SequentialCommandGroup(
-                        m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                        m_Arm.moveArm(ArmPos.STORED_POSITION), new InstantCommand(() -> joystickSensitivity = 1)));
         operatorController.b().onTrue(new SequentialCommandGroup(
-                m_Arm.moveArm(ArmPos.L2_SCORING)));
+                m_Arm.moveArm(ArmPos.L2_SCORING), new InstantCommand(() -> joystickSensitivity = 0.5)))
+                .onFalse(new InstantCommand(() -> joystickSensitivity = 1));
         //  .onFalse(new SequentialCommandGroup(
         //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.a().onTrue(new SequentialCommandGroup(
