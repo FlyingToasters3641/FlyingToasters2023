@@ -184,6 +184,7 @@ public class RobotContainer {
         driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
         driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
+        
         // driveController.x().onTrue(new SequentialCommandGroup(
         //         m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
@@ -199,6 +200,13 @@ public class RobotContainer {
                 }));
 
 
+        //TURBO MODE
+        driveController.rightBumper().onTrue(new InstantCommand(() -> {
+                joystickSensitivity = 1.5;
+            }))
+            .onFalse(new InstantCommand(() -> {
+                joystickSensitivity = 1.0;
+            }));
         //TESTING CONTROLS
         // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
         // driveController.y().onTrue(m_Arm.extend(0));
