@@ -155,11 +155,11 @@ public final class Constants {
         new Translation2d(-DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
     /** Voltage needed to overcome the motor’s static friction. kS */
-    public static final double DRIVE_kS = 0.28399267231;//0.6716;
+    public static final double DRIVE_kS = 0.31050690859173935;//0.28399267231;//0.6716;
     /** Voltage needed to hold (or "cruise") at a given constant velocity. kV */
-    public static final double DRIVE_kV = 2.190886470165;//2.5913;
+    public static final double DRIVE_kV = 2.4470107531148186;//2.190886470165;//2.5913;
     /** Voltage needed to induce a given acceleration in the motor shaft. kA */
-    public static final double DRIVE_kA = 0.178125854;//0.19321;
+    public static final double DRIVE_kA = 0.9523099560718562;//0.178125854;//0.19321;
 
     public static final double STEER_kP = 0.2; // .3
     public static final double STEER_kI = 0.0;
