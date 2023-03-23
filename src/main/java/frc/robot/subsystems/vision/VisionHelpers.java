@@ -19,6 +19,25 @@ public class VisionHelpers {
             this.ambiguity = ambiguity;
             this.fps = fps;
         }
+
+        public Pose3d getPose() {
+            return pose;
+        }
+        public Pose3d getNonTransformedPose() {
+            return nonTransformedPose;
+        }
+        public double getTimestamp() {
+            return timestamp;
+        }
+        public double getAmbiguity() {
+            return ambiguity;
+        }
+        public int getID() {
+            return ID;
+        }
+        public long getFps() {
+            return fps;
+        }
     }
     //NOTE: You must place the theta components in a quaternion
     public enum NorthStarNetworkTables {

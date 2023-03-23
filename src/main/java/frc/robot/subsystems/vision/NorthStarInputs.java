@@ -96,7 +96,7 @@ public class NorthStarInputs implements AprilTagInputs {
                 //If there are multiple camera poses for the same tag in one frame, pick the best one.
                 if (
                         (int) frame[0] == 2 &&
-                                frame[NorthStarNetworkTables.ERROR_1.getValue()] < ambiguity
+                                frame[NorthStarNetworkTables.ERROR_1.getValue()] < ambiguity * 0.15
                 ) {
                     ambiguity = frame[NorthStarNetworkTables.ERROR_1.getValue()];
                     cameraPosition =
@@ -113,21 +113,28 @@ public class NorthStarInputs implements AprilTagInputs {
                                             )
                                     )
                             );
+                } else if (
+                        (int) frame[0] == 2 &&
+                                ambiguity > frame[NorthStarNetworkTables.ERROR_1.getValue()] * 0.15
+                ) {
+                    cameraPosition = null;
                 }
-                var measure = new AprilTagMeasurement(
-                        timestamp,
-                        id,
-                        cameraPosition.transformBy(
-                                new Transform3d(
-                                        relativeCameraPosition.getTranslation(),
-                                        relativeCameraPosition.getRotation())
-                                        .inverse()
-                        ),
-                        cameraPosition,
-                        ambiguity,
-                        fps
-                );
-                measurements.put(timestamp, measure);
+                if (cameraPosition != null) {
+                    var measure = new AprilTagMeasurement(
+                            timestamp,
+                            id,
+                            cameraPosition.transformBy(
+                                    new Transform3d(
+                                            relativeCameraPosition.getTranslation(),
+                                            relativeCameraPosition.getRotation())
+                                            .inverse()
+                            ),
+                            cameraPosition,
+                            ambiguity,
+                            fps
+                    );
+                    measurements.put(timestamp, measure);
+                }
             }
         }
     }
