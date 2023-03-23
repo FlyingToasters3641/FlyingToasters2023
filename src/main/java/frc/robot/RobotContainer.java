@@ -132,8 +132,6 @@ public class RobotContainer {
                         m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.L2_SCORING)));
-        //  .onFalse(new SequentialCommandGroup(
-        //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.a().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
 

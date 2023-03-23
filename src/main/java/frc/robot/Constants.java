@@ -60,6 +60,14 @@ public final class Constants {
         Constants.PPAutoConstants.THETA_kI, Constants.PPAutoConstants.THETA_kD);
   }
 
+
+  public static final class VisionConstants {
+    public static final double limelightMountAngleDegrees = 0;//offset for real world mounting of the limelight
+    public static final double distanceToNode = 0;//in meteres the set distance to the nodes when lined up to score. 
+    public static final double heightOfLimelight = 0; //in meteres the height of the limelight from the ground. 
+    public static final double heightOfL3Node = 1.063625; //in meteres
+    public static final double heightOfL2Node = 0.561975; //in meteres
+  }
   public static final class DrivetrainConstants {
     public static final boolean ADD_TO_DASHBOARD = false;
 
@@ -87,26 +95,26 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40;
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(25.22);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(165.146484);//164.531250);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(345.058594);//165.146484);//164.531250);
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38;
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET =
     // -Math.toRadians(202.675);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(240.117188);//240.292969);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(60.732422);//240.117188);//240.292969);
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41;
     // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(122.78);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(121.201172);//121.552734);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(302.607422);//121.201172);//121.552734);
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(290.917969);//292.32419);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(111.093750);//290.917969);//292.32419);
 
     public static final int LEFT_ARM_MOTOR = 26;
     public static final int RIGHT_ARM_MOTOR = 21;
@@ -130,8 +138,8 @@ public final class Constants {
      * line.
      */
     public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-        ModuleConfiguration.MK4I_L2.getDriveReduction() *
-        ModuleConfiguration.MK4I_L2.getWheelDiameter() * Math.PI;
+        ModuleConfiguration.MK4I_L3.getDriveReduction() *
+        ModuleConfiguration.MK4I_L3.getWheelDiameter() * Math.PI;
 
     /**
      * The maximum angular velocity of the robot in radians per second.
@@ -174,8 +182,8 @@ public final class Constants {
 
     public static final double DEADBAND = 0.1;
 
-    public static final double X_RATE_LIMIT = 10.0;
-    public static final double Y_RATE_LIMIT = 10.0;
+    public static final double X_RATE_LIMIT = 15.0;
+    public static final double Y_RATE_LIMIT = 15.0;
     public static final double ROTATION_RATE_LIMIT = 5.0 * Math.PI;
 
     public static final double HEADING_MAX_VELOCITY = Math.PI * 2;
@@ -213,7 +221,8 @@ public final class Constants {
     SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true), 
     DOUBLE_PLAYERSTATION_PICKUP(131, 14, IntakePos.DEFAULT, true), 
     L2_SCORING(142, 0, IntakePos.DEFAULT, false),
-    L3_SCORING(142, kArm.EXTENDED_POSITION, IntakePos.DEFAULT, false);
+    L3_SCORING(142, kArm.EXTENDED_POSITION, IntakePos.DEFAULT, false), 
+    GROUND_INTAKE_AUTON_POS(-28, kArm.EXTENDED_POSITION, IntakePos.FLOOR, true);
 
     private double angle;
     private double extendedPosition;
