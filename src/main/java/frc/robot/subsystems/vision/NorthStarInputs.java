@@ -123,6 +123,7 @@ public class NorthStarInputs implements AprilTagInputs {
                                         relativeCameraPosition.getRotation())
                                         .inverse()
                         ),
+                        cameraPosition,
                         ambiguity,
                         fps
                 );

@@ -9,10 +9,12 @@ public class VisionHelpers {
         int ID;
         long fps;
         Pose3d pose;
+        Pose3d nonTransformedPose;
 
-        public AprilTagMeasurement(double timestamp, int ID, Pose3d pose, double ambiguity, long fps) {
+        public AprilTagMeasurement(double timestamp, int ID, Pose3d pose, Pose3d nonTransformedPose, double ambiguity, long fps) {
             this.ID = ID;
             this.pose = pose;
+            this.nonTransformedPose = nonTransformedPose;
             this.timestamp = timestamp;
             this.ambiguity = ambiguity;
             this.fps = fps;

@@ -30,9 +30,10 @@ public class AprilTagSubsystem extends SubsystemBase {
             for (Map.Entry<Double, AprilTagMeasurement> m : robotPoses.entrySet()) {
                 if (m.getValue().ID == i) {
                     tagPoses.put(m.getValue().ID, m.getValue());
-                    SmartDashboard.putNumber("Tag" + m.getValue().ID + " X position", m.getValue().pose.getX());
-                    SmartDashboard.putNumber("Tag" + m.getValue().ID + " Y position", m.getValue().pose.getY());
-                    SmartDashboard.putNumber("Tag" + m.getValue().ID + " Z position", m.getValue().pose.getZ());
+                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " X position:", m.getValue().pose.getX());
+                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " Y position:", m.getValue().pose.getY());
+                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " Z position:", m.getValue().pose.getZ());
+                    totalDistance += m.getValue().pose.getTranslation().getDistance(m.getValue()..getTranslation());
                 }
             }
 
