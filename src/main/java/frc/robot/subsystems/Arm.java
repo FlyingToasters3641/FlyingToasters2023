@@ -212,27 +212,6 @@ public class Arm extends SubsystemBase {
 
     }
 
-
-    // public boolean extendRange(){
-    //     double pos = getArmAbsolutePositionDegrees();
-    //     boolean outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 30)) ||
-    //         (pos > (ArmPos.L2_SCORING.getAngle() + 30));
-    //     return outOfRange;
-    // }
-
-
-    public Command extendL3 () {
-        return run(() -> {
-            })
-            .until(() -> {
-            double pos = getArmAbsolutePositionDegrees();
-            boolean outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 40)) ||
-                (pos > (ArmPos.L2_SCORING.getAngle() + 40));
-            return !outOfRange;
-            })
-        .andThen(extend(kArm.EXTENDED_POSITION));
-    }
-
     public Command extend(double position) {
         return run(() -> {
             m_extenderTarget = position;

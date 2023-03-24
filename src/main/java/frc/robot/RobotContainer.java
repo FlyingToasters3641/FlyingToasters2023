@@ -132,32 +132,22 @@ public class RobotContainer {
                         m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.L2_SCORING)));
+        //  .onFalse(new SequentialCommandGroup(
+        //     m_Arm.moveArm(ArmPos.STORED_POSITION)));
         operatorController.a().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
         leftTriggerO.onTrue(m_intake.runIntake(m_LEDSubsystem));
 
+        rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
+                    var pos = m_Arm.getArmAbsolutePositionDegrees();
+                    var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) ||
+                            (pos > (ArmPos.L2_SCORING.getAngle() + 10));
+                    System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
+                    return outOfRange;
+                }
+        )).whileFalse(m_Arm.extend(0));
 
-
-        // rightTriggerO.whileTrue(m_Arm.extend(kArm.EXTENDED_POSITION).unless(() -> {
-        //             var pos = m_Arm.getArmAbsolutePositionDegrees();
-        //             var outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 10)) ||
-        //                     (pos > (ArmPos.L2_SCORING.getAngle() + 10));
-        //             System.out.println("ARM IN RANGE FOR EXTENSION: " + !outOfRange + ", ANGLE: " + pos);
-        //             return outOfRange;
-        //         }
-        // )).whileFalse(m_Arm.extend(0));
-
-
-        rightTriggerO.whileTrue(m_Arm.extendL3())
-            .whileFalse(m_Arm.extend(0));
-
-        // rightTriggerO.whileTrue(() -> {
-        //         if (!extendRange){
-        //                 .extend(kArm.EXTENDED_POSITION);
-        //         }
-        //         }
-        //  );
 
         //driveController.b().onTrue(new InstantCommand(() -> {
         //m_drivetrainSubsystem.resetGyro();
@@ -177,9 +167,9 @@ public class RobotContainer {
 
 
         //DRIVER BUTTON BINDINGS
-        rightTriggerD.whileTrue(m_intake.reverseIntake());
+       //rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
-        driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
+        rightTriggerD.whileTrue(new AutoBalance(m_drivetrainSubsystem, m_poseEstimator));
         driveController.b().onTrue(new SequentialCommandGroup(
                 m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));//TODO: robot oriented;deadman
         // driveController.x().onTrue(new SequentialCommandGroup(
@@ -208,7 +198,7 @@ public class RobotContainer {
 
     private Map<String, Command> eventMap = Map.of(
             "ScoreL3", m_Arm.extend(ArmPos.L3_SCORING.getExtended()).andThen(m_intake.reverseIntake().withTimeout(.75)),
-            "AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator),
+            "AutoBalance", new AutoBalance(m_drivetrainSubsystem, m_poseEstimator),
             "ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING),//.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION))
             "Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()),
             "Outtake", m_intake.reverseIntake().withTimeout(0.5),

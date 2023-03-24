@@ -37,7 +37,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -96,28 +95,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
     swerveModules = new SwerveModule[] {
         createSwerveModule(
             frontLeftLayout,
-            ModuleConfiguration.MK4I_L3,
+            ModuleConfiguration.MK4I_L2,
             FRONT_LEFT_MODULE_DRIVE_MOTOR,
             FRONT_LEFT_MODULE_STEER_MOTOR,
             FRONT_LEFT_MODULE_STEER_ENCODER,
             FRONT_LEFT_MODULE_STEER_OFFSET),
         createSwerveModule(
             frontRightLayout,
-            ModuleConfiguration.MK4I_L3,
+            ModuleConfiguration.MK4I_L2,
             FRONT_RIGHT_MODULE_DRIVE_MOTOR,
             FRONT_RIGHT_MODULE_STEER_MOTOR,
             FRONT_RIGHT_MODULE_STEER_ENCODER,
             FRONT_RIGHT_MODULE_STEER_OFFSET),
         createSwerveModule(
             backLeftLayout,
-            ModuleConfiguration.MK4I_L3,
+            ModuleConfiguration.MK4I_L2,
             BACK_LEFT_MODULE_DRIVE_MOTOR,
             BACK_LEFT_MODULE_STEER_MOTOR,
             BACK_LEFT_MODULE_STEER_ENCODER,
             BACK_LEFT_MODULE_STEER_OFFSET),
         createSwerveModule(
             backRightLayout,
-            ModuleConfiguration.MK4I_L3,
+            ModuleConfiguration.MK4I_L2,
             BACK_RIGHT_MODULE_DRIVE_MOTOR,
             BACK_RIGHT_MODULE_STEER_MOTOR,
             BACK_RIGHT_MODULE_STEER_ENCODER,
@@ -310,30 +309,7 @@ public void setVelocities(Double p0, Double p1, Double p2) {
     SmartDashboard.putNumber("Commanded speeds x", p2);
 }
 
-public void setWheelsToX() {
-  desiredChassisSpeeds = null;
-  setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0))
-  });
-}
 
-public double getPitchDegreesSec() {
-  double[] xyz = getGyroVelocity();
-  return Units.degreesToRadians(-xyz[0]);
-}
-
-public double getRollDegreesSec() {
-  double[] xyz = getGyroVelocity();
-  return Units.degreesToRadians(xyz[1]);
-}
-public double[] getGyroVelocity() {
-  double[] xyz = new double[3];
-  pigeon.getRawGyro(xyz);
-  return xyz;
-}
   /**
    * Creates a command to follow a Trajectory on the drivetrain.
    * 

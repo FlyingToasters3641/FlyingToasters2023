@@ -13,10 +13,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
         PoseEstimatorSubsystem poseEstimator;
         double pitch = 0.0;
         double correction;
-        double prevRoll;
-        double prevPitch;
         double prevTime;
-        double pitchVelocity;
         double roll = 0.0;
         double timeCorrection = -Timer.getFPGATimestamp();
         double angularVelocity;
@@ -25,8 +22,6 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
         public AutoBalance(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator) {
             this.drive = drive;
             this.poseEstimator = poseEstimator;
-            prevRoll = 0.0;
-            prevPitch = 0.0;
         }
 
         @Override
@@ -35,21 +30,18 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
             roll = drive.getGyroscopeRotation3d().getX();
             double time = Timer.getFPGATimestamp();
             double deltaTime = time - prevTime;
-            angularVelocity = ((roll - prevRoll) + (pitch - prevPitch)) / deltaTime;
-            correction = roll + pitch > 0 ? -0.4 : 0.4;
+            angularVelocity = (roll + pitch) / deltaTime;
+            correction = Math.abs(roll + pitch) > 0 ? -0.4 : 0.4;
             SmartDashboard.putBoolean("Balancing", true);
             SmartDashboard.putNumber("Pitch", pitch * 180);
             SmartDashboard.putNumber("Roll", roll * 180);
             drive.drive(new ChassisSpeeds(correction, 0, 0));
             prevTime = time;
-            prevRoll = roll;
-            prevPitch = pitch;
         }
 
         @Override
         public void end(boolean interrupted) {
             drive.drive(new ChassisSpeeds(0,0,0));
-            drive.setWheelsToX();
         }
 
          @Override
