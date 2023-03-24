@@ -54,6 +54,13 @@ public enum ModuleConfiguration {
       (14.0 / 50.0) * (27.0 / 17.0) * (15.0 / 45.0),
       true,
       (14.0 / 50.0) * (10.0 / 60.0),
+      false),
+
+  MK4I_L3(
+      0.10033,
+      (14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0),
+      false,
+      (14.0 / 50.0) * (10.0 / 60.0),
       false);
 
   private final double wheelDiameter;
