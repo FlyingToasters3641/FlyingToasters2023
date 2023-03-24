@@ -432,6 +432,7 @@ public final class Constants {
         FLOOR
     }
 
+
     public enum ArmPos {
         STORED_POSITION(-56, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),
@@ -469,4 +470,5 @@ public final class Constants {
         }
     }
 
-}
+}}
+
