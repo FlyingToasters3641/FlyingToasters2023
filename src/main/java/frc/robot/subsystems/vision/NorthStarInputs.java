@@ -27,7 +27,7 @@ public class NorthStarInputs implements AprilTagInputs {
     DoubleArraySubscriber observationSubscriber;
     IntegerSubscriber fpsSubscriber;
     TimestampedDoubleArray[] queue;
-    HashMap<Double, AprilTagMeasurement> measurements = new HashMap<Double, AprilTagMeasurement>();
+    HashMap<Double, AprilTagMeasurement> measurements = new HashMap<>();
     private final Pose3d relativeCameraPosition;
 
     public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
