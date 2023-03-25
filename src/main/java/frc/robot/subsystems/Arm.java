@@ -254,7 +254,7 @@ public class Arm extends SubsystemBase {
         return Commands.run(() -> {
             double pos = getArmAbsolutePositionDegrees();
             if ((pos >= (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) &&
-                    (pos <= (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 10))) {
+                    (pos <= (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 30))) {
                 m_extenderTarget = kArm.GROUND_INTAKE_EXT;
             }
         }).until(() -> m_extenderTarget == kArm.GROUND_INTAKE_EXT).withTimeout(2.0);
@@ -263,7 +263,7 @@ public class Arm extends SubsystemBase {
     public Command extendDoublePlayerStatiion() {
         return Commands.run(() -> {
             double pos = getArmAbsolutePositionDegrees();
-            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 20)) &&
+            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 30)) &&
                     (pos <= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20))) {
                 m_extenderTarget = kArm.DOUBLE_PLAYERSTATION_EXT;
             }
