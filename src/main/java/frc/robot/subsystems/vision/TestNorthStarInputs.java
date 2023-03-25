@@ -32,7 +32,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
     double[] allTimestamps;
     double[] timestampQueue;
     Double NorthStarInitialTimestamp;
-    private final double curTime;
+    private double curTime;
     private double requestTime;
     private double prevRequestTime;
 
@@ -78,6 +78,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
         flushQueue();
         Arrays.fill(timestampQueue, 0.0);
         prevRequestTime = requestTime;
+        curTime += 0.02;
         return output;
     }
 
