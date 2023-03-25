@@ -37,6 +37,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
     private Scanner sc;
     private final Path openFile;
     Double[][] NorthStarData;
+    Double[] timestamps;
     Double NorthStarInitialTimestamp;
 
     public TestNorthStarInputs(String NT4Id, Pose3d relativeCameraPosition, String csvName) {
@@ -52,8 +53,11 @@ public class TestNorthStarInputs implements AprilTagInputs {
             for (int i = 0; i < output.size(); i++) {
                 String line = output.get(i);
                 String[] frameString = line.split(",");
-                Double[] frame = new Double[frameString.length];
-                for (int j = 0; j < frameString.length; j++) {
+                if (Double.parseDouble(frameString[0]) > 0) {
+                    timestamps[i] = Double.parseDouble(frameString[0]);
+                }
+                Double[] frame = new Double[frameString.length - 1];
+                for (int j = 1; j < frameString.length; j++) {
                     String stringValue = frameString[j];
                     if (frame[0] > 0) {
                         frame[j] = Double.parseDouble(stringValue);
