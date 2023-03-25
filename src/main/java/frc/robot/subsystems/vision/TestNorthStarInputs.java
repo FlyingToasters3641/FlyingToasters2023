@@ -44,6 +44,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
         try {
             var output = Files.readAllLines(openFile);
             NorthStarData = new double[output.size()][];
+            allTimestamps = new double[output.size()];
 //            Arrays.fill(NorthStarData, output.size());
             for (int i = 0; i < output.size(); i++) {
                 String line = output.get(i);
@@ -51,15 +52,20 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 if (Double.parseDouble(frameString[0]) > 0) {
                     allTimestamps[i] = Double.parseDouble(frameString[0]);
                 }
-                double[] frame = new double[frameString.length];
+                double[] frame = new double[frameString.length - 1];
                 for (int j = 1; j < frameString.length; j++) {
                     String stringValue = frameString[j];
-                    if (frame[0] > 0) {
+                    if (Double.parseDouble(frameString[0]) > 0) {
                         frame[j] = Double.parseDouble(stringValue);
                     }
                 }
-                NorthStarData[i] = frame;
-                NorthStarInitialTimestamp = NorthStarInitialTimestamp == null && frame[0] > 0? frame[0] : NorthStarInitialTimestamp;
+                if (Double.parseDouble(frameString[0]) > 0) {
+                NorthStarData[i] = frame;}
+                if (NorthStarInitialTimestamp == null && Double.parseDouble(frameString[0]) > 0.000) {
+                    int gghdjs= 0;
+                    NorthStarInitialTimestamp = frame[0];}
+                else {NorthStarInitialTimestamp = NorthStarInitialTimestamp;}
+
             }
         } catch (IOException e) {
             System.out.println("Unable to open test output (ignore if this ends up in the competition code)");
