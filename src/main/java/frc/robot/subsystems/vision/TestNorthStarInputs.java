@@ -14,39 +14,32 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.networktables.*;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class TestNorthStarInputs implements AprilTagInputs {
 
-    String NT4Id;
-    NetworkTable northStarNT4;
-    DoubleArraySubscriber observationSubscriber;
-    IntegerSubscriber fpsSubscriber;
-    TimestampedDoubleArray[] queue;
+    double[][] queue = new double[800][];
     HashMap<Double, AprilTagMeasurement> measurements = new HashMap<>();
     private final Pose3d relativeCameraPosition;
-    private Scanner sc;
-    private final Path openFile;
-    Double[][] NorthStarData;
-    Double[] timestamps;
+    double[][] NorthStarData;
+    double[] allTimestamps;
+    double[] timestampQueue;
     Double NorthStarInitialTimestamp;
+    private final double curTime;
+    private double requestTime;
+    private double prevRequestTime;
 
-    public TestNorthStarInputs(String NT4Id, Pose3d relativeCameraPosition, String csvName) {
-        this.NT4Id = NT4Id;
+    public TestNorthStarInputs(Pose3d relativeCameraPosition, String csvName) {
         this.relativeCameraPosition = relativeCameraPosition;
-        northStarNT4 = NetworkTableInstance.getDefault().getTable(NT4Id);
-        var outputTable = northStarNT4.getSubTable("output");
 
-        openFile = Paths.get(csvName);
+        Path openFile = Paths.get(csvName);
 
         try {
             var output = Files.readAllLines(openFile);
@@ -54,9 +47,9 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 String line = output.get(i);
                 String[] frameString = line.split(",");
                 if (Double.parseDouble(frameString[0]) > 0) {
-                    timestamps[i] = Double.parseDouble(frameString[0]);
+                    allTimestamps[i] = Double.parseDouble(frameString[0]);
                 }
-                Double[] frame = new Double[frameString.length - 1];
+                double[] frame = new double[frameString.length - 1];
                 for (int j = 1; j < frameString.length; j++) {
                     String stringValue = frameString[j];
                     if (frame[0] > 0) {
@@ -69,27 +62,22 @@ public class TestNorthStarInputs implements AprilTagInputs {
             }
         } catch (IOException e) {
             System.out.println("Unable to open test output (ignore if this ends up in the competition code)");
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
 
-        observationSubscriber =
-                outputTable
-                        .getDoubleArrayTopic("observations")
-                        .subscribe(
-                                new double[]{},
-                                PubSubOption.keepDuplicates(true),
-                                PubSubOption.sendAll(true)
-                        );
-        fpsSubscriber = outputTable.getIntegerTopic("fps").subscribe(0);
-
+        curTime = NorthStarInitialTimestamp;
+        prevRequestTime = curTime;
 
     }
 
     @Override
     public Map<Double, AprilTagMeasurement> getQueue() {
+        requestTime = curTime;
         update();
         var output = measurements;
         flushQueue();
+        Arrays.fill(timestampQueue, 0.0);
+        prevRequestTime = requestTime;
         return output;
     }
 
@@ -102,14 +90,22 @@ public class TestNorthStarInputs implements AprilTagInputs {
     public void update() {
         //Deserialize the output from the Northstar networktables entry
         if (queue != null && queue.length > 0) {
-            queue = observationSubscriber.readQueue();
+            //TODO: queue will always be null in non-test version
+            for (int i = 0; i < allTimestamps.length; i++) {
+                double value = allTimestamps[i];
+                if (value <= requestTime && value >= prevRequestTime) {
+                    queue[i] = NorthStarData[i];
+                    timestampQueue[i] = allTimestamps[i];
+                }
+            }
+
             double[] timestamps = new double[queue.length];
             double[][] frames = new double[queue.length][];
             for (int i = 0; i < queue.length; i++) {
-                timestamps[i] = queue[i].timestamp / 1000000.0;
-                frames[i] = queue[i].value;
+                timestamps[i] = timestampQueue[i] / 1000000.0;
+                frames[i] = queue[i];
             }
-            long fps = fpsSubscriber.get();
+            long fps = 50;
 
             for (int tag = 0; tag < queue.length; tag++) {
                 double timestamp = timestamps[tag];
