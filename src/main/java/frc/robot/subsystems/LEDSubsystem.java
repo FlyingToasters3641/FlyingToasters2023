@@ -12,42 +12,45 @@ import frc.robot.util.MathUtil;
 
 public class LEDSubsystem extends SubsystemBase {
 
-    //The CANdle device represented in the code
+    // The CANdle device represented in the code
     private CANdle candle = new CANdle(22);
-    
-    //Two different timers for the code. Led Timer is for the coordinating of the stripes while Sparkle Timer coordinates the sparkles.
+
+    // Two different timers for the code. Led Timer is for the coordinating of the
+    // stripes while Sparkle Timer coordinates the sparkles.
     private final Timer ledTimer = new Timer();
     private final Timer sparkleTimer = new Timer();
+    private final Timer greenTimer = new Timer();
+    private final Timer checkTimer = new Timer();
 
-    //Changes the status of the LED
+    // Changes the status of the LED
     private boolean ledStatusSwitch;
 
-    //Blinks the yellow and purple mode on and off
+    // Blinks the yellow and purple mode on and off
     private int ledBlink;
 
-    //Used to communicate which colors the LED's should be turned on or off.
+    // Used to communicate which colors the LED's should be turned on or off.
     private int ledStatus;
 
-    //A list of int's which shows the specific positions of when a block or blue/orange starts
-    private int[] ledIndex = {8, 45, 81, 117};
+    // A list of int's which shows the specific positions of when a block or
+    // blue/orange starts
+    private int[] ledIndex = { 8, 45, 81, 117 };
 
     /*
-     * Variables used to modify the 
+     * Variables used to modify the
      */
     private String startLedColor;
     private boolean startLed;
     private int startLedCount;
     private boolean ledDisable;
 
-
     /*
      * Variables used to modify the sparkling of the blue-orange idling stripes
      */
-    private int whiteness; //Brightness of the sparks
-    //private String sparkColor; //Color of the sparks
-    //private int sparkIndex; //Variable which is used to modify what place the spark is being placed at
-    //private int amountOfSparkLeds; //Amount of sparkles for each block
-
+    private int whiteness; // Brightness of the sparks
+    // private String sparkColor; //Color of the sparks
+    // private int sparkIndex; //Variable which is used to modify what place the
+    // spark is being placed at
+    // private int amountOfSparkLeds; //Amount of sparkles for each block
 
     public LEDSubsystem() {
 
@@ -69,12 +72,14 @@ public class LEDSubsystem extends SubsystemBase {
 
         ledTimer.start();
         sparkleTimer.start();
+        checkTimer.start();
     }
 
-    
     /*
-     * For refrence, the periodic function of every subsystem runs for every 20(?) milliseconds
-     * This allows something to constantly run for the rest of the program, for when we want the LED to constantly display
+     * For refrence, the periodic function of every subsystem runs for every 20(?)
+     * milliseconds
+     * This allows something to constantly run for the rest of the program, for when
+     * we want the LED to constantly display
      * We use variables to control which LED runs at the time, so they don't overlap
      */
     @Override
@@ -83,7 +88,8 @@ public class LEDSubsystem extends SubsystemBase {
         /*
          * This code checks if we are currently in a teleoperated state
          * 
-         * If we aren't, it defaults to a solid blue color, otherwise it uses the switch statement
+         * If we aren't, it defaults to a solid blue color, otherwise it uses the switch
+         * statement
          * This switch statement defaults to a blue and orange stripe pattern
          */
         if (RobotState.isDisabled() == true) {
@@ -94,20 +100,19 @@ public class LEDSubsystem extends SubsystemBase {
             ledDisable = false;
         }
 
-        
-          
-        //This switch statement controls the color the LED's will be displaying at the time
-
+        // This switch statement controls the color the LED's will be displaying at the
+        // time
 
         switch (ledStatus) {
             case 0:
-            //Turns the LED's off
-                setColorSimplified("none", 0    , 152);
-            break;
+                // Turns the LED's off
+                setColorSimplified("none", 0, 152);
+                break;
             case 1:
-            //Blue and orange flowing stripes code
+                // Blue and orange flowing stripes code
                 if (ledTimer.advanceIfElapsed(.085)) {
-                    //For every iteration of .085 seconds, it increments the led color positions by 1. It does that for each position
+                    // For every iteration of .085 seconds, it increments the led color positions by
+                    // 1. It does that for each position
                     setColorSimplified("blue", ledIndex[0], 36);
                     setColorSimplified("orange", ledIndex[1], 36);
                     setColorSimplified("blue", ledIndex[2], 36);
@@ -117,7 +122,7 @@ public class LEDSubsystem extends SubsystemBase {
                     ledIndex[2]++;
                     ledIndex[3]++;
 
-                    //Allows for the LED to loop around the strips
+                    // Allows for the LED to loop around the strips
                     if (startLed == true) {
                         setColorSimplified(startLedColor, 8, startLedCount);
                         startLedCount++;
@@ -140,99 +145,112 @@ public class LEDSubsystem extends SubsystemBase {
                         }
                     }
 
-                    //Sets the position back to the LED start
+                    // Sets the position back to the LED start
                     for (int i = 0; i < 4; i++) {
                         if (ledIndex[i] > 151) {
                             ledIndex[i] = 8;
                         }
 
                     }
+                }
+                /*
+                 * if (sparkleTimer.advanceIfElapsed(.15)) {
+                 * amountOfSparkLeds = MathUtil.randomNum(3, 5);
+                 * for (int i = 0; i < amountOfSparkLeds; i++) {
+                 * sparkIndex = MathUtil.randomNum(8, 152);
+                 * if (sparkIndex >= ledIndex[0] && sparkIndex <= ledIndex[0] + 36) {
+                 * sparkColor = "blue-white";
+                 * }
+                 * if (sparkIndex >= ledIndex[1] && sparkIndex <= ledIndex[1] + 36) {
+                 * sparkColor = "orange-white";
+                 * }
+                 * if (sparkIndex >= ledIndex[2] && sparkIndex <= ledIndex[2] + 36) {
+                 * sparkColor = "blue-white";
+                 * }
+                 * if (sparkIndex >= ledIndex[3] && sparkIndex <= ledIndex[3] + 36) {
+                 * sparkColor = "orange-white";
+                 * }
+                 * if (sparkIndex >= 8 && sparkIndex <= 8 + startLedCount) {
+                 * if (startLedColor == "blue") {
+                 * sparkColor = "blue-white";
+                 * } else if (startLedColor == "orange") {
+                 * sparkColor = "orange-white";
+                 * }
+                 * }
+                 * 
+                 * setColorSimplified(sparkColor, sparkIndex, 1);
+                 * 
+                 * }
+                 * }
+                 */
 
-                
-                }
-                /*if (sparkleTimer.advanceIfElapsed(.15)) {
-                    amountOfSparkLeds = MathUtil.randomNum(3, 5);
-                    for (int i = 0; i < amountOfSparkLeds; i++) {
-                        sparkIndex = MathUtil.randomNum(8, 152);
-                        if (sparkIndex >= ledIndex[0] && sparkIndex <= ledIndex[0] + 36) {
-                            sparkColor = "blue-white";
-                        } 
-                        if (sparkIndex >= ledIndex[1] && sparkIndex <= ledIndex[1] + 36) {
-                            sparkColor = "orange-white";
-                        }
-                        if (sparkIndex >= ledIndex[2] && sparkIndex <= ledIndex[2] + 36) {
-                            sparkColor = "blue-white";
-                        }
-                        if (sparkIndex >= ledIndex[3] && sparkIndex <= ledIndex[3] + 36) {
-                            sparkColor = "orange-white";
-                        }
-                        if (sparkIndex >= 8 && sparkIndex <= 8 + startLedCount) {
-                            if (startLedColor == "blue") {
-                                sparkColor = "blue-white";
-                            } else if (startLedColor == "orange") {
-                                sparkColor = "orange-white";
-                            }
-                        }
-                        setColorSimplified(sparkColor, sparkIndex, 1);
-                    }
-                } */
-                
-            break;
+                break;
             case 2:
-            //Blinks Yellow every .2 seconds
-            if (ledTimer.advanceIfElapsed(.2)) {
-                ledBlink++;
+                // Blinks Yellow every .2 seconds
+                if (ledTimer.advanceIfElapsed(.2)) {
+                    ledBlink++;
                 }
-            
-                if (ledBlink % 2 == 0){
-                ledStatusSwitch = false;
+
+                if (ledBlink % 2 == 0) {
+                    ledStatusSwitch = false;
                 } else {
-                ledStatusSwitch = true;
+                    ledStatusSwitch = true;
                 }
-            
+
                 if (ledStatusSwitch) {
-                setColorSimplified("yellow", 8, 152);
-                } if (!ledStatusSwitch) {
-                setColorSimplified("none", 8, 152);
-            }
+                    setColorSimplified("yellow", 8, 152);
+                }
+                if (!ledStatusSwitch) {
+                    setColorSimplified("none", 8, 152);
+                }
                 break;
             case 3:
-            //Blinks Purple every .2 seconds
-            if (ledTimer.advanceIfElapsed(.2)) {
-                ledBlink++;
+                // Blinks Purple every .2 seconds
+                if (ledTimer.advanceIfElapsed(.2)) {
+                    ledBlink++;
                 }
-            
-                if (ledBlink % 2 == 0){
-                ledStatusSwitch = false;
+
+                if (ledBlink % 2 == 0) {
+                    ledStatusSwitch = false;
                 } else {
-                ledStatusSwitch = true;
+                    ledStatusSwitch = true;
                 }
-            
+
                 if (ledStatusSwitch) {
-                setColorSimplified("purple", 8, 152);
-                } if (!ledStatusSwitch) {
-                setColorSimplified("none", 8, 152);
-            }
+                    setColorSimplified("purple", 8, 152);
+                }
+                if (!ledStatusSwitch) {
+                    setColorSimplified("none", 8, 152);
+                }
                 break;
             case 4:
-            //Solid blue
+                // Solid blue
                 setColorSimplified("blue", 8, 152);
+            case 5:
+                // blinks green every .2 seconds
+                if (ledTimer.advanceIfElapsed(.2)) {
+                    ledBlink++;
+
+                    if (ledBlink % 2 == 0) {
+                        setColorSimplified("green", 8, 152);
+                    } else {
+                        setColorSimplified("none", 8, 152);
+                    }
+
+                    if (greenTimer.advanceIfElapsed(2.2)) {
+                        ledSwitch(1);
+                    }
+                }
         }
-
-        // System.out.println(ledTimer.get());
-
-        //Sets the CANdle led's to not activate at all
-        setColorSimplified("none", 0, 8);
-
     }
 
-    
     // public void setColor(int R, int G, int B, int W, int index, int count) {
-    //     candle.setLEDs(R, G, B, W, index, count);
+    // candle.setLEDs(R, G, B, W, index, count);
     // }
 
-    //This function just sets the colors using a string instead of using the specific RGBW values
-    public void setColorSimplified(String color, int index, int count) {
+    // This function just sets the colors using a string instead of using the
+    // specific RGBW values
+    private void setColorSimplified(String color, int index, int count) {
         if (color.equals("blue")) {
             candle.setLEDs(0, 80, 255, 0, index, count);
         } else if (color.equals("orange")) {
@@ -241,6 +259,8 @@ public class LEDSubsystem extends SubsystemBase {
             candle.setLEDs(225, 80, 0, 0, index, count);
         } else if (color.equals("purple")) {
             candle.setLEDs(35, 0, 60, 0, index, count);
+        } else if (color.equals("green")) {
+            candle.setLEDs(47, 125, 41, 0, index, count);
         } else if (color.equals("none")) {
             candle.setLEDs(0, 0, 0, 0, index, count);
         } else if (color.equals("blue-white")) {
@@ -252,18 +272,22 @@ public class LEDSubsystem extends SubsystemBase {
         }
     }
 
-    //Changes the status of the LED's for the Robotc container function to work
+    // Changes the status of the LED's for the Robotc container function to work
     public void ledSwitch(int status) {
-        if (status == 1) { //red and orange mode
+        if (status == 1) { // red and orange mode
             ledStatus = 1;
-        } else if (status == 2) { //yellow flash
+        } else if (status == 2) { // yellow flash
             ledStatus = 2;
-        } else if (status == 3) { //purple flash
+        } else if (status == 3) { // purple flash
             ledStatus = 3;
-        } else if (status == 4) { //blue
+        } else if (status == 4) { // blue
             ledStatus = 4;
+        } else if (status == 5) { // timed green flash
+            ledStatus = 5;
+            greenTimer.reset();
+            greenTimer.start();
         }
 
     }
-    
+
 }
