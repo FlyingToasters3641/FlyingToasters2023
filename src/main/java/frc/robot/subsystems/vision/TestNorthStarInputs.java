@@ -30,7 +30,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
     private final Pose3d relativeCameraPosition;
     double[][] NorthStarData;
     double[] allTimestamps;
-    double[] timestampQueue;
+    double[] timestampQueue = new double[800];
     Double NorthStarInitialTimestamp;
     private double curTime;
     private double requestTime;
@@ -47,10 +47,15 @@ public class TestNorthStarInputs implements AprilTagInputs {
             allTimestamps = new double[output.size()];
 //            Arrays.fill(NorthStarData, output.size());
             for (int i = 0; i < output.size(); i++) {
+                int b = i;
+
                 String line = output.get(i);
                 String[] frameString = line.split(",");
+                if (!(Double.parseDouble(frameString[0]) > 0)) {
+                    b -= 1;
+                }
                 if (Double.parseDouble(frameString[0]) > 0) {
-                    allTimestamps[i] = Double.parseDouble(frameString[0]);
+                    allTimestamps[b] = Double.parseDouble(frameString[0]);
                 }
                 double[] frame = new double[frameString.length - 1];
                 for (int j = 1; j < frameString.length; j++) {
@@ -62,7 +67,6 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 if (Double.parseDouble(frameString[0]) > 0) {
                 NorthStarData[i] = frame;}
                 if (NorthStarInitialTimestamp == null && Double.parseDouble(frameString[0]) > 0.000) {
-                    int gghdjs= 0;
                     NorthStarInitialTimestamp = Double.parseDouble(frameString[0]) / 1000000.0;}
                 else {NorthStarInitialTimestamp = NorthStarInitialTimestamp;}
 
@@ -73,7 +77,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
         }
 
         curTime = NorthStarInitialTimestamp;
-        prevRequestTime = curTime;
+        prevRequestTime = 0;
 
     }
 
@@ -99,11 +103,13 @@ public class TestNorthStarInputs implements AprilTagInputs {
         //Deserialize the output from the Northstar networktables entry
         if (queue != null && queue.length > 0) {
             //TODO: queue will always be null in non-test version
+            int z = 0;
             for (int i = 0; i < allTimestamps.length; i++) {
                 double value = allTimestamps[i];
-                if (value <= requestTime && value >= prevRequestTime) {
-                    queue[i] = NorthStarData[i];
-                    timestampQueue[i] = allTimestamps[i];
+                if (value <= requestTime && value >= prevRequestTime && value > 0.00000) {
+                    queue[z] = NorthStarData[i];
+                    timestampQueue[z] = allTimestamps[i];
+                    z += 1;
                 }
             }
 

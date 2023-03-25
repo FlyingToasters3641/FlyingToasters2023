@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import static frc.robot.Constants.tagConfigs;
 
 
-public class AprilTagSubsystem extends SubsystemBase {
+public class AprilTagSubsystem{
     AprilTagInputs[] detectors;
     double totalDistance = 0.0;
     private static final double xyStdDevCoefficient = 0.01;
@@ -64,7 +64,6 @@ public class AprilTagSubsystem extends SubsystemBase {
         prevTagPoses = tagPoses;
     }
 
-    @Override
     public void periodic() {
         updatePoses();
     }

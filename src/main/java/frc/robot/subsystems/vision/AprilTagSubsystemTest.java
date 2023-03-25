@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.hal.HAL;
 import edu.wpi.first.math.geometry.Pose3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
