@@ -43,13 +43,15 @@ public class TestNorthStarInputs implements AprilTagInputs {
 
         try {
             var output = Files.readAllLines(openFile);
+            NorthStarData = new double[output.size()][];
+//            Arrays.fill(NorthStarData, output.size());
             for (int i = 0; i < output.size(); i++) {
                 String line = output.get(i);
                 String[] frameString = line.split(",");
                 if (Double.parseDouble(frameString[0]) > 0) {
                     allTimestamps[i] = Double.parseDouble(frameString[0]);
                 }
-                double[] frame = new double[frameString.length - 1];
+                double[] frame = new double[frameString.length];
                 for (int j = 1; j < frameString.length; j++) {
                     String stringValue = frameString[j];
                     if (frame[0] > 0) {
@@ -57,7 +59,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
                     }
                 }
                 NorthStarData[i] = frame;
-                NorthStarInitialTimestamp = NorthStarInitialTimestamp == null ? frame[0] : NorthStarInitialTimestamp;
+                NorthStarInitialTimestamp = NorthStarInitialTimestamp == null && frame[0] > 0? frame[0] : NorthStarInitialTimestamp;
             }
         } catch (IOException e) {
             System.out.println("Unable to open test output (ignore if this ends up in the competition code)");
