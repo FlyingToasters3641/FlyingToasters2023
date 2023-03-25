@@ -56,14 +56,14 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 for (int j = 1; j < frameString.length; j++) {
                     String stringValue = frameString[j];
                     if (Double.parseDouble(frameString[0]) > 0) {
-                        frame[j] = Double.parseDouble(stringValue);
+                        frame[j - 1] = Double.parseDouble(stringValue);
                     }
                 }
                 if (Double.parseDouble(frameString[0]) > 0) {
                 NorthStarData[i] = frame;}
                 if (NorthStarInitialTimestamp == null && Double.parseDouble(frameString[0]) > 0.000) {
                     int gghdjs= 0;
-                    NorthStarInitialTimestamp = frame[0];}
+                    NorthStarInitialTimestamp = Double.parseDouble(frameString[0]) / 1000000.0;}
                 else {NorthStarInitialTimestamp = NorthStarInitialTimestamp;}
 
             }
