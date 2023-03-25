@@ -64,6 +64,8 @@ public class Arm extends SubsystemBase {
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
+        public static final double DOUBLE_PLAYERSTATION_EXT = 14;
+        public static final double GROUND_INTAKE_EXT = 56; 
 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
@@ -250,26 +252,22 @@ public class Arm extends SubsystemBase {
 
     public Command extendGroundIntake() {
         return Commands.run(() -> {
-        })
-                .until(() -> {
-                    double pos = getArmAbsolutePositionDegrees();
-                    boolean outOfRange = (pos < (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) ||
-                            (pos > (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 10));
-                    return !outOfRange;
-                })
-                .andThen(extend(56));
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) &&
+                    (pos <= (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 10))) {
+                m_extenderTarget = kArm.GROUND_INTAKE_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.GROUND_INTAKE_EXT).withTimeout(2.0);
     }
 
     public Command extendDoublePlayerStatiion() {
         return Commands.run(() -> {
-        })
-                .until(() -> {
-                    double pos = getArmAbsolutePositionDegrees();
-                    boolean outOfRange = (pos < (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 20)) ||
-                            (pos > (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20));
-                    return !outOfRange;
-                })
-                .andThen(extend(14));
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 20)) &&
+                    (pos <= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20))) {
+                m_extenderTarget = kArm.DOUBLE_PLAYERSTATION_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.DOUBLE_PLAYERSTATION_EXT).withTimeout(2.0);
     }
 
     // Extension command
