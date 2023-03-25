@@ -58,7 +58,6 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 }
                 NorthStarData[i] = frame;
                 NorthStarInitialTimestamp = NorthStarInitialTimestamp == null ? frame[0] : NorthStarInitialTimestamp;
-
             }
         } catch (IOException e) {
             System.out.println("Unable to open test output (ignore if this ends up in the competition code)");

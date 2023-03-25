@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AprilTagSubsystemTest {
     AprilTagSubsystem aprilTagSubsystem;
     Consumer<VisionHelpers.AprilTagMeasurement> printMeasurement = measurement -> System.out.println(measurement);
-    AprilTagInputs input = new TestNorthStarInputs(new Pose3d(), "");
+    AprilTagInputs input = new TestNorthStarInputs(new Pose3d(), "src/main/java/frc/robot/subsystems/vision/output.csv");
     @BeforeEach
     void Setup() {
         aprilTagSubsystem = new AprilTagSubsystem(printMeasurement, input);
