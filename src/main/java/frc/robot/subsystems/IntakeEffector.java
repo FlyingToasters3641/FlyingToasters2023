@@ -88,7 +88,7 @@ public class IntakeEffector extends SubsystemBase {
                     m_rollers.set(0);
                     m_leds.ledSwitch(5);  // flash green when we have an object
                     PIDController.setReference(
-                            m_rollers.getEncoder().getPosition(),
+                            m_rollers.getEncoder().getPosition() * 1.15,
                             ControlType.kPosition
                     );
                     avgCurrent = 0;

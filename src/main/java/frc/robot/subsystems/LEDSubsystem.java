@@ -92,6 +92,7 @@ public class LEDSubsystem extends SubsystemBase {
          * statement
          * This switch statement defaults to a blue and orange stripe pattern
          */
+
         if (RobotState.isDisabled() == true) {
             ledSwitch(4);
             ledDisable = true;
@@ -226,6 +227,7 @@ public class LEDSubsystem extends SubsystemBase {
             case 4:
                 // Solid blue
                 setColorSimplified("blue", 8, 152);
+                break;
             case 5:
                 // blinks green every .2 seconds
                 if (ledTimer.advanceIfElapsed(.2)) {
@@ -260,7 +262,7 @@ public class LEDSubsystem extends SubsystemBase {
         } else if (color.equals("purple")) {
             candle.setLEDs(35, 0, 60, 0, index, count);
         } else if (color.equals("green")) {
-            candle.setLEDs(47, 125, 41, 0, index, count);
+            candle.setLEDs(47, 125, 0, 0, index, count);
         } else if (color.equals("none")) {
             candle.setLEDs(0, 0, 0, 0, index, count);
         } else if (color.equals("blue-white")) {
