@@ -59,7 +59,7 @@ public enum ModuleConfiguration {
   MK4I_L3(
       0.10033,
       (14.0 / 50.0) * (28.0 / 16.0) * (15.0 / 45.0),
-      false,
+      true,
       (14.0 / 50.0) * (10.0 / 60.0),
       false);
 

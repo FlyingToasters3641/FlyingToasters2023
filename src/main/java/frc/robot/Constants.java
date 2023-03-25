@@ -95,26 +95,26 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40;
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(25.22);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(345.585938);//345.058594);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(165.322266);//345.585938);//345.058594); //from looking at the robot from behind, bevels facing left
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38;
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET =
     // -Math.toRadians(202.675);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(60.556641);//60.732422);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(240.117188);//60.556641);//60.732422);
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41;
     // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(122.78);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(302.514844);//302.607422);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(122.343750);//302.514844);//302.607422);
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(110.9179);//111.093750);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(291.269531);//110.9179);//111.093750);
 
     public static final int LEFT_ARM_MOTOR = 26;
     public static final int RIGHT_ARM_MOTOR = 21;
