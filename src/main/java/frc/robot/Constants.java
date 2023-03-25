@@ -95,26 +95,26 @@ public final class Constants {
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 40;
     // public static final double BACK_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(25.22);
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(345.058594);//165.146484);//164.531250);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(345.585938);//345.058594);
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 42;
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 34;
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 38;
     // public static final double BACK_LEFT_MODULE_STEER_OFFSET =
     // -Math.toRadians(202.675);
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(60.732422);//240.117188);//240.292969);
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(60.556641);//60.732422);
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 36;
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 33;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 41;
     // public static final double FRONT_RIGHT_MODULE_STEER_OFFSET =
     // -Math.toRadians(122.78);
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(302.607422);//121.201172);//121.552734);
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(302.514844);//302.607422);
 
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 30;
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 32;
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 31;
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(111.093750);//290.917969);//292.32419);
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(110.9179);//111.093750);
 
     public static final int LEFT_ARM_MOTOR = 26;
     public static final int RIGHT_ARM_MOTOR = 21;
@@ -216,8 +216,8 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-56, 0, IntakePos.DEFAULT, false), 
-    GROUND_INTAKE_POSITION(-40, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true), 
+    STORED_POSITION(-53, 0, IntakePos.DEFAULT, false), 
+    GROUND_INTAKE_POSITION(-38, 56 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true), 
     SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true), 
     DOUBLE_PLAYERSTATION_PICKUP(131, 14, IntakePos.DEFAULT, true), 
     L2_SCORING(142, 0, IntakePos.DEFAULT, false),
