@@ -25,6 +25,8 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.DrivetrainSubsystem;
+
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -92,12 +94,24 @@ public class RobotContainer {
 
   /* UI Elements */
   private final SendableChooser<Command> chooser = new SendableChooser<>();
-  private Map<String, Command> eventMap;
+  private Map<String, Command> eventMap = new HashMap<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+      eventMap.put("ScoreL3", m_Arm.extend(ArmPos.L3_SCORING.getExtended()).andThen(m_intake.reverseIntake()));
+      eventMap.put("AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
+      eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING)); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
+      eventMap.put("Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()));
+      eventMap.put("Outtake", m_intake.reverseIntake().withTimeout(0.25));
+      eventMap.put("Retract", m_Arm.extend(0));
+      eventMap.put("RetractToRest", m_Arm.moveArm(ArmPos.STORED_POSITION).withTimeout(0.75));
+      eventMap.put("GroundIntake", new SequentialCommandGroup(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION), m_Arm.extend(ArmPos.GROUND_INTAKE_POSITION.getExtended()), m_intake.runIntake(m_LEDSubsystem)));
+      eventMap.put("StartIntake", m_intake.runIntake(m_LEDSubsystem).withTimeout(2)); // TODO: Tune timeout! this should stop before we try to score
+      eventMap.put("MoveArmUp", m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
+      eventMap.put("MoveToL3", m_Arm.moveArm(ArmPos.L3_SCORING));
+      eventMap.put("MoveToL2", m_Arm.moveArm(ArmPos.L2_SCORING));
     m_drivetrainSubsystem.setDefaultCommand(
       new FieldOrientedDriveCommand(
         m_drivetrainSubsystem,
@@ -117,43 +131,13 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
     // Configure the autonomous chooser
     configureAutonomousChooser();
 
     reseedTimer.start();
 
-    eventMap.put(
-      "ScoreL3",
-      m_Arm
-        .extend(ArmPos.L3_SCORING.getExtended())
-        .andThen(m_intake.reverseIntake().withTimeout(.75))
-    );
-    eventMap.put(
-      "AutoBalance",
-      new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator)
-    );
-    eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING)); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
-    eventMap.put("Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()));
-    eventMap.put("Outtake", m_intake.reverseIntake().withTimeout(0.5));
-    eventMap.put("Retract", m_Arm.extend(0));
-    eventMap.put(
-      "RetractToRest",
-      m_Arm.moveArm(ArmPos.STORED_POSITION).withTimeout(0.75)
-    );
-    eventMap.put(
-      "GroundIntake",
-      new SequentialCommandGroup(
-        m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION),
-        m_intake.runIntake(m_LEDSubsystem).withTimeout(4)
-      )
-    );
-    eventMap.put(
-      "StartIntake",
-      m_intake.runIntake(m_LEDSubsystem).withTimeout(2)
-    ); // TODO: Tune timeout! this should stop before we try to score
-    eventMap.put("MoveArmUp", m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
-    eventMap.put("MoveToL3", m_Arm.moveArm(ArmPos.L3_SCORING));
-    eventMap.put("MoveToL2", m_Arm.moveArm(ArmPos.L2_SCORING));
+
   }
 
   /**
