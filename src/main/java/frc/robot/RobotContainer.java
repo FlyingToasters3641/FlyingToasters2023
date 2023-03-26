@@ -220,6 +220,19 @@ public class RobotContainer {
     // driveController.x().onTrue(new SequentialCommandGroup(
     // m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
+    // Field-oriented 90 degree mode
+    driveController
+        .rightStick().whileTrue(
+                new FieldHeadingDriveCommand(
+                        m_drivetrainSubsystem,
+                        () -> m_poseEstimator.getCurrentPose().getRotation(),
+                        () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () -> -modifyAxis(driveController.getRightY()),
+                        () -> -modifyAxis(driveController.getRightX())
+                )                
+        );
+
     // SLOW MODE
     driveController
       .leftBumper()
