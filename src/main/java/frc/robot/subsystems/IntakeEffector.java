@@ -192,9 +192,10 @@ public class IntakeEffector extends SubsystemBase {
 
         SmartDashboard.putNumber("TOF: Get", m_tof.get());
         SmartDashboard.putNumber("TOF: Get distance", m_tof.getDistance());
-        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());//yes
+        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());
         SmartDashboard.putNumber("TOF: Freq", m_tof.getFrequency());
         SmartDashboard.putBoolean("TOF: Is connected?", m_tof.isConnected());
+        SmartDashboard.putBoolean("Does the intake have an object?", intakeHasObject());
 
         prevEncoder = m_rollers.getEncoder().getPosition();
     }
