@@ -70,16 +70,19 @@ public class AprilTagSubsystem extends SubsystemBase{
 
         for (Map.Entry<Integer, AprilTagMeasurement> entry : tagPoses.entrySet() ) {
             int id = entry.getValue().getID();
+            SmartDashboard.putNumber("Tag detected:", id);
             double currentTimeStamp = entry.getValue().getTimestamp();
-
+            SmartDashboard.putBoolean("Got to consumer caller", true);
             if (prevTagPoses != null && prevTagPoses.get(id).getTimestamp() < currentTimeStamp) {
+                SmartDashboard.putBoolean("Consumer Called:", true);
                 poseEstimator.accept(entry.getValue());
             } else if (prevTagPoses == null) {
+                SmartDashboard.putBoolean("Consumer Called:", true);
                 poseEstimator.accept(entry.getValue());
-            }
+            } else {SmartDashboard.putBoolean("Consumer Called:", false);}
         }
 
-        prevTagPoses = tagPoses;
+        prevTagPoses = new TreeMap<Integer, AprilTagMeasurement>(tagPoses);
     }
 
     @Override
