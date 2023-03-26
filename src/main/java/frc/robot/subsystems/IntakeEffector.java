@@ -68,6 +68,14 @@ public class IntakeEffector extends SubsystemBase {
     private double avgCurrent = 0;
     private double currentStore = 0;
     private int intakeIteration = 1;
+    private double tofPos = m_tof.getAbsolutePosition();
+
+    public boolean intakeHasObject() {
+        if (tofPos > 0.3 || tofPos < 0.15) 
+            return true;
+        else
+            return false;
+    }
 
     public Command runIntake(LEDSubsystem m_leds) {
 
@@ -91,7 +99,7 @@ public class IntakeEffector extends SubsystemBase {
             SmartDashboard.putBoolean("Intake is finished", false);
         })
                 .until(() -> {
-                    return avgCurrent >= 20;
+                    return avgCurrent >= 20 & intakeHasObject() == true;
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
@@ -184,7 +192,7 @@ public class IntakeEffector extends SubsystemBase {
 
         SmartDashboard.putNumber("TOF: Get", m_tof.get());
         SmartDashboard.putNumber("TOF: Get distance", m_tof.getDistance());
-        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());
+        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());//yes
         SmartDashboard.putNumber("TOF: Freq", m_tof.getFrequency());
         SmartDashboard.putBoolean("TOF: Is connected?", m_tof.isConnected());
 
