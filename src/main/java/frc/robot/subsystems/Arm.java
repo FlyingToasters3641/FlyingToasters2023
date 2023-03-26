@@ -64,6 +64,8 @@ public class Arm extends SubsystemBase {
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
+        public static final double DOUBLE_PLAYERSTATION_EXT = 14;
+        public static final double GROUND_INTAKE_EXT = 56; 
 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
@@ -193,7 +195,7 @@ public class Arm extends SubsystemBase {
     }
 
     // Main command to rotate and extend arm to a preset
-    public Command moveArm(ArmPos angle) {
+    public Command moveArm(ArmPos angle, double timeout) {
         // double extendTimeout = 2.0;
         // boolean concurrentRetract = false;
         // System.out.println("IN MOVEARM (COMMANDED TO: " + angle.getAngle());
@@ -207,7 +209,7 @@ public class Arm extends SubsystemBase {
         // System.out.println("CONCURRENT RETRACT");
         // }
 
-        return m_intake.stopIntake().andThen(extend(0)).andThen(
+        return m_intake.stopIntake().andThen(m_intake.retractIntake()).andThen(extend(0)).andThen(
                 Commands.run(() -> {
                     System.out.println("arm position yes" + getArmAbsolutePositionDegrees() + ",commanded angle"
                             + angle.getAngle());
@@ -218,13 +220,45 @@ public class Arm extends SubsystemBase {
                     m_targetArmPosition = normalizeAngle(angle.getAngle());
                     // System.out.println("Moving arm to: " + angle.getAngle());
                 })
-                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(0.1)
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout)
                         .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
                                 : m_intake.extendIntake())
                                 .andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
 
     }
 
+    public Command moveArm(ArmPos angle) {
+        double timeout = 0.1;
+        // double extendTimeout = 2.0;
+        // boolean concurrentRetract = false;
+        // System.out.println("IN MOVEARM (COMMANDED TO: " + angle.getAngle());
+
+        // if (angle == ArmPos.STORED_POSITION && getArmAbsolutePositionDegrees() > 45)
+        // {
+        // extendTimeout = 0.1; // don't wait for retract of extender if going to rest
+        // position and we're
+        // // currently at L2/L3 position.
+        // concurrentRetract = true;
+        // System.out.println("CONCURRENT RETRACT");
+        // }
+
+        return m_intake.stopIntake().andThen(m_intake.retractIntake()).andThen(extend(0)).andThen(
+                Commands.run(() -> {
+                            System.out.println("arm position yes" + getArmAbsolutePositionDegrees() + ",commanded angle"
+                                    + angle.getAngle());
+                            if (getArmAbsolutePositionDegrees() > angle.getAngle())
+                                m_activeArmPidSlot = 1; // for downward arm rotations, slowed down
+                            else
+                                m_activeArmPidSlot = 0;
+                            m_targetArmPosition = normalizeAngle(angle.getAngle());
+                            // System.out.println("Moving arm to: " + angle.getAngle());
+                        })
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout)
+                        .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
+                                : m_intake.extendIntake())
+                                .andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
+
+    }
     // EXTENSIONS FOR ARM POSITIONS
     // public Command extendL3() {
     // return Commands.run(() -> {
@@ -250,26 +284,22 @@ public class Arm extends SubsystemBase {
 
     public Command extendGroundIntake() {
         return Commands.run(() -> {
-        })
-                .until(() -> {
-                    double pos = getArmAbsolutePositionDegrees();
-                    boolean outOfRange = (pos < (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) ||
-                            (pos > (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 10));
-                    return !outOfRange;
-                })
-                .andThen(extend(56));
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) &&
+                    (pos <= (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 30))) {
+                m_extenderTarget = kArm.GROUND_INTAKE_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.GROUND_INTAKE_EXT).withTimeout(2.0);
     }
 
     public Command extendDoublePlayerStatiion() {
         return Commands.run(() -> {
-        })
-                .until(() -> {
-                    double pos = getArmAbsolutePositionDegrees();
-                    boolean outOfRange = (pos < (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 20)) ||
-                            (pos > (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20));
-                    return !outOfRange;
-                })
-                .andThen(extend(14));
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 30)) &&
+                    (pos <= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20))) {
+                m_extenderTarget = kArm.DOUBLE_PLAYERSTATION_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.DOUBLE_PLAYERSTATION_EXT).withTimeout(2.0);
     }
 
     // Extension command

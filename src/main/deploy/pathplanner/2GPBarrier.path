@@ -17,8 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
-          "Outtake",
+          "ScoreL3",
           "Retract",
           "RetractToRest"
         ],
@@ -129,12 +128,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9129291991222872,
-        "y": 4.285622468814383
+        "x": 1.898843193248414,
+        "y": 4.423830969318036
       },
       "prevControl": {
-        "x": 2.6098865288008373,
-        "y": 4.328649537507409
+        "x": 2.5958005229269645,
+        "y": 4.466858038011062
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -144,8 +143,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
-          "Outtake",
+          "ScoreL3",
           "RetractToRest"
         ],
         "executionBehavior": "sequential",
@@ -162,6 +160,12 @@
       "position": 0.25,
       "names": [
         "GroundIntake"
+      ]
+    },
+    {
+      "position": 3.297230113636362,
+      "names": [
+        "RetractToRest"
       ]
     }
   ]
