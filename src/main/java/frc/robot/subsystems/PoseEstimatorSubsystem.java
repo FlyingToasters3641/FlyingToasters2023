@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
 // import org.photonvision.EstimatedRobotPose;
@@ -100,14 +101,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 visionMeasurementStdDevs);
 
         tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
-        tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
 
-        addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
+
+        //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
+        addData = measure -> tab.add("Field", measure).withPosition(2, 0).withSize(6, 4);
 
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-                new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
+             //   new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
                 new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,0.349066)))
 
         );

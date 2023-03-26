@@ -1,10 +1,18 @@
 {
   "NetworkTables": {
-    "Transitory Values": {
+    "Persistent Values": {
       "open": false
     },
     "retained": {
       "limelight": {
+        "open": true
+      }
+    },
+    "transitory": {
+      "Shuffleboard": {
+        "Vision": {
+          "open": true
+        },
         "open": true
       }
     },
