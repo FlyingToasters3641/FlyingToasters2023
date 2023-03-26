@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +23,8 @@ public class IntakeEffector extends SubsystemBase {
     int intakeFilterIteration = 20;
 
     private CANSparkMax m_rollers;
+    private DutyCycleEncoder m_tof;
+    
     private boolean intakeRetracted;
     SparkMaxPIDController PIDController;
     double prevEncoder;
@@ -51,6 +55,10 @@ public class IntakeEffector extends SubsystemBase {
         PIDController.setD(0);
 
         prevEncoder = m_rollers.getEncoder().getPosition();
+
+        m_tof = new DutyCycleEncoder(0);
+        m_tof.setDistancePerRotation(1.0);
+        m_tof.reset();
     }
 
     public boolean isIn() {
@@ -173,6 +181,13 @@ public class IntakeEffector extends SubsystemBase {
                 m_rollers.getOutputCurrent() /
                         (m_rollers.getEncoder().getPosition() - prevEncoder)
         );
+
+        SmartDashboard.putNumber("TOF: Get", m_tof.get());
+        SmartDashboard.putNumber("TOF: Get distance", m_tof.getDistance());
+        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());
+        SmartDashboard.putNumber("TOF: Freq", m_tof.getFrequency());
+        SmartDashboard.putBoolean("TOF: Is connected?", m_tof.isConnected());
+
         prevEncoder = m_rollers.getEncoder().getPosition();
     }
 }
