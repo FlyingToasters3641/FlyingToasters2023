@@ -61,9 +61,9 @@ public class NorthStarInputs implements AprilTagInputs {
 
     @Override
     public void update() {
+        queue = observationSubscriber.readQueue();
         //Deserialize the output from the Northstar networktables entry
         if (queue != null && queue.length > 0) {
-            queue = observationSubscriber.readQueue();
             double[] timestamps = new double[queue.length];
             double[][] frames = new double[queue.length][];
             for (int i = 0; i < queue.length; i++) {

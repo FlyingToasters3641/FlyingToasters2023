@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import static frc.robot.Constants.tagConfigs;
 
 
-public class AprilTagSubsystem{
+public class AprilTagSubsystem extends SubsystemBase{
     AprilTagInputs[] detectors;
     double totalDistance = 0.0;
     private static final double xyStdDevCoefficient = 0.01;
@@ -32,15 +32,13 @@ public class AprilTagSubsystem{
     private void updatePoses() {
         for (AprilTagInputs detector : detectors) {
             var detectorQueue = detector.getQueue();
+            //TODO: This may overwrite the previous poses, try to add something that will get the least ambiguous poses
             robotPoses.putAll(detectorQueue);
         }
         for (int i = 1; i <= tagConfigs.length; i++) {
             for (Map.Entry<Double, AprilTagMeasurement> m : robotPoses.entrySet()) {
                 if (m.getValue().ID == i) {
                     tagPoses.put(m.getValue().ID, m.getValue());
-                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " X position:", m.getValue().pose.getX());
-                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " Y position:", m.getValue().pose.getY());
-                    SmartDashboard.putNumber("Tag " + m.getValue().ID + " Z position:", m.getValue().pose.getZ());
                     totalDistance += tagConfigs[i - 1].pose.getTranslation().getDistance(m.getValue().nonTransformedPose.getTranslation());
                 }
             }
@@ -64,6 +62,7 @@ public class AprilTagSubsystem{
         prevTagPoses = tagPoses;
     }
 
+    @Override
     public void periodic() {
         updatePoses();
     }

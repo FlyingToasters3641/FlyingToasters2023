@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.*;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
 // import org.photonvision.EstimatedRobotPose;
@@ -22,10 +23,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -110,8 +107,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-                new NorthStarInputs("ADD ID HERE", new Pose3d()),
-                new NorthStarInputs("ADD ID HERE", new Pose3d())
+                new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
+                new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,0.349066)))
+
         );
     }
 

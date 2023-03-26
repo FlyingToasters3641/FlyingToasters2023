@@ -67,7 +67,7 @@ public class TestNorthStarInputs implements AprilTagInputs {
                 if (Double.parseDouble(frameString[0]) > 0) {
                 NorthStarData[i] = frame;}
                 if (NorthStarInitialTimestamp == null && Double.parseDouble(frameString[0]) > 0.000) {
-                    NorthStarInitialTimestamp = Double.parseDouble(frameString[0]) / 1000000.0;}
+                    NorthStarInitialTimestamp = Double.parseDouble(frameString[0]);}
                 else {NorthStarInitialTimestamp = NorthStarInitialTimestamp;}
 
             }
@@ -83,13 +83,14 @@ public class TestNorthStarInputs implements AprilTagInputs {
 
     @Override
     public Map<Double, AprilTagMeasurement> getQueue() {
+        curTime += 0.02 * 1000000.0;
         requestTime = curTime;
         update();
         var output = measurements;
         flushQueue();
         Arrays.fill(timestampQueue, 0.0);
         prevRequestTime = requestTime;
-        curTime += 0.02;
+
         return output;
     }
 
@@ -122,67 +123,69 @@ public class TestNorthStarInputs implements AprilTagInputs {
             long fps = 50;
 
             for (int tag = 0; tag < queue.length; tag++) {
-                double timestamp = timestamps[tag];
-                double[] frame = frames[tag];
-                //If there's a duplicate tag pose, the tag id moves to position 17 in the frame (double array) and
-                //position 9 becomes the error of the second tag pose.
-                int id = (int) frame[0] == 2 ? (int) frame[17] : (int) frame[9];
-                double ambiguity = frame[NorthStarNetworkTables.ERROR_0.getValue()];
-                var cameraPosition =
-                        new Pose3d(
-                                frame[NorthStarNetworkTables.CAMERA_POSE_0_X_COMPONENT.getValue()],
-                                frame[NorthStarNetworkTables.CAMERA_POSE_0_Y_COMPONENT.getValue()],
-                                frame[NorthStarNetworkTables.CAMERA_POSE_0_Z_COMPONENT.getValue()],
-                                new Rotation3d(
-                                        new Quaternion(
-                                                frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_W.getValue()],
-                                                frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_X.getValue()],
-                                                frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_Y.getValue()],
-                                                frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_Z.getValue()]
-                                        )
-                                )
-                        );
-                //If there are multiple camera poses for the same tag in one frame, pick the best one.
-                if (
-                        (int) frame[0] == 2 &&
-                                frame[NorthStarNetworkTables.ERROR_1.getValue()] < ambiguity * 0.15
-                ) {
-                    ambiguity = frame[NorthStarNetworkTables.ERROR_1.getValue()];
-                    cameraPosition =
+                if (queue[tag] != null) {
+                    double timestamp = timestamps[tag];
+                    double[] frame = frames[tag];
+                    //If there's a duplicate tag pose, the tag id moves to position 17 in the frame (double array) and
+                    //position 9 becomes the error of the second tag pose.
+                    int id = (int) frame[0] == 2 ? (int) frame[17] : (int) frame[9];
+                    double ambiguity = frame[NorthStarNetworkTables.ERROR_0.getValue()];
+                    var cameraPosition =
                             new Pose3d(
-                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_X_COMPONENT.getValue()],
-                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_Y_COMPONENT.getValue()],
-                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_Z_COMPONENT.getValue()],
+                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_X_COMPONENT.getValue()],
+                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_Y_COMPONENT.getValue()],
+                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_Z_COMPONENT.getValue()],
                                     new Rotation3d(
                                             new Quaternion(
-                                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_W.getValue()],
-                                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_X.getValue()],
-                                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_Y.getValue()],
-                                                    frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_Z.getValue()]
+                                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_W.getValue()],
+                                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_X.getValue()],
+                                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_Y.getValue()],
+                                                    frame[NorthStarNetworkTables.CAMERA_POSE_0_THETA_COMPONENT_Z.getValue()]
                                             )
                                     )
                             );
-                } else if (
-                        (int) frame[0] == 2 &&
-                                ambiguity > frame[NorthStarNetworkTables.ERROR_1.getValue()] * 0.15
-                ) {
-                    cameraPosition = null;
-                }
-                if (cameraPosition != null) {
-                    var measure = new AprilTagMeasurement(
-                            timestamp,
-                            id,
-                            cameraPosition.transformBy(
-                                    new Transform3d(
-                                            relativeCameraPosition.getTranslation(),
-                                            relativeCameraPosition.getRotation())
-                                            .inverse()
-                            ),
-                            cameraPosition,
-                            ambiguity,
-                            fps
-                    );
-                    measurements.put(timestamp, measure);
+                    //If there are multiple camera poses for the same tag in one frame, pick the best one.
+                    if (
+                            (int) frame[0] == 2 &&
+                                    frame[NorthStarNetworkTables.ERROR_1.getValue()] < ambiguity * 0.15
+                    ) {
+                        ambiguity = frame[NorthStarNetworkTables.ERROR_1.getValue()];
+                        cameraPosition =
+                                new Pose3d(
+                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_X_COMPONENT.getValue()],
+                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_Y_COMPONENT.getValue()],
+                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_Z_COMPONENT.getValue()],
+                                        new Rotation3d(
+                                                new Quaternion(
+                                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_W.getValue()],
+                                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_X.getValue()],
+                                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_Y.getValue()],
+                                                        frame[NorthStarNetworkTables.CAMERA_POSE_1_THETA_COMPONENT_Z.getValue()]
+                                                )
+                                        )
+                                );
+                    } else if (
+                            (int) frame[0] == 2 &&
+                                    ambiguity > frame[NorthStarNetworkTables.ERROR_1.getValue()] * 0.15
+                    ) {
+                        cameraPosition = null;
+                    }
+                    if (cameraPosition != null) {
+                        var measure = new AprilTagMeasurement(
+                                timestamp,
+                                id,
+                                cameraPosition.transformBy(
+                                        new Transform3d(
+                                                relativeCameraPosition.getTranslation(),
+                                                relativeCameraPosition.getRotation())
+                                                .inverse()
+                                ),
+                                cameraPosition,
+                                ambiguity,
+                                fps
+                        );
+                        measurements.put(timestamp, measure);
+                    }
                 }
             }
         }
