@@ -104,7 +104,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
 
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
-        addData = measure -> tab.add("Field", measure).withPosition(2, 0).withSize(6, 4);
+
+        addData = measure -> {
+            var stuff = new Field2d();
+            stuff.setRobotPose(measure.getPose().toPose2d());
+           tab.add("Field", stuff).withPosition(2, 0).withSize(6, 4);};
 
 
         NorthStarEstimator = new AprilTagSubsystem(

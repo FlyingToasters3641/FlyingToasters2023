@@ -25,7 +25,7 @@ public class AprilTagSubsystem extends SubsystemBase{
 
     private static final double xyStdDevCoefficient = 0.01;
     private static final double thetaStdDevCoefficient = 0.01;
-    private TreeMap<Integer, AprilTagMeasurement> prevTagPoses = new TreeMap<>();
+    private TreeMap<Integer, AprilTagMeasurement> prevTagPoses;
 
     private TreeMap<Double, AprilTagMeasurement> robotPoses = new TreeMap<>();
     private TreeMap<Integer, AprilTagMeasurement> tagPoses = new TreeMap<>();
@@ -73,10 +73,10 @@ public class AprilTagSubsystem extends SubsystemBase{
             SmartDashboard.putNumber("Tag detected:", id);
             double currentTimeStamp = entry.getValue().getTimestamp();
             SmartDashboard.putBoolean("Got to consumer caller", true);
-            if (prevTagPoses != null && prevTagPoses.get(id).getTimestamp() < currentTimeStamp) {
+            if (prevTagPoses != null && prevTagPoses.get(id) != null && prevTagPoses.size() > 0 && prevTagPoses.get(id).getTimestamp() < currentTimeStamp) {
                 SmartDashboard.putBoolean("Consumer Called:", true);
                 poseEstimator.accept(entry.getValue());
-            } else if (prevTagPoses == null) {
+            } else if (prevTagPoses == null || prevTagPoses.size() == 0 || prevTagPoses.get(id) == null) {
                 SmartDashboard.putBoolean("Consumer Called:", true);
                 poseEstimator.accept(entry.getValue());
             } else {SmartDashboard.putBoolean("Consumer Called:", false);}
