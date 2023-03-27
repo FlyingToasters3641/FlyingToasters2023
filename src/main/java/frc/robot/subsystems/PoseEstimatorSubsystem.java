@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -52,12 +56,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
 
     private final Field2d field2d = new Field2d();
+    private final Field2d fieldOdometry2d = new Field2d();
+    private final Field2d fieldVision2d = new Field2d();
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
     private final ArrayList<Double> xValues = new ArrayList<>();
     private final ArrayList<Double> yValues = new ArrayList<>();
     Consumer<AprilTagMeasurement> addData;
     private final AprilTagSubsystem NorthStarEstimator;
+
 
 
     public PoseEstimatorSubsystem(/* PhotonCamera photonCamera,*/ DrivetrainSubsystem drivetrainSubsystem) {
@@ -84,14 +91,17 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 visionMeasurementStdDevs);
 
         tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
-
+        tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
+        tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
+        tab.add("Vision Field", fieldVision2d).withPosition(2,0).withSize(6,4);
 
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
 
         addData = measure -> {
-            var stuff = new Field2d();
-            stuff.setRobotPose(measure.getPose().toPose2d());
-           tab.add("Field", stuff).withPosition(2, 0).withSize(6, 4);};
+            fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
+            fieldVision2d.setRobotPose(measure.getPose().toPose2d());
+            poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
+            };
 
 
         NorthStarEstimator = new AprilTagSubsystem(
