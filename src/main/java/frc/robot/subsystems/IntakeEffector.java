@@ -5,7 +5,10 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -23,7 +26,8 @@ public class IntakeEffector extends SubsystemBase {
     int intakeFilterIteration = 20;
 
     private CANSparkMax m_rollers;
-    private DutyCycleEncoder m_tof;
+    // private DutyCycleEncoder m_tof;
+    private DutyCycle m_tof;
     
     private boolean intakeRetracted;
     SparkMaxPIDController PIDController;
@@ -56,9 +60,9 @@ public class IntakeEffector extends SubsystemBase {
 
         prevEncoder = m_rollers.getEncoder().getPosition();
 
-        m_tof = new DutyCycleEncoder(0);
-        m_tof.setDistancePerRotation(1.0);
-        m_tof.reset();
+        m_tof = new DutyCycle(new DigitalInput(0));
+        //m_tof.setDistancePerRotation(1.0);
+        // m_tof.reset();
     }
 
     public boolean isIn() {
@@ -68,14 +72,14 @@ public class IntakeEffector extends SubsystemBase {
     private double avgCurrent = 0;
     private double currentStore = 0;
     private int intakeIteration = 1;
-    private double tofPos = m_tof.getAbsolutePosition();
+    // private double tofPos = m_tof.getAbsolutePosition();
 
-    public boolean intakeHasObject() {
-        if (tofPos > 0.3 || tofPos < 0.15) 
-            return true;
-        else
-            return false;
-    }
+    // public boolean intakeHasObject() {
+    //     if (tofPos > 0.3 || tofPos < 0.15) 
+    //         return true;
+    //     else
+    //         return false;
+    // }
 
     public Command runIntake(LEDSubsystem m_leds) {
 
@@ -99,7 +103,7 @@ public class IntakeEffector extends SubsystemBase {
             SmartDashboard.putBoolean("Intake is finished", false);
         })
                 .until(() -> {
-                    return avgCurrent >= 20 & intakeHasObject() == true;
+                    return avgCurrent >= 20;
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
@@ -190,12 +194,9 @@ public class IntakeEffector extends SubsystemBase {
                         (m_rollers.getEncoder().getPosition() - prevEncoder)
         );
 
-        SmartDashboard.putNumber("TOF: Get", m_tof.get());
-        SmartDashboard.putNumber("TOF: Get distance", m_tof.getDistance());
-        SmartDashboard.putNumber("TOF: Get absolute position", m_tof.getAbsolutePosition());
-        SmartDashboard.putNumber("TOF: Freq", m_tof.getFrequency());
-        SmartDashboard.putBoolean("TOF: Is connected?", m_tof.isConnected());
-        SmartDashboard.putBoolean("Does the intake have an object?", intakeHasObject());
+        SmartDashboard.putNumber("TOF: Output", m_tof.getOutput());
+        SmartDashboard.putNumber("TOF: Freqency", m_tof.getFrequency());
+        SmartDashboard.putNumber("TOF: HighTimeNanoseconds", m_tof.getHighTimeNanoseconds());
 
         prevEncoder = m_rollers.getEncoder().getPosition();
     }
