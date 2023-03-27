@@ -49,7 +49,6 @@ public class NorthStarInputs implements AprilTagInputs {
 
     @Override
     public Map<Double, AprilTagMeasurement> getQueue() {
-
         update();
         HashMap<Double, AprilTagMeasurement> output = new HashMap<Double, AprilTagMeasurement>(measurements);;
         flushQueue();
@@ -143,7 +142,7 @@ public class NorthStarInputs implements AprilTagInputs {
                         );
                         SmartDashboard.putBoolean("NorthStarInputsCalled", true);
                         SmartDashboard.putNumber("NorthStarX: ", cameraPosition.getX());
-                        measurements.put(timestamp, measure);
+                        measurements.put(ambiguity, measure);
                     }
                 }
             }

@@ -45,7 +45,9 @@ public class AprilTagSubsystem extends SubsystemBase{
     private void updatePoses() {
         for (AprilTagInputs detector : detectors) {
             var detectorQueue = detector.getQueue();
-            //TODO: This may overwrite the previous poses, try to add something that will get the least ambiguous poses
+            /*TODO: This is better (the double is now ambiguity), but we should add something to validate that the pose is fairly recent,
+               from initial tests, the subsystem keeps the values fairly fresh, but just to double check, we should also double check the treemap
+               reversal.*/
             robotPoses.putAll(detectorQueue);
             testRemoveMe += robotPoses.size();
             SmartDashboard.putNumber("robotPoses number", testRemoveMe);
@@ -69,6 +71,8 @@ public class AprilTagSubsystem extends SubsystemBase{
         double thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPoses.size();
 
         for (Map.Entry<Integer, AprilTagMeasurement> entry : tagPoses.entrySet() ) {
+            /*TODO: I'd be interested in doing something to select the closest tag to the camera, Mechanical Advantage
+            *  mentioned it in their blog post and said it had a couple issues, but I'd like to see how it works.*/
             int id = entry.getValue().getID();
             SmartDashboard.putNumber("Tag detected:", id);
             double currentTimeStamp = entry.getValue().getTimestamp();
@@ -83,6 +87,8 @@ public class AprilTagSubsystem extends SubsystemBase{
         }
 
         prevTagPoses = new TreeMap<Integer, AprilTagMeasurement>(tagPoses);
+        robotPoses.clear();
+        tagPoses.clear();
     }
 
     @Override
