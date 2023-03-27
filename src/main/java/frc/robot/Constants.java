@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.autonomous.TrajectoryHelpers.Speeds;
 import frc.robot.subsystems.Arm.kArm;
 import frc.robot.subsystems.swerve.ModuleConfiguration;
@@ -213,6 +215,7 @@ public final class Constants {
         public static final Speeds defaultSpeed = Speeds.Med;
     }
     //NOTE: Configurations have to be added IN ORDER from 1 to the highest number
+    //TODO: Add AprilTag positions
     public static final AprilTag[] tagConfigs = new AprilTag[]{
             new AprilTag(1, new Pose3d()),
             new AprilTag(2, new Pose3d()),

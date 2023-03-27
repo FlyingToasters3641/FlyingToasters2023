@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 public interface AprilTagInputs {
     public Map<Double, AprilTagMeasurement> getQueue();
-
+    //TODO: Determine if we really need flushQueue() as part of the interface
     public void flushQueue();
 
     public void update();

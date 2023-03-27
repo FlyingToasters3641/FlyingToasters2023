@@ -1,13 +1,6 @@
 package frc.robot.subsystems.vision;
 
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.networktables.*;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,21 +12,21 @@ import java.util.function.Consumer;
 import static frc.robot.Constants.tagConfigs;
 
 
-public class AprilTagSubsystem extends SubsystemBase{
+public class AprilTagSubsystem extends SubsystemBase {
     AprilTagInputs[] detectors;
     double totalDistance = 0.0;
 
     private static final double xyStdDevCoefficient = 0.01;
     private static final double thetaStdDevCoefficient = 0.01;
     private TreeMap<Integer, AprilTagMeasurement> prevTagPoses;
-
-    private TreeMap<Double, AprilTagMeasurement> robotPoses = new TreeMap<>();
-    private TreeMap<Integer, AprilTagMeasurement> tagPoses = new TreeMap<>();
+    //NOTE: This is in reverse order, meaning that the worst poses will be first in the map,
+    //due to the way that we're iterating over it, it makes sense to do that because it means
+    //that the last poses that are written to the tagPoses treemap are the best ones
+    private final TreeMap<Double, AprilTagMeasurement> robotPoses = new TreeMap<>(Collections.reverseOrder());
+    private final TreeMap<Integer, AprilTagMeasurement> tagPoses = new TreeMap<>();
     private final Consumer<AprilTagMeasurement> poseEstimator;
     int testRemoveMe = 0;
-    private Pose3d outputPose;
     //ShuffleboardTab tab = Shuffleboard.getTab("NorthStar");
-
 
 
     public AprilTagSubsystem(Consumer<AprilTagMeasurement> poseEstimator, AprilTagInputs... detectors) {
@@ -67,12 +60,13 @@ public class AprilTagSubsystem extends SubsystemBase{
 
         }
         double avgDistance = totalDistance / tagPoses.size();
+        //TODO: I'd like to actually use these
         double xyStdDev = xyStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPoses.size();
         double thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPoses.size();
 
-        for (Map.Entry<Integer, AprilTagMeasurement> entry : tagPoses.entrySet() ) {
+        for (Map.Entry<Integer, AprilTagMeasurement> entry : tagPoses.entrySet()) {
             /*TODO: I'd be interested in doing something to select the closest tag to the camera, Mechanical Advantage
-            *  mentioned it in their blog post and said it had a couple issues, but I'd like to see how it works.*/
+             *  mentioned it in their blog post and said it had a couple issues, but I'd like to see how it works.*/
             int id = entry.getValue().getID();
             SmartDashboard.putNumber("Tag detected:", id);
             double currentTimeStamp = entry.getValue().getTimestamp();
@@ -83,10 +77,12 @@ public class AprilTagSubsystem extends SubsystemBase{
             } else if (prevTagPoses == null || prevTagPoses.size() == 0 || prevTagPoses.get(id) == null) {
                 SmartDashboard.putBoolean("Consumer Called:", true);
                 poseEstimator.accept(entry.getValue());
-            } else {SmartDashboard.putBoolean("Consumer Called:", false);}
+            } else {
+                SmartDashboard.putBoolean("Consumer Called:", false);
+            }
         }
 
-        prevTagPoses = new TreeMap<Integer, AprilTagMeasurement>(tagPoses);
+        prevTagPoses = new TreeMap<>(tagPoses);
         robotPoses.clear();
         tagPoses.clear();
     }

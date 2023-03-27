@@ -1,24 +1,12 @@
 package frc.robot.subsystems;
 
-// import static frc.robot.Constants.VisionConstants.ROBOT_TO_CAMERA;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
-
-// import org.photonvision.EstimatedRobotPose;
-// import org.photonvision.PhotonCamera;
-// import org.photonvision.PhotonPoseEstimator;
-// import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-
-// import com.pathplanner.lib.PathPlannerTrajectory;
-
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
@@ -64,12 +52,10 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
 
     private final Field2d field2d = new Field2d();
-
-    private double previousPipelineTimestamp = 0;
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
-    private final ArrayList<Double> xValues = new ArrayList<Double>();
-    private final ArrayList<Double> yValues = new ArrayList<Double>();
+    private final ArrayList<Double> xValues = new ArrayList<>();
+    private final ArrayList<Double> yValues = new ArrayList<>();
     Consumer<AprilTagMeasurement> addData;
     private final AprilTagSubsystem NorthStarEstimator;
 
@@ -81,9 +67,6 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         try {
             var layout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
             layout.setOrigin(originPosition);
-            //photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.MULTI_TAG_PNP, photonCamera,
-            //    Constants.VisionConstants.ROBOT_TO_CAMERA);
-            //photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         } catch (IOException e) {
             DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
             //photonPoseEstimator = null;
@@ -216,6 +199,11 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         return poseToFlip.relativeTo(new Pose2d(
                 new Translation2d(FieldConstants.FIELD_LENGTH_METERS, FieldConstants.FIELD_WIDTH_METERS),
                 new Rotation2d(Math.PI)));
+    }
+
+    private Pose2d clampToDrivableArea(Pose2d pose) {
+
+        return pose;
     }
 
     public void addTrajectory(PathPlannerTrajectory traj) {

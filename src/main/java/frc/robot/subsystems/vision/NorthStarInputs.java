@@ -50,7 +50,7 @@ public class NorthStarInputs implements AprilTagInputs {
     @Override
     public Map<Double, AprilTagMeasurement> getQueue() {
         update();
-        HashMap<Double, AprilTagMeasurement> output = new HashMap<Double, AprilTagMeasurement>(measurements);;
+        HashMap<Double, AprilTagMeasurement> output = new HashMap<>(measurements);
         flushQueue();
         return output;
     }
@@ -75,6 +75,7 @@ public class NorthStarInputs implements AprilTagInputs {
             long fps = fpsSubscriber.get();
 
             for (int tag = 0; tag < queue.length; tag++) {
+                //TODO: Remove SmartDashboard calls, they eat up time on the robot loop
                 SmartDashboard.putBoolean("NorthStarInputsCalled", true);
                 double timestamp = timestamps[tag];
                 double[] frame = frames[tag];
