@@ -40,9 +40,9 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.00007; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.000065; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
-        public static final double KD = 0;// 0.000015; //0.017546;//0.0;
+        public static final double KD = 0.0000003;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
         public static final double KS = 0.078474;// 0.11814;
         public static final double KG = 0.53836;// 0.49202;
@@ -121,14 +121,14 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        m_leftMotorPid.setSmartMotionMaxVelocity(40000, 0);
+        m_leftMotorPid.setSmartMotionMaxVelocity(35000, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 0);
-        m_leftMotorPid.setSmartMotionMaxAccel(57000, 0);
+        m_leftMotorPid.setSmartMotionMaxAccel(48000, 0);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
 
-        m_leftMotorPid.setSmartMotionMaxVelocity(20000, 1);
+        m_leftMotorPid.setSmartMotionMaxVelocity(18000, 1);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 1);
-        m_leftMotorPid.setSmartMotionMaxAccel(30000, 1);
+        m_leftMotorPid.setSmartMotionMaxAccel(25000, 1);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 1); // 0.002
         m_leftMotorPid.setP(kArm.KP, 1);
         m_leftMotorPid.setI(kArm.KI, 1);

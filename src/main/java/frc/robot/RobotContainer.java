@@ -65,17 +65,6 @@ public class RobotContainer {
 
   Trigger leftBumperD = driveController.leftBumper();
 
-  /* Drive Controls */
-  // private final int translationAxis = XboxController.Axis.kLeftY.value;
-  // private final int strafeAxis = XboxController.Axis.kLeftX.value;
-  // private final int rotationAxis = XboxController.Axis.kRightX.value;
-
-  /* Driver Buttons */
-  // private final JoystickButton zeroGyro = new JoystickButton(driver,
-  // XboxController.Button.kY.value);
-  // private final JoystickButton robotCentric = new JoystickButton(driver,
-  // XboxController.Button.kLeftBumper.value);
-
   /* Subsystems */
   private final Timer reseedTimer = new Timer();
 
@@ -95,7 +84,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-      eventMap.put("ScoreL3", new ParallelCommandGroup(m_Arm.moveArm(ArmPos.L3_SCORING, 1), new SequentialCommandGroup(new WaitCommand(0.45), m_Arm.extend(kArm.EXTENDED_POSITION), new WaitCommand(0.15), m_intake.reverseIntake().withTimeout(0.15))));
+      eventMap.put("ScoreL3", new ParallelCommandGroup(m_Arm.moveArm(ArmPos.L3_SCORING, 1), new SequentialCommandGroup(new WaitCommand(0.45), m_Arm.extend(kArm.EXTENDED_POSITION), new WaitCommand(0.15), m_intake.reverseIntake().withTimeout(0.3))));
       eventMap.put("AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
       eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1)); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
       eventMap.put("Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()));
@@ -131,8 +120,6 @@ public class RobotContainer {
     configureAutonomousChooser();
 
     reseedTimer.start();
-
-
   }
 
   /**
@@ -155,6 +142,7 @@ public class RobotContainer {
       .onFalse(
         new SequentialCommandGroup(m_Arm.moveArm(ArmPos.STORED_POSITION))
       );
+    
     operatorController
       .y()
       .onTrue(
@@ -166,9 +154,11 @@ public class RobotContainer {
       .onFalse(
         new SequentialCommandGroup(m_Arm.moveArm(ArmPos.STORED_POSITION))
       );
+    
     operatorController
       .b()
       .onTrue(new SequentialCommandGroup(m_Arm.moveArm(ArmPos.L2_SCORING)));
+    
     operatorController
       .a()
       .onTrue(
@@ -179,6 +169,7 @@ public class RobotContainer {
 
     rightTriggerO.whileTrue(m_Arm.extendL3()).whileFalse(m_Arm.extend(0));
 
+    //Purple LED's
     operatorController
       .rightBumper()
       .onTrue(
@@ -187,8 +178,7 @@ public class RobotContainer {
         })
       )
       .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
-    // purple
-
+    //Yellow LED's
     operatorController
       .leftBumper()
       .onTrue(
@@ -197,23 +187,14 @@ public class RobotContainer {
         })
       )
       .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
-    // yellow
 
     // DRIVER BUTTON BINDINGS
     rightTriggerD.whileTrue(m_intake.reverseIntake());
-    leftTriggerD.onTrue(m_intake.runIntake(m_LEDSubsystem));
+    leftTriggerD.onTrue(new ParallelCommandGroup(
+      m_Arm.extendGroundIntake(),
+      m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
     // driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem,
     // m_poseEstimator));
-    driveController
-      .b()
-      .onTrue(
-        new ParallelCommandGroup(
-          m_Arm.extendGroundIntake(),
-          m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)
-        )
-      );
-    // driveController.x().onTrue(new SequentialCommandGroup(
-    // m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
     // Field-oriented 90 degree mode
 //     driveController
@@ -257,13 +238,6 @@ public class RobotContainer {
           joystickSensitivity = 1.0;
         })
       );
-    // TESTING CONTROLS
-    // driveController.x().onTrue(m_Arm.extend(kArm.EXTENDED_POSITION));
-    // driveController.y().onTrue(m_Arm.extend(0));
-    // driveController.a().whileTrue(m_Arm.extendOpenLoop());
-    // driveController.a().onTrue(m_intake.extendIntake());
-    // driveController.b().onTrue(m_intake.retractIntake());
-    // driveController.b().onTrue(new InstantCommand(() -> s_Swerve.zeroGyro()));
   }
 
   //        private Map<String, Command> eventMap = Map.of(
