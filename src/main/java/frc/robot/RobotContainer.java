@@ -216,15 +216,31 @@ public class RobotContainer {
     // m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
     // Field-oriented 90 degree mode
-    driveController
-        .rightStick().whileTrue(
+//     driveController
+//         .rightStick().whileTrue(
+//                 new FieldHeadingDriveCommand(
+//                         m_drivetrainSubsystem,
+//                         () -> m_poseEstimator.getCurrentPose().getRotation(),
+//                         () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+//                         () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+//                         () -> -modifyAxis(driveController.getRightY()),
+//                         () -> -modifyAxis(driveController.getRightX())
+//                 )                
+//         );
+        // Controls:
+        //   Y => Straight ahead drive station facing out (+x)
+        //   X => Face right from driver's perspective (+y)
+        //   A => Face back at driver station (-x)
+        //   B => Face left from driver's perspective (-y)
+        driveController
+        .x().or(driveController.a()).or(driveController.b()).or(driveController.y()).whileTrue(
                 new FieldHeadingDriveCommand(
                         m_drivetrainSubsystem,
                         () -> m_poseEstimator.getCurrentPose().getRotation(),
                         () -> -modifyAxis(driveController.getLeftY() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
                         () -> -modifyAxis(driveController.getLeftX() * joystickSensitivity) * DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () -> -modifyAxis(driveController.getRightY()),
-                        () -> -modifyAxis(driveController.getRightX())
+                        () -> driveController.getHID().getYButton() ? 1 : (driveController.getHID().getAButton() ? -1 : 0),
+                        () -> driveController.getHID().getXButton() ? 1 : (driveController.getHID().getBButton() ? -1 : 0)
                 )                
         );
 
