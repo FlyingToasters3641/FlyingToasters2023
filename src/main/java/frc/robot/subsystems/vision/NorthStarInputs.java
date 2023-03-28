@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.*;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
@@ -33,6 +34,8 @@ public class NorthStarInputs implements AprilTagInputs {
     private final Pose3d relativeCameraPosition;
     private Pose3d previousPosePosition;
     private double distanceTravelled;
+    private double elapsedTime = 0.02;
+    private double prevTime = 0;
 
     public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
         this.NT4Id = NT4Id;
@@ -65,6 +68,7 @@ public class NorthStarInputs implements AprilTagInputs {
 
     @Override
     public void update() {
+        elapsedTime = Timer.getFPGATimestamp() - prevTime;
         queue = observationSubscriber.readQueue();
         //Deserialize the output from the Northstar networktables entry
         SmartDashboard.putNumber("Queue length", queue.length);
@@ -133,14 +137,17 @@ public class NorthStarInputs implements AprilTagInputs {
                         distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
                 }
 
-                    if (ambiguity > 2 || cameraPosition != null && cameraPosition.getX() >= 7 || distanceTravelled > 4.2672 / 0.02) {
+                    if (ambiguity > 2 || cameraPosition != null && cameraPosition.getX() >= 8 || distanceTravelled > 4.2672 / elapsedTime) {
                         cameraPosition = null;
+                        SmartDashboard.putNumber("ElapsedTime", Timer.getFPGATimestamp() - prevTime);
                         SmartDashboard.putBoolean("Unambiguous pose detected", false);
+                        
                     }
 
                     if (cameraPosition != null) {
                         SmartDashboard.putBoolean("Unambiguous pose detected", true);
                         previousPosePosition = new Pose3d(cameraPosition.getTranslation(), cameraPosition.getRotation());
+                        
                         var measure = new AprilTagMeasurement(
                                 timestamp,
                                 id,
@@ -156,11 +163,13 @@ public class NorthStarInputs implements AprilTagInputs {
                         );
                         SmartDashboard.putBoolean("NorthStarInputsCalled", true);
                         SmartDashboard.putNumber("NorthStarX: ", cameraPosition.getX());
+                        
                         measurements.put(ambiguity, measure);
                     }
                 }
             }
         }
+        prevTime = Timer.getFPGATimestamp();
     }
 
     @Override
