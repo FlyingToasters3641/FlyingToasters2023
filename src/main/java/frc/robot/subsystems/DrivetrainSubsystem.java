@@ -77,51 +77,51 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     if (DrivetrainConstants.ADD_TO_DASHBOARD) {
       frontLeftLayout = tab.getLayout("Front Left Module", BuiltInLayouts.kList)
-          .withSize(2, 4)
-          .withPosition(0, 0);
+              .withSize(2, 4)
+              .withPosition(0, 0);
 
       frontRightLayout = tab.getLayout("Front Right Module", BuiltInLayouts.kList)
-          .withSize(2, 4)
-          .withPosition(2, 0);
+              .withSize(2, 4)
+              .withPosition(2, 0);
 
       backLeftLayout = tab.getLayout("Back Left Module", BuiltInLayouts.kList)
-          .withSize(2, 4)
-          .withPosition(4, 0);
+              .withSize(2, 4)
+              .withPosition(4, 0);
 
       backRightLayout = tab.getLayout("Back Right Module", BuiltInLayouts.kList)
-          .withSize(2, 4)
-          .withPosition(6, 0);
+              .withSize(2, 4)
+              .withPosition(6, 0);
     }
 
     swerveModules = new SwerveModule[] {
-        createSwerveModule(
-            frontLeftLayout,
-            ModuleConfiguration.MK4I_L3,
-            FRONT_LEFT_MODULE_DRIVE_MOTOR,
-            FRONT_LEFT_MODULE_STEER_MOTOR,
-            FRONT_LEFT_MODULE_STEER_ENCODER,
-            FRONT_LEFT_MODULE_STEER_OFFSET),
-        createSwerveModule(
-            frontRightLayout,
-            ModuleConfiguration.MK4I_L3,
-            FRONT_RIGHT_MODULE_DRIVE_MOTOR,
-            FRONT_RIGHT_MODULE_STEER_MOTOR,
-            FRONT_RIGHT_MODULE_STEER_ENCODER,
-            FRONT_RIGHT_MODULE_STEER_OFFSET),
-        createSwerveModule(
-            backLeftLayout,
-            ModuleConfiguration.MK4I_L3,
-            BACK_LEFT_MODULE_DRIVE_MOTOR,
-            BACK_LEFT_MODULE_STEER_MOTOR,
-            BACK_LEFT_MODULE_STEER_ENCODER,
-            BACK_LEFT_MODULE_STEER_OFFSET),
-        createSwerveModule(
-            backRightLayout,
-            ModuleConfiguration.MK4I_L3,
-            BACK_RIGHT_MODULE_DRIVE_MOTOR,
-            BACK_RIGHT_MODULE_STEER_MOTOR,
-            BACK_RIGHT_MODULE_STEER_ENCODER,
-            BACK_RIGHT_MODULE_STEER_OFFSET) };
+            createSwerveModule(
+                    frontLeftLayout,
+                    ModuleConfiguration.MK4I_L3,
+                    FRONT_LEFT_MODULE_DRIVE_MOTOR,
+                    FRONT_LEFT_MODULE_STEER_MOTOR,
+                    FRONT_LEFT_MODULE_STEER_ENCODER,
+                    FRONT_LEFT_MODULE_STEER_OFFSET),
+            createSwerveModule(
+                    frontRightLayout,
+                    ModuleConfiguration.MK4I_L3,
+                    FRONT_RIGHT_MODULE_DRIVE_MOTOR,
+                    FRONT_RIGHT_MODULE_STEER_MOTOR,
+                    FRONT_RIGHT_MODULE_STEER_ENCODER,
+                    FRONT_RIGHT_MODULE_STEER_OFFSET),
+            createSwerveModule(
+                    backLeftLayout,
+                    ModuleConfiguration.MK4I_L3,
+                    BACK_LEFT_MODULE_DRIVE_MOTOR,
+                    BACK_LEFT_MODULE_STEER_MOTOR,
+                    BACK_LEFT_MODULE_STEER_ENCODER,
+                    BACK_LEFT_MODULE_STEER_OFFSET),
+            createSwerveModule(
+                    backRightLayout,
+                    ModuleConfiguration.MK4I_L3,
+                    BACK_RIGHT_MODULE_DRIVE_MOTOR,
+                    BACK_RIGHT_MODULE_STEER_MOTOR,
+                    BACK_RIGHT_MODULE_STEER_ENCODER,
+                    BACK_RIGHT_MODULE_STEER_OFFSET) };
 
     /*
      * By pausing init for a second before setting module offsets, we avoid a bug
@@ -148,7 +148,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /**
    * Creates a server module instance
-   * 
+   *
    * @param container           shuffleboard layout, or null
    * @param moduleConfiguration module configuration
    * @param driveMotorPort      drive motor CAN ID
@@ -158,16 +158,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @return new swerve module instance
    */
   private static SwerveModule createSwerveModule(
-      ShuffleboardLayout container,
-      ModuleConfiguration moduleConfiguration,
-      int driveMotorPort,
-      int steerMotorPort,
-      int steerEncoderPort,
-      double steerOffset) {
+          ShuffleboardLayout container,
+          ModuleConfiguration moduleConfiguration,
+          int driveMotorPort,
+          int steerMotorPort,
+          int steerEncoderPort,
+          double steerOffset) {
 
     return new SwerveModule(
-        new SwerveSpeedController(driveMotorPort, moduleConfiguration, container),
-        new SwerveSteerController(steerMotorPort, steerEncoderPort, steerOffset, container, moduleConfiguration));
+            new SwerveSpeedController(driveMotorPort, moduleConfiguration, container),
+            new SwerveSteerController(steerMotorPort, steerEncoderPort, steerOffset, container, moduleConfiguration));
   }
 
   public Rotation2d getGyroscopeRotation() {
@@ -196,7 +196,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /**
    * Sets the desired chassis speeds
-   * 
+   *
    * @param chassisSpeeds desired chassis speeds
    */
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -212,7 +212,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /**
    * Gets the actual chassis speeds
-   * 
+   *
    * @return actual chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
@@ -221,22 +221,22 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private double[] swerveModulesToNTValues(SwerveModule[] states) {
     return new double[] {
-        states[0].getSteerAngle().getRadians(), states[0].getDriveVelocity(),
-        states[1].getSteerAngle().getRadians(), states[1].getDriveVelocity(),
-        states[2].getSteerAngle().getRadians(), states[2].getDriveVelocity(),
-        states[3].getSteerAngle().getRadians(), states[3].getDriveVelocity()
+            states[0].getSteerAngle().getRadians(), states[0].getDriveVelocity(),
+            states[1].getSteerAngle().getRadians(), states[1].getDriveVelocity(),
+            states[2].getSteerAngle().getRadians(), states[2].getDriveVelocity(),
+            states[3].getSteerAngle().getRadians(), states[3].getDriveVelocity()
     };
   }
 
   @Override
   public void periodic() {
     if (gyroOffset == null) {gyroOffset = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI);}
-  SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
+    SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
     // Set the swerve module states
     if (desiredChassisSpeeds != null) {
       var desiredStates = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(desiredChassisSpeeds);
       if (desiredChassisSpeeds.vxMetersPerSecond == 0.0 && desiredChassisSpeeds.vyMetersPerSecond == 0.0
-          && desiredChassisSpeeds.omegaRadiansPerSecond == 0.0) {
+              && desiredChassisSpeeds.omegaRadiansPerSecond == 0.0) {
         var currentStates = getModuleStates();
         // Keep the wheels at their current angle when stopped, don't snap back to
         // straight
@@ -260,9 +260,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     for(SwerveModule mod : swerveModules){
       SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
       SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);    
+      SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);
       i++;
-  }
+    }
 
     // Always reset desiredChassisSpeeds to null to prevent latching to the last
     // state (aka motor safety)!!
@@ -273,7 +273,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   /**
    * Gets the current drivetrain state (velocity, and angle), as reported by the
    * modules themselves.
-   * 
+   *
    * @return current drivetrain state. Array orders are frontLeft, frontRight,
    *         backLeft, backRight
    */
@@ -283,7 +283,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /**
    * Gets the current drivetrain position, as reported by the modules themselves.
-   * 
+   *
    * @return current drivetrain state. Array orders are frontLeft, frontRight,
    *         backLeft, backRight
    */
@@ -293,7 +293,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   /**
    * Sets the states of the modules.
-   * 
+   *
    * @param states array of states. Must be ordered frontLeft, frontRight,
    *               backLeft, backRight
    */
@@ -310,40 +310,40 @@ public class DrivetrainSubsystem extends SubsystemBase {
     Arrays.stream(swerveModules).forEach(SwerveModule::reseedSteerMotorOffset);
   }
 
-public void setVelocities(Double p0, Double p1, Double p2) {
+  public void setVelocities(Double p0, Double p1, Double p2) {
     drive(new ChassisSpeeds(p0, p1, p2));
     // SmartDashboard.putNumber("Commanded speeds x", p0);
     // SmartDashboard.putNumber("Commanded speeds x", p1);
     // SmartDashboard.putNumber("Commanded speeds x", p2);
 }
 
-public void setWheelsToX() {
-  desiredChassisSpeeds = null;
-  setModuleStates(new SwerveModuleState[] {
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0)),
-      new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0))
-  });
-}
+  public void setWheelsToX() {
+    desiredChassisSpeeds = null;
+    setModuleStates(new SwerveModuleState[] {
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(45.0)),
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(-45.0)),
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(135.0)),
+            new SwerveModuleState(0.0, Rotation2d.fromDegrees(-135.0))
+    });
+  }
 
-public double getPitchDegreesSec() {
-  double[] xyz = getGyroVelocity();
-  return Units.degreesToRadians(-xyz[0]);
-}
+  public double getPitchDegreesSec() {
+    double[] xyz = getGyroVelocity();
+    return Units.degreesToRadians(-xyz[0]);
+  }
 
-public double getRollDegreesSec() {
-  double[] xyz = getGyroVelocity();
-  return Units.degreesToRadians(xyz[1]);
-}
-public double[] getGyroVelocity() {
-  double[] xyz = new double[3];
-  pigeon.getRawGyro(xyz);
-  return xyz;
-}
+  public double getRollDegreesSec() {
+    double[] xyz = getGyroVelocity();
+    return Units.degreesToRadians(xyz[1]);
+  }
+  public double[] getGyroVelocity() {
+    double[] xyz = new double[3];
+    pigeon.getRawGyro(xyz);
+    return xyz;
+  }
   /**
    * Creates a command to follow a Trajectory on the drivetrain.
-   * 
+   *
    * @param trajectory trajectory to follow
    * @return command that will run the trajectory
    */
