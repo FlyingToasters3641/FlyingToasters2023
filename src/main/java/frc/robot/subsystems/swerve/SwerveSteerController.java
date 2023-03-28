@@ -105,6 +105,8 @@ public class SwerveSteerController {
 
     addDashboardEntries(container);
 
+    reseedTimer.start();
+
   }
 
   private void addDashboardEntries(ShuffleboardContainer container) {
@@ -176,10 +178,8 @@ public class SwerveSteerController {
     if (reseedTimer.advanceIfElapsed(ENCODER_RESEED_SECONDS) && 
         motor.getSelectedSensorVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESEED_MAX_ANGULAR_VELOCITY) {
       currentAngleRadians = configMotorOffset(false);
-      System.out.println("resseded modules");
     } else {
       currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
-      System.out.println("other option for reseed");
     }
     
     double currentAngleRadiansMod = currentAngleRadians % (2.0 * Math.PI);
