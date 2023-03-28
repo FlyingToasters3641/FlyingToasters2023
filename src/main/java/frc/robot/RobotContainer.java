@@ -129,11 +129,15 @@ public class RobotContainer {
                                                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
                 operatorController.y().onTrue(new ParallelCommandGroup(
                                 m_Arm.extendDoublePlayerStatiion(),
-                                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)))
+                                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP),      
+                                new InstantCommand(() -> joystickSensitivity = 0.5)))
                                 .onFalse(new SequentialCommandGroup(
-                                                m_Arm.moveArm(ArmPos.STORED_POSITION)));
+                                                m_Arm.moveArm(ArmPos.STORED_POSITION),
+                                                new InstantCommand(() -> joystickSensitivity = 1)));
                 operatorController.b().onTrue(new SequentialCommandGroup(
-                                m_Arm.moveArm(ArmPos.L2_SCORING)));
+                                m_Arm.moveArm(ArmPos.L2_SCORING),
+                                new InstantCommand(() -> joystickSensitivity = 0.5)))
+                                .onFalse(new InstantCommand(() -> joystickSensitivity = 1));
                 operatorController.a().onTrue(new SequentialCommandGroup(
                                 m_Arm.moveArm(ArmPos.STORED_POSITION)));
 
