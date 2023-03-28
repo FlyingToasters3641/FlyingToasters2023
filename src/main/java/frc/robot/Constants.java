@@ -188,10 +188,6 @@ public final class Constants {
         public static final double HEADING_MAX_VELOCITY = Math.PI * 2;
         public static final double HEADING_MAX_ACCELERATION = Math.PI * 2;
 
-        public static final double HEADING_kP = 2.0;
-        public static final double HEADING_kI = 0.0;
-        public static final double HEADING_kD = 0.0;
-
         public static final double HEADING_TOLERANCE = Math.toRadians(1.5);
 
         private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);

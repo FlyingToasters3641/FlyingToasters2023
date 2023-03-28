@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 public class SwerveSteerController {
 
-  private static final double ENCODER_RESEED_SECONDS = 10.0;
+  private static final double ENCODER_RESEED_SECONDS = 4.0;
   private static final double ENCODER_RESEED_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
   private static final int STATUS_FRAME_GENERAL_PERIOD_MS = 250;
   private static final double TICKS_PER_ROTATION = 2048.0;
@@ -176,8 +176,10 @@ public class SwerveSteerController {
     if (reseedTimer.advanceIfElapsed(ENCODER_RESEED_SECONDS) && 
         motor.getSelectedSensorVelocity() * motorEncoderVelocityCoefficient < ENCODER_RESEED_MAX_ANGULAR_VELOCITY) {
       currentAngleRadians = configMotorOffset(false);
+      System.out.println("resseded modules");
     } else {
       currentAngleRadians = motor.getSelectedSensorPosition() * motorEncoderPositionCoefficient;
+      System.out.println("other option for reseed");
     }
     
     double currentAngleRadiansMod = currentAngleRadians % (2.0 * Math.PI);

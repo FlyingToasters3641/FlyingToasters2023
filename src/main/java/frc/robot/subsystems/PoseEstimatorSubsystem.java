@@ -100,7 +100,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         addData = measure -> {
         //    fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
             fieldVision2d.setRobotPose(measure.getPose().toPose2d());
-            poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
+            //poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
             };
 
 

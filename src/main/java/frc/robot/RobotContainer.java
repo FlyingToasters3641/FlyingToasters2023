@@ -238,8 +238,12 @@ public class RobotContainer {
           joystickSensitivity = 1.0;
         })
       );
-  }
 
+
+      driveController.start().onTrue(Commands.run(() -> m_drivetrainSubsystem.reseedSteerMotorOffsets()));
+    }
+
+    
   //        private Map<String, Command> eventMap = Map.of(
   //                        "ScoreL3",
   //                        m_Arm.extend(ArmPos.L3_SCORING.getExtended())

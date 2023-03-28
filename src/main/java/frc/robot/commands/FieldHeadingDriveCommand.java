@@ -4,9 +4,6 @@ import static frc.robot.Constants.TeleopDriveConstants.DEADBAND;
 import static frc.robot.Constants.TeleopDriveConstants.HEADING_MAX_ACCELERATION;
 import static frc.robot.Constants.TeleopDriveConstants.HEADING_MAX_VELOCITY;
 import static frc.robot.Constants.TeleopDriveConstants.HEADING_TOLERANCE;
-import static frc.robot.Constants.TeleopDriveConstants.HEADING_kD;
-import static frc.robot.Constants.TeleopDriveConstants.HEADING_kI;
-import static frc.robot.Constants.TeleopDriveConstants.HEADING_kP;
 import static frc.robot.Constants.TeleopDriveConstants.X_RATE_LIMIT;
 import static frc.robot.Constants.TeleopDriveConstants.Y_RATE_LIMIT;
 import static java.lang.Math.PI;
@@ -85,7 +82,7 @@ public class FieldHeadingDriveCommand extends CommandBase {
     //     HEADING_MAX_ACCELERATION);
     TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(8, 8);
 
-    thetaController = new ProfiledPIDController(HEADING_kP, HEADING_kI, HEADING_kD, kThetaControllerConstraints);
+    thetaController = new ProfiledPIDController(2.9, 0.01, 0.0 , kThetaControllerConstraints);
     thetaController.enableContinuousInput(-PI, PI);
     thetaController.setTolerance(Units.degreesToRadians(HEADING_TOLERANCE));
   }
