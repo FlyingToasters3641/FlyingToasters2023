@@ -84,7 +84,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-      eventMap.put("ScoreL3", new ParallelCommandGroup(m_Arm.moveArm(ArmPos.L3_SCORING, 1), new SequentialCommandGroup(new WaitCommand(0.45), m_Arm.extend(kArm.EXTENDED_POSITION), new WaitCommand(0.15), m_intake.reverseIntake().withTimeout(0.3))));
+      eventMap.put("ScoreL3", m_Arm.moveArm(ArmPos.L3_SCORING, 1)
+        .andThen(m_Arm.extend(kArm.EXTENDED_POSITION, 1.0)./*andThen(new WaitCommand(0.15).*/andThen(m_intake.reverseIntake().withTimeout(0.3))));
       eventMap.put("AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
       eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1)); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
       eventMap.put("Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()));
