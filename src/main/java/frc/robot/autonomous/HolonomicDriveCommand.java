@@ -100,7 +100,7 @@ public class HolonomicDriveCommand extends CommandBase {
   public void execute() {
     double curTime = m_timer.get();
     State targetPosition = m_trajectory.sample(curTime);
-    SmartDashboard.putNumber("Target Position", targetPosition.poseMeters.getX());
+    //SmartDashboard.putNumber("Target Position", targetPosition.poseMeters.getX());
     ChassisSpeeds targetWheelSpeeds = m_follower.calculate(
       m_pose.get(),
       targetPosition,
@@ -114,26 +114,26 @@ public class HolonomicDriveCommand extends CommandBase {
       vyMetersPerSecond,
       omegaRadiansPerSecond
     );
-    SmartDashboard.putNumber(
-      "Commanded Rotational Power",
-      omegaRadiansPerSecond
-    );
-    SmartDashboard.putNumber(
-      "Target X",
-      targetPosition.poseMeters.getTranslation().getX()
-    );
-    SmartDashboard.putNumber(
-      "Target Y",
-      targetPosition.poseMeters.getTranslation().getY()
-    );
-    SmartDashboard.putNumber("Target Angle", omegaRadiansPerSecond);
+    // SmartDashboard.putNumber(
+    //   "Commanded Rotational Power",
+    //   omegaRadiansPerSecond
+    // );
+    // SmartDashboard.putNumber(
+    //   "Target X",
+    //   targetPosition.poseMeters.getTranslation().getX()
+    // );
+    // SmartDashboard.putNumber(
+    //   "Target Y",
+    //   targetPosition.poseMeters.getTranslation().getY()
+    // );
+    // SmartDashboard.putNumber("Target Angle", omegaRadiansPerSecond);
     m_prevSpeeds = targetWheelSpeeds;
   }
 
   @Override
   public void end(boolean interrupted) {
     m_timer.stop();
-    SmartDashboard.putBoolean("Auton stopped", interrupted);
+    //SmartDashboard.putBoolean("Auton stopped", interrupted);
   }
 
   @Override
