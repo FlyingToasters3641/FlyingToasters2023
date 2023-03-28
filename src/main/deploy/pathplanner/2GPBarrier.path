@@ -144,6 +144,7 @@
       "stopEvent": {
         "names": [
           "ScoreL3",
+          "Retract",
           "RetractToRest"
         ],
         "executionBehavior": "sequential",
