@@ -216,7 +216,7 @@ public final class Constants {
   }
 
   public enum ArmPos {
-    STORED_POSITION(-53, 0, IntakePos.DEFAULT, false), 
+    STORED_POSITION(-56, 0, IntakePos.DEFAULT, false), 
     GROUND_INTAKE_POSITION(-38, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true), 
     SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true), 
     DOUBLE_PLAYERSTATION_PICKUP(131,0, IntakePos.DEFAULT, true), 

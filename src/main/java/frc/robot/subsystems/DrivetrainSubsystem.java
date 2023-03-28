@@ -175,8 +175,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
   public Rotation3d getGyroscopeRotation3d() {
     var rotation = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI).minus(gyroOffset);
-    SmartDashboard.putNumber("Roll2", rotation.getX());
-    SmartDashboard.putNumber("Pitch2", rotation.getY());
+    // SmartDashboard.putNumber("Roll2", rotation.getX());
+    // SmartDashboard.putNumber("Pitch2", rotation.getY());
     return rotation;
   }
 
@@ -248,6 +248,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
       setModuleStates(desiredStates);
     }
     SmartDashboard.putNumberArray("Drivetrain/SwerveStates", swerveModulesToNTValues(swerveModules));
+    
+    int x = 0;
+    for(SwerveModule mod: swerveModules) {
+    SmartDashboard.putNumber("Mod" + x + "temperature", mod.getDriveMotor().getTemperature());
+    SmartDashboard.putNumber("Mod" + x + "temperature", mod.getSteerMotor().getTemperature());
+    x++;
+    }
 
     int i = 0;
     for(SwerveModule mod : swerveModules){
@@ -305,9 +312,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
 public void setVelocities(Double p0, Double p1, Double p2) {
     drive(new ChassisSpeeds(p0, p1, p2));
-    SmartDashboard.putNumber("Commanded speeds x", p0);
-    SmartDashboard.putNumber("Commanded speeds x", p1);
-    SmartDashboard.putNumber("Commanded speeds x", p2);
+    // SmartDashboard.putNumber("Commanded speeds x", p0);
+    // SmartDashboard.putNumber("Commanded speeds x", p1);
+    // SmartDashboard.putNumber("Commanded speeds x", p2);
 }
 
 public void setWheelsToX() {

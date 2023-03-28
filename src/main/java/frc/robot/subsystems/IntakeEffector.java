@@ -160,6 +160,7 @@ public class IntakeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("ROLLER MOTOR TEMP", m_rollers.getMotorTemperature());
         SmartDashboard.putNumber(
                 "Roller output current",
                 m_rollers.getOutputCurrent()

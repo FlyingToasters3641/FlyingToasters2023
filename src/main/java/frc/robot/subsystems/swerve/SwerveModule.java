@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -40,6 +41,14 @@ public class SwerveModule {
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(driveController.getStatePosition(), getSteerAngle());
+  }
+
+  public WPI_TalonFX getDriveMotor() {
+    return driveController.getMotor();
+  }
+
+  public WPI_TalonFX getSteerMotor() {
+    return steerController.getMotor();
   }
 
   /**

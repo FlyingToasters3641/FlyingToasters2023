@@ -85,6 +85,10 @@ public class SwerveSpeedController {
     motor.feed();
   }
 
+  public WPI_TalonFX getMotor() {
+    return motor;
+  }
+
   /**
    * Returns velocity in meters per second
    * 

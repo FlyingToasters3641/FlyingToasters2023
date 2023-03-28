@@ -43,13 +43,15 @@ public class AutoBalanceAlt3 extends CommandBase {
 
         correction = angleDegrees > 0 ? -0.3 : 0.3;
 
-        SmartDashboard.putNumber("Balancing: Robot Rotation", roll);
-        SmartDashboard.putNumber("Balancing: Pitch", pitch);
-        SmartDashboard.putNumber("Balancing: Roll", roll);
-        SmartDashboard.putNumber("Balancing: Angle (Degrees)", angleDegrees);
-        SmartDashboard.putNumber("Balancing: Angular Velocity (Degrees/sec)", angleVelocityDegreesPerSec);
-        SmartDashboard.putBoolean("Balancing: Should stop?", shouldStop);
-        SmartDashboard.putNumber("Balancing: Correction (m/sec)", correction);
+        //read outs for the autobalence testing
+        // SmartDashboard.putNumber("Balancing: Robot Rotation", roll);
+        // SmartDashboard.putNumber("Balancing: Pitch", pitch);
+        // SmartDashboard.putNumber("Balancing: Roll", roll);
+        // SmartDashboard.putNumber("Balancing: Angle (Degrees)", angleDegrees);
+        // SmartDashboard.putNumber("Balancing: Angular Velocity (Degrees/sec)", angleVelocityDegreesPerSec);
+        // SmartDashboard.putBoolean("Balancing: Should stop?", shouldStop);
+        // SmartDashboard.putNumber("Balancing: Correction (m/sec)", correction);
+        
         prevAngle = angleDegrees;
         prevTime = startTime;
         if (!shouldStop) {

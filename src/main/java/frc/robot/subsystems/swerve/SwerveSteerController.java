@@ -115,6 +115,10 @@ public class SwerveSteerController {
     }
   }
 
+  public WPI_TalonFX getMotor() {
+    return motor;
+  }
+
   /**
    * Configures the motor offset from the CANCoder's abosolute position. In an
    * ideal state, this only needs to happen

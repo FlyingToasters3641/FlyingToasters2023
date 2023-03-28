@@ -40,13 +40,14 @@ public class AutoBalanceAlt2 extends CommandBase {
 
         correction = angleDegrees > 0 ? -0.4 : 0.4;
 
-        SmartDashboard.putNumber("Balancing: Robot Rotation", rotation.getDegrees());
-        SmartDashboard.putNumber("Balancing: Pitch", pitch);
-        SmartDashboard.putNumber("Balancing: Roll", roll);
-        SmartDashboard.putNumber("Balancing: Angle (Degrees)", angleDegrees);
-        SmartDashboard.putNumber("Balancing: Angular Velocity (Degrees/sec)", angleVelocityDegreesPerSec);
-        SmartDashboard.putBoolean("Balancing: Shoud stop?", shouldStop);
-        SmartDashboard.putNumber("Balancing: Correction (m/sec)", correction);
+        //read outs for the autbalence testing
+        // SmartDashboard.putNumber("Balancing: Robot Rotation", rotation.getDegrees());
+        // SmartDashboard.putNumber("Balancing: Pitch", pitch);
+        // SmartDashboard.putNumber("Balancing: Roll", roll);
+        // SmartDashboard.putNumber("Balancing: Angle (Degrees)", angleDegrees);
+        // SmartDashboard.putNumber("Balancing: Angular Velocity (Degrees/sec)", angleVelocityDegreesPerSec);
+        // SmartDashboard.putBoolean("Balancing: Shoud stop?", shouldStop);
+        // SmartDashboard.putNumber("Balancing: Correction (m/sec)", correction);
 
         if (shouldStop) {
             double firstTime = Timer.getFPGATimestamp();
