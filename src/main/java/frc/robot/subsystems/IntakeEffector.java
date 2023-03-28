@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DutyCycle;
@@ -28,7 +29,8 @@ public class IntakeEffector extends SubsystemBase {
     private CANSparkMax m_rollers;
     // private DutyCycleEncoder m_tof;
     private DutyCycle m_tof;
-    
+    private LinearFilter m_tofFilter;
+
     private boolean intakeRetracted;
     SparkMaxPIDController PIDController;
     double prevEncoder;
@@ -63,6 +65,7 @@ public class IntakeEffector extends SubsystemBase {
         m_tof = new DutyCycle(new DigitalInput(0));
         //m_tof.setDistancePerRotation(1.0);
         // m_tof.reset();
+        m_tofFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
     }
 
     public boolean isIn() {
@@ -180,6 +183,8 @@ public class IntakeEffector extends SubsystemBase {
 
     @Override
     public void periodic() {
+        var currValue = m_tofFilter.calculate(avgCurrent);
+
         SmartDashboard.putNumber(
                 "Roller output current",
                 m_rollers.getOutputCurrent()
@@ -195,6 +200,7 @@ public class IntakeEffector extends SubsystemBase {
         );
 
         SmartDashboard.putNumber("TOF: Output", m_tof.getOutput());
+        SmartDashboard.putNumber("TOF: Filtered output", currValue);
         SmartDashboard.putNumber("TOF: Freqency", m_tof.getFrequency());
         SmartDashboard.putNumber("TOF: HighTimeNanoseconds", m_tof.getHighTimeNanoseconds());
 
