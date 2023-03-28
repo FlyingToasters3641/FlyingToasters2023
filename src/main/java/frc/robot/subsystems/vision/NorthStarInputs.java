@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
@@ -30,6 +31,8 @@ public class NorthStarInputs implements AprilTagInputs {
     TimestampedDoubleArray[] queue;
     HashMap<Double, AprilTagMeasurement> measurements = new HashMap<>();
     private final Pose3d relativeCameraPosition;
+    private Pose3d previousPosePosition;
+    private double distanceTravelled;
 
     public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
         this.NT4Id = NT4Id;
@@ -126,8 +129,18 @@ public class NorthStarInputs implements AprilTagInputs {
                         cameraPosition = null;
                         SmartDashboard.putBoolean("Unambiguous pose detected", false);
                     }
+                    if (previousPosePosition != null && cameraPosition != null) {
+                        distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
+                }
+
+                    if (ambiguity > 2 || cameraPosition != null && cameraPosition.getX() >= 7 || distanceTravelled > 4.2672 / 0.02) {
+                        cameraPosition = null;
+                        SmartDashboard.putBoolean("Unambiguous pose detected", false);
+                    }
+
                     if (cameraPosition != null) {
                         SmartDashboard.putBoolean("Unambiguous pose detected", true);
+                        previousPosePosition = new Pose3d(cameraPosition.getTranslation(), cameraPosition.getRotation());
                         var measure = new AprilTagMeasurement(
                                 timestamp,
                                 id,

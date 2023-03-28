@@ -42,7 +42,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * matrix is in the form [x, y, theta]ᵀ, with units in meters and radians, then
      * meters.
      */
-    private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.05, 0.05, 0.1);
+    private static final Vector<N3> stateStdDevs = VecBuilder.fill(0.005, 0.005, 0.0009);
 
     /**
      * Standard deviations of the vision measurements. Increase these numbers to
@@ -50,7 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
      * radians.
      */
-    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.005, 0.005, 0.0005);
+    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.5, 0.5,5);
 
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -100,14 +100,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         addData = measure -> {
         //    fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
             fieldVision2d.setRobotPose(measure.getPose().toPose2d());
-            //poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
+            poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
             };
 
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
              //   new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
-                new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,0.349066)))
+                new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
 
         );
     }

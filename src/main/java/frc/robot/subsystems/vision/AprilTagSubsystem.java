@@ -73,9 +73,11 @@ public class AprilTagSubsystem extends SubsystemBase {
             SmartDashboard.putBoolean("Got to consumer caller", true);
             if (prevTagPoses != null && prevTagPoses.get(id) != null && prevTagPoses.size() > 0 && prevTagPoses.get(id).getTimestamp() < currentTimeStamp) {
                 SmartDashboard.putBoolean("Consumer Called:", true);
+                SmartDashboard.putNumber("Ambiguity", entry.getValue().getAmbiguity());
                 poseEstimator.accept(entry.getValue());
             } else if (prevTagPoses == null || prevTagPoses.size() == 0 || prevTagPoses.get(id) == null) {
                 SmartDashboard.putBoolean("Consumer Called:", true);
+                SmartDashboard.putNumber("Ambiguity", entry.getValue().getAmbiguity());
                 poseEstimator.accept(entry.getValue());
             } else {
                 SmartDashboard.putBoolean("Consumer Called:", false);
