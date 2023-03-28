@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
@@ -80,8 +81,9 @@ public class FieldHeadingDriveCommand extends CommandBase {
 
     addRequirements(drivetrainSubsystem);
 
-    TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(HEADING_MAX_VELOCITY,
-        HEADING_MAX_ACCELERATION);
+    // TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(HEADING_MAX_VELOCITY,
+    //     HEADING_MAX_ACCELERATION);
+    TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(8, 8);
 
     thetaController = new ProfiledPIDController(HEADING_kP, HEADING_kI, HEADING_kD, kThetaControllerConstraints);
     thetaController.enableContinuousInput(-PI, PI);
@@ -134,6 +136,9 @@ public class FieldHeadingDriveCommand extends CommandBase {
       omega = 0;
     }
 
+    SmartDashboard.putNumber("SNAP90: Setpoint", omega);
+    SmartDashboard.putNumber("SNAP90: Measured rotational speed", drivetrainSubsystem.getChassisSpeeds().omegaRadiansPerSecond);
+    
     drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
         translateXRateLimiter.calculate(xSupplier.getAsDouble()),
         translateYRateLimiter.calculate(ySupplier.getAsDouble()),

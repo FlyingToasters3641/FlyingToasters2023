@@ -203,6 +203,14 @@ public final class Constants {
         public static final ProfiledPIDController omegaController = new ProfiledPIDController(2, 0, 0, OMEGA_CONSTRAINTS);
     }
 
+    public static final class VisionConstants {
+        public static final double limelightMountAngleDegrees = 0;//offset for real world mounting of the limelight
+        public static final double distanceToNode = 0;//in meteres the set distance to the nodes when lined up to score. 
+        public static final double heightOfLimelight = 0; //in meteres the height of the limelight from the ground. 
+        public static final double heightOfL3Node = 1.063625; //in meteres
+        public static final double heightOfL2Node = 0.561975; //in meteres
+    }
+    
     /* Default settings for trajectories */
     public static final class Trajectories {
         public static final boolean safetyMode = false;
