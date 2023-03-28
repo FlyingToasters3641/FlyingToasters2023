@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 public class SwerveSteerController {
 
-  private static final double ENCODER_RESEED_SECONDS = 10.0;
+  private static final double ENCODER_RESEED_SECONDS = 4.0;
   private static final double ENCODER_RESEED_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
   private static final int STATUS_FRAME_GENERAL_PERIOD_MS = 250;
   private static final double TICKS_PER_ROTATION = 2048.0;
@@ -105,6 +105,8 @@ public class SwerveSteerController {
 
     addDashboardEntries(container);
 
+    reseedTimer.start();
+
   }
 
   private void addDashboardEntries(ShuffleboardContainer container) {
@@ -113,6 +115,10 @@ public class SwerveSteerController {
       container.addNumber("Target Angle", () -> Math.toDegrees(desiredAngleRadians));
       container.addNumber("Absolute Encoder Angle", () -> encoder.getAbsolutePosition());
     }
+  }
+
+  public WPI_TalonFX getMotor() {
+    return motor;
   }
 
   /**

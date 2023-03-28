@@ -188,10 +188,6 @@ public final class Constants {
         public static final double HEADING_MAX_VELOCITY = Math.PI * 2;
         public static final double HEADING_MAX_ACCELERATION = Math.PI * 2;
 
-        public static final double HEADING_kP = 2.0;
-        public static final double HEADING_kI = 0.0;
-        public static final double HEADING_kD = 0.0;
-
         public static final double HEADING_TOLERANCE = Math.toRadians(1.5);
 
         private static final TrapezoidProfile.Constraints X_CONSTRAINTS = new TrapezoidProfile.Constraints(3, 2);
@@ -235,7 +231,7 @@ public final class Constants {
     }
 
     public enum ArmPos {
-        STORED_POSITION(-53, 0, IntakePos.DEFAULT, false),
+        STORED_POSITION(-56, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_POSITION(-38, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),
         SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true),
         DOUBLE_PLAYERSTATION_PICKUP(131,0, IntakePos.DEFAULT, true),

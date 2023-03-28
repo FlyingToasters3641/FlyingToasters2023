@@ -320,8 +320,6 @@ public class Arm extends SubsystemBase {
                 CANSparkMax.ControlType.kPosition,
                 0,
                 armFF);
-        SmartDashboard.putNumber("reference target", target);
-        SmartDashboard.putNumber("Computed FF", armFF);
     }
 
     // // Sets a target for the arm to reach for the PID loop
@@ -361,23 +359,28 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
-        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Raw)", m_leftArmMotor.getEncoder().getPosition());
-        SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());
-
-        // SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
-        SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
         SmartDashboard.putNumber("Extender: Absolute Encoder Pos", getExtenderAbsolutePosition());
-
         SmartDashboard.putNumber("Arm: Setpoint position", (m_targetArmPosition != null) ? m_targetArmPosition : 0);
-        // SmartDashboard.putNumber("Arm: Setpoint velocity",
-        // m_currentSetpoint.velocity);
+        SmartDashboard.putNumber("Extender target", m_extenderTarget);
+        SmartDashboard.putNumber("LEFT ARM MOTOR TEMP", m_leftArmMotor.getMotorTemperature());
+        SmartDashboard.putNumber("RIGHT ARM MOTOR TEMP", m_rightArmMotor.getMotorTemperature());
+        SmartDashboard.putNumber("EXTENDER MOTOR TEMP", m_extenderMotor.getMotorTemperature());
+        //SmartDashboard.putNumber("Arm: Setpoint velocity", m_currentSetpoint.velocity);
+        //SmartDashboard.putNumber("Arm: Pot Position", m_pot.get());
+        //SmartDashboard.putNumber("Arm: Relative Encoder Pos (Raw)", m_leftArmMotor.getEncoder().getPosition());
+        //SmartDashboard.putNumber("Arm: Relative Encoder Pos (Adjusted Degrees)", getArmEncoderPositionDegrees());
+        //SmartDashboard.putNumber("Extender: Pot Position", m_exPot.get());
+        //SmartDashboard.putNumber("Extender: Relative Encoder Pos", getExtenderEncoderPosition());
+        //SmartDashboard.putNumber("Arm: Computed feedforward", armFeedForward);
+        //SmartDashboard.putNumber("Arm: Active PID Slot", m_activeArmPidSlot);
+
 
         // Resets encoder based off of pot values
         if (Math.abs(getArmAbsolutePositionDegrees() - getArmEncoderPositionDegrees()) > 1) {
             resetArm();
         }
+
         if (Math.abs(getExtenderAbsolutePosition() - getExtenderEncoderPosition()) > 0.25) {
             resetExtender();
         }
@@ -402,21 +405,15 @@ public class Arm extends SubsystemBase {
         if (m_targetArmPosition != null) {
             m_targetArmPosition = normalizeAngle(m_targetArmPosition);
 
-            // Calculate feed forward based on angle to counteract gravity
-            // double cosineScalar = Math.cos(getWristPosition());
-            // double feedForward = GRAVITY_FF * cosineScalar;
+        // Calculate feed forward based on angle to counteract gravity
+        // double cosineScalar = Math.cos(getWristPosition());
+        // double feedForward = GRAVITY_FF * cosineScalar;
             double armFeedForward = m_armFeedforward.calculate(
                     Units.degreesToRadians(getArmEncoderPositionDegrees()),
                     getArmEncoderVelocityDegreesSec() * Math.PI / 180.0);
-
-            SmartDashboard.putNumber("Arm: Computed feedforward", armFeedForward);
-            SmartDashboard.putNumber("Arm: Active PID Slot", m_activeArmPidSlot);
-
             m_leftMotorPid.setReference(degreesToArmEncoderRotations(m_targetArmPosition),
                     ControlType.kSmartMotion, m_activeArmPidSlot, armFeedForward, ArbFFUnits.kVoltage);
         }
-
-        SmartDashboard.putNumber("Extender target", m_extenderTarget);
     }
 
 }
