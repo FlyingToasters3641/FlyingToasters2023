@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.MotorHelper;
 import frc.robot.Constants.DrivetrainConstants;
@@ -86,9 +87,9 @@ public class IntakeEffector extends SubsystemBase {
                 })
                 .andThen(() -> {
                     m_rollers.set(0);
-                    //m_leds.ledSwitch(5);
+                    m_leds.ledSwitch(5);  // flash green when we have an object
                     PIDController.setReference(
-                            m_rollers.getEncoder().getPosition(),
+                            m_rollers.getEncoder().getPosition() * 1.15,
                             ControlType.kPosition
                     );
                     avgCurrent = 0;
@@ -138,7 +139,7 @@ public class IntakeEffector extends SubsystemBase {
     }
 
     public Command reverseIntake() {
-        return run(() -> {
+        return Commands.run(() -> {
             m_rollers.set(-0.5);
         })
                 .finallyDo(end -> {

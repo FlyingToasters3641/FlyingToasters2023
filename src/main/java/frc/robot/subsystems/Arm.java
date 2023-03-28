@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
@@ -34,13 +35,14 @@ public class Arm extends SubsystemBase {
 
     double m_extenderTarget;
     private Double m_targetArmPosition = null;
+    private int m_activeArmPidSlot = 0;
     private ArmPos m_targetArmState = null;
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.00009; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.000065; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
-        public static final double KD = 0;// 0.000015; //0.017546;//0.0;
+        public static final double KD = 0.0000003;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
         public static final double KS = 0.078474;// 0.11814;
         public static final double KG = 0.53836;// 0.49202;
@@ -50,9 +52,9 @@ public class Arm extends SubsystemBase {
         public static final int RIGHT_CURRENT_LIMIT = 39;
         public static final double MIN_PID_OUTPUT = -0.5;
         public static final double MAX_PID_OUTPUT = 0.5;
-        public static final double SMART_MOTION_MAX_VELOCITY = 9000; // rpm
-        public static final double SMART_MOTION_MAX_ACCEL = 14000;
-        public static final double SMART_MOTION_MIN_VELOCITY = 0; // rpm
+        // public static final double SMART_MOTION_MAX_VELOCITY = 14000; // 9000
+        // public static final double SMART_MOTION_MAX_ACCEL = 24000; //14000
+        // public static final double SMART_MOTION_MIN_VELOCITY = 0; // rpm
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
@@ -62,6 +64,8 @@ public class Arm extends SubsystemBase {
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
+        public static final double DOUBLE_PLAYERSTATION_EXT = 14;
+        public static final double GROUND_INTAKE_EXT = 56; 
 
         public static final double ERROR = 5.0; // degrees
         public static final double MIN_POSITION = -59.0; // degrees
@@ -117,15 +121,23 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        // m_leftMotorPid.setOutputRange(kArm.MIN_PID_OUTPUT, kArm.MAX_PID_OUTPUT);
-        m_leftMotorPid.setSmartMotionMaxVelocity(kArm.SMART_MOTION_MAX_VELOCITY, 0);
-        m_leftMotorPid.setSmartMotionMinOutputVelocity(kArm.SMART_MOTION_MIN_VELOCITY, 0);
-        m_leftMotorPid.setSmartMotionMaxAccel(kArm.SMART_MOTION_MAX_ACCEL, 0);
+        m_leftMotorPid.setSmartMotionMaxVelocity(35000, 0);
+        m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 0);
+        m_leftMotorPid.setSmartMotionMaxAccel(48000, 0);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
 
+        m_leftMotorPid.setSmartMotionMaxVelocity(18000, 1);
+        m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 1);
+        m_leftMotorPid.setSmartMotionMaxAccel(25000, 1);
+        m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 1); // 0.002
+        m_leftMotorPid.setP(kArm.KP, 1);
+        m_leftMotorPid.setI(kArm.KI, 1);
+        m_leftMotorPid.setD(kArm.KD, 1);
+        m_leftMotorPid.setFF(kArm.KF, 1);
+
         m_extenderPid.setOutputRange(-0.5, 0.5);
-        m_extenderPid.setSmartMotionMaxVelocity(2000/* 1500 */, 0);
-        m_extenderPid.setSmartMotionMaxAccel(1500/* 1000 */, 0);
+        m_extenderPid.setSmartMotionMaxVelocity(3000/* 1500 */, 0);
+        m_extenderPid.setSmartMotionMaxAccel(6000/* 1000 */, 0);
         m_extenderPid.setSmartMotionAllowedClosedLoopError(1.0, 0); // 0.002
 
         m_rightArmMotor.follow(m_leftArmMotor, true);
@@ -182,41 +194,123 @@ public class Arm extends SubsystemBase {
                 .setPosition(((getExtenderAbsolutePosition() / 2.259920049) / 1.02526223259) + 0.114723);
     }
 
-    // Main command to rotate and extend arm to a preset (angle and whether extended
-    // or not: enum ArmPos)
-    public Command moveArm(ArmPos angle) {
-        // return extend(0) // always retract elevator before rotating arm
-        // //.andThen(() -> m_intake.retractIntake()) // always make sure in "Default"
-        // position before rotating
-        // .andThen(run(() -> m_targetArmPosition = normalizeAngle(angle.getAngle()))
-        // .until(() -> {
-        // var done = isArmAtPos(angle.getAngle());
-        // System.out.println("Done: " + done + ", Target: " + angle.getAngle() + ",
-        // Current Angle: " + getArmAbsolutePositionDegrees());
-        // return done;
-        // })
-        // //.andThen(angle.getIntakePosition() == IntakePos.DEFAULT ?
-        // m_intake.retractIntake() : m_intake.extendIntake())
-        // .andThen(() -> extend(angle.getExtended())));
+    // Main command to rotate and extend arm to a preset
+    public Command moveArm(ArmPos angle, double timeout) {
+        // double extendTimeout = 2.0;
+        // boolean concurrentRetract = false;
+        // System.out.println("IN MOVEARM (COMMANDED TO: " + angle.getAngle());
 
-        return m_intake.stopIntake().andThen(m_intake.retractIntake().andThen(extend(0).andThen(
-                run(() -> {
+        // if (angle == ArmPos.STORED_POSITION && getArmAbsolutePositionDegrees() > 45)
+        // {
+        // extendTimeout = 0.1; // don't wait for retract of extender if going to rest
+        // position and we're
+        // // currently at L2/L3 position.
+        // concurrentRetract = true;
+        // System.out.println("CONCURRENT RETRACT");
+        // }
+
+        return m_intake.stopIntake().andThen(m_intake.retractIntake()).andThen(extend(0)).andThen(
+                Commands.run(() -> {
+                    System.out.println("arm position yes" + getArmAbsolutePositionDegrees() + ",commanded angle"
+                            + angle.getAngle());
+                    if (getArmAbsolutePositionDegrees() > angle.getAngle())
+                        m_activeArmPidSlot = 1; // for downward arm rotations, slowed down
+                    else
+                        m_activeArmPidSlot = 0;
                     m_targetArmPosition = normalizeAngle(angle.getAngle());
-                    //System.out.println("Moving arm to: " + angle.getAngle());
+                    // System.out.println("Moving arm to: " + angle.getAngle());
                 })
-                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(4)
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout)
                         .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
                                 : m_intake.extendIntake())
-                                .andThen(extend(angle.getExtended()).andThen(
-                                        angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake()))))));
+                                .andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
 
     }
 
+    public Command moveArm(ArmPos angle) {
+        double timeout = 0.1;
+        // double extendTimeout = 2.0;
+        // boolean concurrentRetract = false;
+        // System.out.println("IN MOVEARM (COMMANDED TO: " + angle.getAngle());
+
+        // if (angle == ArmPos.STORED_POSITION && getArmAbsolutePositionDegrees() > 45)
+        // {
+        // extendTimeout = 0.1; // don't wait for retract of extender if going to rest
+        // position and we're
+        // // currently at L2/L3 position.
+        // concurrentRetract = true;
+        // System.out.println("CONCURRENT RETRACT");
+        // }
+
+        return m_intake.stopIntake().andThen(m_intake.retractIntake()).andThen(extend(0)).andThen(
+                Commands.run(() -> {
+                            System.out.println("arm position yes" + getArmAbsolutePositionDegrees() + ",commanded angle"
+                                    + angle.getAngle());
+                            if (getArmAbsolutePositionDegrees() > angle.getAngle())
+                                m_activeArmPidSlot = 1; // for downward arm rotations, slowed down
+                            else
+                                m_activeArmPidSlot = 0;
+                            m_targetArmPosition = normalizeAngle(angle.getAngle());
+                            // System.out.println("Moving arm to: " + angle.getAngle());
+                        })
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout)
+                        .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
+                                : m_intake.extendIntake())
+                                .andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
+
+    }
+    // EXTENSIONS FOR ARM POSITIONS
+    // public Command extendL3() {
+    // return Commands.run(() -> {
+    // })
+    // .until(() -> {
+    // double pos = getArmAbsolutePositionDegrees();
+    // boolean outOfRange = (pos < (ArmPos.L2_SCORING.getAngle() - 50)) ||
+    // (pos > (ArmPos.L2_SCORING.getAngle() + 50));
+    // return !outOfRange;
+    // })
+    // .andThen(extend(kArm.EXTENDED_POSITION));
+    // }
+
+    public Command extendL3() {
+        return Commands.run(() -> {
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.L2_SCORING.getAngle() - 100)) &&
+                    (pos <= (ArmPos.L2_SCORING.getAngle() + 100))) {
+                m_extenderTarget = kArm.EXTENDED_POSITION;
+            }
+        }).until(() -> m_extenderTarget == kArm.EXTENDED_POSITION).withTimeout(2.0);
+    }
+
+    public Command extendGroundIntake() {
+        return Commands.run(() -> {
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.GROUND_INTAKE_POSITION.getAngle() - 10)) &&
+                    (pos <= (ArmPos.GROUND_INTAKE_POSITION.getAngle() + 30))) {
+                m_extenderTarget = kArm.GROUND_INTAKE_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.GROUND_INTAKE_EXT).withTimeout(2.0);
+    }
+
+    public Command extendDoublePlayerStatiion() {
+        return Commands.run(() -> {
+            double pos = getArmAbsolutePositionDegrees();
+            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 30)) &&
+                    (pos <= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20))) {
+                m_extenderTarget = kArm.DOUBLE_PLAYERSTATION_EXT;
+            }
+        }).until(() -> m_extenderTarget == kArm.DOUBLE_PLAYERSTATION_EXT).withTimeout(2.0);
+    }
+
+    // Extension command
     public Command extend(double position) {
-        return run(() -> {
+        return extend(position, 2.0);
+    }
+
+    public Command extend(double position, double timeout) {
+        return Commands.run(() -> {
             m_extenderTarget = position;
-        }).until(() -> isExtAtPos(position)).withTimeout(2.0);
-        // .withTimeout(0.5); // don't wait forever - assume its close and bail
+        }).until(() -> isExtAtPos(position)).withTimeout(timeout);
     }
 
     // A convinence function for moveArm method
@@ -230,14 +324,14 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putNumber("Computed FF", armFF);
     }
 
-    // Sets a target for the arm to reach for the PID loop
-    public void moveArm(double target, double velocity) {
-        target = normalizeAngle(target);
+    // // Sets a target for the arm to reach for the PID loop
+    // public void moveArm(double target, double velocity) {
+    // target = normalizeAngle(target);
 
-        double armFF = m_armFeedforward.calculate(
-                Units.degreesToRadians(target), velocity);
-        setPosition(target, armFF);
-    }
+    // double armFF = m_armFeedforward.calculate(
+    // Units.degreesToRadians(target), velocity);
+    // setPosition(target, armFF);
+    // }
 
     // Tells the PID loop a target position to reach
     public void setExtenderPosition(double target, double extFF) {
@@ -316,9 +410,10 @@ public class Arm extends SubsystemBase {
                     getArmEncoderVelocityDegreesSec() * Math.PI / 180.0);
 
             SmartDashboard.putNumber("Arm: Computed feedforward", armFeedForward);
+            SmartDashboard.putNumber("Arm: Active PID Slot", m_activeArmPidSlot);
 
             m_leftMotorPid.setReference(degreesToArmEncoderRotations(m_targetArmPosition),
-                    ControlType.kSmartMotion, 0, armFeedForward, ArbFFUnits.kVoltage);
+                    ControlType.kSmartMotion, m_activeArmPidSlot, armFeedForward, ArbFFUnits.kVoltage);
         }
 
         SmartDashboard.putNumber("Extender target", m_extenderTarget);
