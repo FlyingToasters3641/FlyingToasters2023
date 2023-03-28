@@ -56,7 +56,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
 
     private final Field2d field2d = new Field2d();
-    private final Field2d fieldOdometry2d = new Field2d();
+//    private final Field2d fieldOdometry2d = new Field2d();
     private final Field2d fieldVision2d = new Field2d();
     private OriginPosition originPosition = OriginPosition.kBlueAllianceWallRightSide;
 
@@ -92,15 +92,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-        tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
+       // tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
         tab.add("Vision Field", fieldVision2d).withPosition(2,0).withSize(6,4);
 
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
 
         addData = measure -> {
-            fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
-            fieldVision2d.setRobotPose(flipAlliance(measure.getPose().toPose2d()));
-            poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
+        //    fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
+            fieldVision2d.setRobotPose(measure.getPose().toPose2d());
+            poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
             };
 
 
