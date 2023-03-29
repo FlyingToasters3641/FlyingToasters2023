@@ -82,7 +82,7 @@ public class FieldHeadingDriveCommand extends CommandBase {
     //     HEADING_MAX_ACCELERATION);
     TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(8, 8);
 
-    thetaController = new ProfiledPIDController(2.9, 0.01, 0.0 , kThetaControllerConstraints);
+    thetaController = new ProfiledPIDController(3.6, 0.018, 0.0 , kThetaControllerConstraints);
     thetaController.enableContinuousInput(-PI, PI);
     thetaController.setTolerance(Units.degreesToRadians(HEADING_TOLERANCE));
   }
