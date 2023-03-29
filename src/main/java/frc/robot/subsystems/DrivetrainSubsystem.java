@@ -256,6 +256,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
     x++;
     }
 
+    SmartDashboard.putNumber("FRONT LEFT =", 0);
+    SmartDashboard.putNumber("FRONT RIGHT =", 1);
+    SmartDashboard.putNumber("BACK LEFT =", 2);
+    SmartDashboard.putNumber("BACK RIGHT =", 3);
+
+
     int i = 0;
     for(SwerveModule mod : swerveModules){
       SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
