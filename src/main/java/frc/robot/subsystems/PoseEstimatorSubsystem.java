@@ -98,10 +98,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
 
         addData = measure -> {
-        //    fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
-            fieldVision2d.setRobotPose(measure.getPose().toPose2d());
-            poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
-            };
+            var visionPose = measure.getPose().toPose2d();
+            if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
+                visionPose = flipAlliance(visionPose);
+            }
+      
+            fieldVision2d.setRobotPose(visionPose);
+            poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+        };
 
 
         NorthStarEstimator = new AprilTagSubsystem(
