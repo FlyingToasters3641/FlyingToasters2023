@@ -4,6 +4,8 @@ import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
@@ -198,6 +200,57 @@ public class RobotContainer {
     // m_poseEstimator));
 
     // Field-oriented 90 degree mode
+//      driveController.rightBumper()
+//              .whileTrue(
+//                      new SequentialCommandGroup(
+//                              new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(150))).withTimeout(0.5),
+//                              new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(13.062936986988058, 7.929223469, new Rotation2d().fromDegrees(90))
+//                              )
+//
+//                      )
+//              );
+    driveController.rightBumper()
+                    .whileTrue(
+                            new SequentialCommandGroup(
+                                    new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0.5),
+                                    new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, 0)
+                                   // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
+                            )
+
+                            );
+    operatorController.povLeft()
+            .whileTrue(
+                    new SequentialCommandGroup(
+                            new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0),
+                            new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, -1)
+                            // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
+                    )
+            );
+      operatorController.povRight()
+              .whileTrue(
+                      new SequentialCommandGroup(
+                              new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0),
+                              new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, 1)
+                              // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
+                      )
+              );
+      driveController.povLeft()
+              .whileTrue(
+                      new SequentialCommandGroup(
+                              new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0),
+                              new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, -1)
+                              // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
+                      )
+              );
+      driveController.povRight()
+              .whileTrue(
+                      new SequentialCommandGroup(
+                              new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0),
+                              new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, 1)
+                              // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
+                      )
+              );
+
 //     driveController
 //         .rightStick().whileTrue(
 //                 new FieldHeadingDriveCommand(
@@ -329,7 +382,7 @@ public class RobotContainer {
     return value;
   }
 
-  private CommandBase makeAutoBuilderCommand(
+  public CommandBase makeAutoBuilderCommand(
     String pathName,
     PathConstraints constraints
   ) {

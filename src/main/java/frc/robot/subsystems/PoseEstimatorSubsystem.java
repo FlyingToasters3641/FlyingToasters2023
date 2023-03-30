@@ -106,8 +106,8 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-             //   new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
-                new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
+               //new NorthStarInputs("NorthStarLeft", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359)))//,
+                 new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
 
         );
     }

@@ -16,8 +16,8 @@ import java.util.function.Supplier;
 
 public class DriveToPose extends CommandBase {
   private final DrivetrainSubsystem drive;
-  private final PoseEstimatorSubsystem poseEstimator;
-  private final Supplier<Pose2d> poseSupplier;
+  protected final PoseEstimatorSubsystem poseEstimator;
+  protected Supplier<Pose2d> poseSupplier;
 
   private boolean running = false;
   private final ProfiledPIDController driveController =
