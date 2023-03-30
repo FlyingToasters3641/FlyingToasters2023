@@ -28,7 +28,7 @@ public class SnapToScoreCommand extends DriveToPose {
 
     @Override
     public void initialize() {
-        var curPose = poseEstimator.getCurrentPose();
+        var curPose = poseEstimator.getCurrentPose() != null ? poseEstimator.getCurrentPose() : new Pose2d(0,0, new Rotation2d(0));
         Double prevLength = null;
 
         for (int i = 0; i < Positions.length; i++) {
@@ -40,11 +40,13 @@ public class SnapToScoreCommand extends DriveToPose {
             }
         }
         SmartDashboard.putNumber("Current Y position:", curPose.getY());
-        SmartDashboard.putNumber("Lining up to score at", bestPosition);
+        SmartDashboard.putNumber("Lining up to score at", bestPosition + 1);
     }
 
 
     private Pose2d getBestPosition() {
+
+        int id = ((bestPosition + oneOver) < Positions.length) && ((bestPosition + oneOver) >= 0) ? bestPosition + oneOver : oneOver;
         return Positions[bestPosition + oneOver];
     }
 }
