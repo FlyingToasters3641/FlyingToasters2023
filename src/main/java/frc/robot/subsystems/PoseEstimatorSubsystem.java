@@ -99,7 +99,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         addData = measure -> {
             var visionPose = measure.getPose().toPose2d();
-            if (originPosition == OriginPosition.kRedAllianceWallRightSide) {
+            if (DriverStation.getAlliance() == Alliance.Red) {
                 visionPose = flipAlliance(visionPose);
             }
       
