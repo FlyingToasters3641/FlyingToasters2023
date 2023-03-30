@@ -410,6 +410,6 @@ public class RobotContainer {
 
   public void onAllianceChanged(Alliance currentAlliance) {
     alliance = currentAlliance;
-    // m_poseEstimator.setAlliance(currentAlliance);
+    m_poseEstimator.setAlliance(currentAlliance);
   }
 }

@@ -37,6 +37,8 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     DataLogManager.start(LOGS_FOLDER);
+
+    checkDriverStationUpdate();
   }
 
   /**
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    checkDriverStationUpdate();
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -67,6 +71,8 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    checkDriverStationUpdate();
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
