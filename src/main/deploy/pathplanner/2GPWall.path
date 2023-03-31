@@ -17,8 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
-          "Outtake",
+          "ScoreL3",
           "Retract",
           "RetractToRest"
         ],
@@ -65,7 +64,7 @@
         "x": 6.315251162441553,
         "y": 0.9523168019278124
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 16.97076369011423,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -119,8 +118,8 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
-          "Outtake",
+          "ScoreL3",
+          "Retract",
           "RetractToRest"
         ],
         "executionBehavior": "sequential",

@@ -99,7 +99,7 @@ public class RobotContainer {
         eventMap.put("MoveArmUp", m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
         eventMap.put("MoveToL3", m_Arm.moveArm(ArmPos.L3_SCORING, 1));
         eventMap.put("MoveToL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1));
-        eventMap.put("AutoBalanceTag", new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(12.7926178, 5.270563878, new Rotation2d(-180)))));
+        eventMap.put("AutoBalanceTag", new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(12.7926178, 5.270563878, new Rotation2d(-180)))).withTimeout(1));
         SmartDashboard.putNumber("Lining up to score at", 1);
         m_drivetrainSubsystem.setDefaultCommand(
                 new FieldOrientedDriveCommand(

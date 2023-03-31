@@ -50,7 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
      * radians.
      */
-    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.02, 0.02,2);
+    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.04, 0.04,5);
 
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final SwerveDrivePoseEstimator poseEstimator;
