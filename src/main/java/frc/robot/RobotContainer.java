@@ -81,6 +81,7 @@ public class RobotContainer {
     /* UI Elements */
     private final SendableChooser<Command> chooser = new SendableChooser<>();
     private Map<String, Command> eventMap = new HashMap<>();
+    public static String selectedAutonomous = "";
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -405,7 +406,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-
+        selectedAutonomous = chooser.getSelected().getName();
         return chooser.getSelected();
         // return new testAuton(s_Swerve);
     }

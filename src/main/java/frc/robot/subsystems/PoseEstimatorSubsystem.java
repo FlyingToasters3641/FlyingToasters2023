@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -104,7 +105,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             }
       
             fieldVision2d.setRobotPose(visionPose);
-            poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+            if (DriverStation.isAutonomous() != true && !RobotContainer.selectedAutonomous.equals("2GPBarrier")) {
+                poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+            }
         };
 
 
