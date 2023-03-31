@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -50,7 +51,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
      * radians.
      */
-    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.05, 0.05,2);
+    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.04, 0.04,5);
 
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -98,16 +99,22 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
 
         addData = measure -> {
-        //    fieldOdometry2d.setRobotPose(measure.getPose().toPose2d());
-            fieldVision2d.setRobotPose(measure.getPose().toPose2d());
-            poseEstimator.addVisionMeasurement(measure.getPose().toPose2d(), measure.getTimestamp());
-            };
+            var visionPose = measure.getPose().toPose2d();
+            if (DriverStation.getAlliance() == Alliance.Red) {
+                visionPose = flipAlliance(visionPose);
+            }
+      
+            fieldVision2d.setRobotPose(visionPose);
+            if (DriverStation.isAutonomous() != true && !RobotContainer.selectedAutonomous.equals("2GPBarrier")) {
+                poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+            }
+        };
 
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-             //   new NorthStarInputs("NorthStarLeft", new Pose3d(0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
-                new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
+               //new NorthStarInputs("NorthStarLeft", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359)))//,
+                 new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
 
         );
     }
@@ -206,6 +213,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * @return pose relative to the other alliance's coordinate system
      */
     private Pose2d flipAlliance(Pose2d poseToFlip) {
+        return poseToFlip.relativeTo(new Pose2d(
+                new Translation2d(FieldConstants.FIELD_LENGTH_METERS, FieldConstants.FIELD_WIDTH_METERS),
+                new Rotation2d(Math.PI)));
+    }
+
+    public static Pose2d flipAllianceStatic(Pose2d poseToFlip) {
         return poseToFlip.relativeTo(new Pose2d(
                 new Translation2d(FieldConstants.FIELD_LENGTH_METERS, FieldConstants.FIELD_WIDTH_METERS),
                 new Rotation2d(Math.PI)));

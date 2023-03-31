@@ -137,7 +137,7 @@ public class NorthStarInputs implements AprilTagInputs {
                         distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
                 }
 
-                    if (ambiguity > 2 || cameraPosition != null && cameraPosition.getX() >= 8 || distanceTravelled > 4.2672 / elapsedTime) {
+                    if (ambiguity > 2 || cameraPosition != null && cameraPosition.getX() >= 7 && cameraPosition.getX() <= 16.54175 - 7 || distanceTravelled > 4.2672 / elapsedTime) {
                         cameraPosition = null;
                         SmartDashboard.putNumber("ElapsedTime", Timer.getFPGATimestamp() - prevTime);
                         SmartDashboard.putBoolean("Unambiguous pose detected", false);
