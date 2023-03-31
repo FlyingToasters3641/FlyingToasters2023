@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.util.trajectory.RotationSequence;
 
 /**
  * Utility functions for flipping from the blue to red alliance. By default, all translations and
@@ -81,15 +82,15 @@ public class AllianceFlipUtil {
   }
 
   /** Flips a rotation sequence state based on the current alliance color. */
-  // public static RotationSequence.State apply(RotationSequence.State state) {
-  //   if (shouldFlip()) {
-  //     return new RotationSequence.State(
-  //         new Rotation2d(-state.position.getCos(), state.position.getSin()),
-  //         -state.velocityRadiansPerSec);
-  //   } else {
-  //     return state;
-  //   }
-  // }
+  public static RotationSequence.State apply(RotationSequence.State state) {
+    if (shouldFlip()) {
+      return new RotationSequence.State(
+          new Rotation2d(-state.position.getCos(), state.position.getSin()),
+          -state.velocityRadiansPerSec);
+    } else {
+      return state;
+    }
+  }
 
   private static boolean shouldFlip() {
     return DriverStation.getAlliance() == Alliance.Red;
