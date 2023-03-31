@@ -152,9 +152,9 @@ public class RobotContainer {
         operatorController
                 .y()
                 .onTrue(
-                        new SequentialCommandGroup(
+                        new ParallelCommandGroup(
                                 m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP),
-                                m_Arm.extendDoublePlayerStatiion()
+                                new WaitCommand(1).andThen(m_Arm.extendDoublePlayerStatiion())
                         )
                 )
                 .onFalse(
@@ -198,7 +198,7 @@ public class RobotContainer {
         rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(new ParallelCommandGroup(
                 m_Arm.extendGroundIntake(),
-                m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION)));
+                new WaitCommand(0.5).andThen(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION))));
         // driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem,
         // m_poseEstimator));
 
