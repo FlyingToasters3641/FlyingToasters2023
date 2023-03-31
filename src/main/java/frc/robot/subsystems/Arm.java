@@ -295,7 +295,7 @@ public class Arm extends SubsystemBase {
     public Command extendDoublePlayerStatiion() {
         return Commands.run(() -> {
             double pos = getArmAbsolutePositionDegrees();
-            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 30)) &&
+            if ((pos >= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() - 10)) &&
                     (pos <= (ArmPos.DOUBLE_PLAYERSTATION_PICKUP.getAngle() + 20))) {
                 m_extenderTarget = kArm.DOUBLE_PLAYERSTATION_EXT;
             }

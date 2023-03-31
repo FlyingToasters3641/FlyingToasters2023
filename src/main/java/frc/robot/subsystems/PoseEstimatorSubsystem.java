@@ -50,7 +50,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
      * radians.
      */
-    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.05, 0.05,2);
+    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.02, 0.02,2);
 
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final SwerveDrivePoseEstimator poseEstimator;
@@ -210,6 +210,12 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * @return pose relative to the other alliance's coordinate system
      */
     private Pose2d flipAlliance(Pose2d poseToFlip) {
+        return poseToFlip.relativeTo(new Pose2d(
+                new Translation2d(FieldConstants.FIELD_LENGTH_METERS, FieldConstants.FIELD_WIDTH_METERS),
+                new Rotation2d(Math.PI)));
+    }
+
+    public static Pose2d flipAllianceStatic(Pose2d poseToFlip) {
         return poseToFlip.relativeTo(new Pose2d(
                 new Translation2d(FieldConstants.FIELD_LENGTH_METERS, FieldConstants.FIELD_WIDTH_METERS),
                 new Rotation2d(Math.PI)));

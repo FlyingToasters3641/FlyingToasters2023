@@ -11,15 +11,15 @@ public class SnapToScoreCommand extends DriveToPose {
     Boolean goToClosest = true;
     int oneOver = 0;
     Pose2d[] Positions = new Pose2d[]{
-            new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 4.58139, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 3.992152, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 3.330761, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 2.83503, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 2.37096, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 1.654740, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 1.08437, new Rotation2d().fromDegrees(0)),
-            new Pose2d(1.81301, 0.47977869, new Rotation2d().fromDegrees(0))
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 2.9406413367726785 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 3.3698509 - 0.3, new Rotation2d().fromDegrees(0))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 4.00005467 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 4.627886 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 5.0438675 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 5.629004 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 6.3015654 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 6.855354977 - 0.3, new Rotation2d().fromDegrees(-180))),
+           PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(14.8340863, 7.43862497 -1 0.3, new Rotation2d().fromDegrees(-180)))
     };
     public SnapToScoreCommand(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator, Boolean goToClosest) {
         super(drive, poseEstimator, (Pose2d) null);

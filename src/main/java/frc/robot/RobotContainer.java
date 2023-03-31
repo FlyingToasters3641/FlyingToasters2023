@@ -99,6 +99,7 @@ public class RobotContainer {
         eventMap.put("MoveArmUp", m_Arm.moveArm(ArmPos.SOLO_PLAYERSTATION_PICKUP));
         eventMap.put("MoveToL3", m_Arm.moveArm(ArmPos.L3_SCORING, 1));
         eventMap.put("MoveToL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1));
+        eventMap.put("AutoBalanceTag", new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(12.7926178, 5.270563878, new Rotation2d(-180)))));
         SmartDashboard.putNumber("Lining up to score at", 1);
         m_drivetrainSubsystem.setDefaultCommand(
                 new FieldOrientedDriveCommand(
@@ -150,9 +151,9 @@ public class RobotContainer {
         operatorController
                 .y()
                 .onTrue(
-                        new ParallelCommandGroup(
-                                m_Arm.extendDoublePlayerStatiion(),
-                                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP)
+                        new SequentialCommandGroup(
+                                m_Arm.moveArm(ArmPos.DOUBLE_PLAYERSTATION_PICKUP),
+                                m_Arm.extendDoublePlayerStatiion()
                         )
                 )
                 .onFalse(
@@ -359,10 +360,15 @@ public class RobotContainer {
     private void configureAutonomousChooser() {
         SmartDashboard.putData("Chooser", chooser);
         // chooser.setDefaultOption("TestAuton", new testAuton(m_drivetrainSubsystem, m_poseEstimator));
+        
 
         chooser.setDefaultOption(
                 "OneConeBalance",
                 makeAutoBuilderCommand("1ConeBalance", new PathConstraints(1.5, 1))
+        );
+
+        chooser.addOption("AutoBalanceAprilTag", 
+                makeAutoBuilderCommand("1ConeBalanceAlt", new PathConstraints(1.5, 1))
         );
 
         chooser.addOption(
