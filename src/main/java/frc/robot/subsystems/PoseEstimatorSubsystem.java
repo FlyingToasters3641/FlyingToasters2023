@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -105,15 +106,15 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             }
       
             fieldVision2d.setRobotPose(visionPose);
-            if (DriverStation.isAutonomous() != true && !RobotContainer.selectedAutonomous.equals("2GPBarrier")) {
-                poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+            if (!(DriverStation.isAutonomous() && (RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance")))) {
+              //  poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
             }
         };
 
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-               //new NorthStarInputs("NorthStarLeft", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359)))//,
+                 new NorthStarInputs("NorthStarLeft", new Pose3d(-0.198938789, 0.270769403, 0.628645808, new Rotation3d(0,0,2.79252665359))),
                  new NorthStarInputs("NorthStarRight", new Pose3d(-0.198938789, -0.270769403, 0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
 
         );

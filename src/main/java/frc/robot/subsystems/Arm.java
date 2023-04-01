@@ -58,9 +58,9 @@ public class Arm extends SubsystemBase {
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.000070; // 0.025;// 0.015;
+        public static final double EX_KP = 0.00004;//0.000070; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.0000004; // 0.0001;
+        public static final double EX_KD = 0.000004; // 0.0001;//took away 1 0
         public static final double EX_KF = 0.0005;
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
@@ -136,8 +136,8 @@ public class Arm extends SubsystemBase {
         m_leftMotorPid.setFF(kArm.KF, 1);
 
         m_extenderPid.setOutputRange(-0.5, 0.5);
-        m_extenderPid.setSmartMotionMaxVelocity(3000/* 1500 */, 0);
-        m_extenderPid.setSmartMotionMaxAccel(6000/* 1000 */, 0);
+        m_extenderPid.setSmartMotionMaxVelocity(1500/* 1500 */, 0);//3000
+        m_extenderPid.setSmartMotionMaxAccel(4000/* 1000 */, 0);//6000
         m_extenderPid.setSmartMotionAllowedClosedLoopError(1.0, 0); // 0.002
 
         m_rightArmMotor.follow(m_leftArmMotor, true);
@@ -162,7 +162,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmAbsolutePositionDegrees() {
-        return (m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360);
+        return ((m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360) - (233.54476049651504 - 90));
     }
 
     protected double getArmEncoderPositionDegrees() {
