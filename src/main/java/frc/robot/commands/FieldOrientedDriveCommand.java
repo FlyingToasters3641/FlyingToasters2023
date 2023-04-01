@@ -80,8 +80,6 @@ public class FieldOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Drive: Rotational Velocity Commanded", rotationRateLimiter.calculate(rotationSupplier.getAsDouble()));
-    SmartDashboard.putNumber("Drive: Rotational Velocity Commanded (supplied)", rotationSupplier.getAsDouble());
     drivetrainSubsystem.drive(
         ChassisSpeeds.fromFieldRelativeSpeeds(
             translateXRateLimiter.calculate(translationXSupplier.getAsDouble()),

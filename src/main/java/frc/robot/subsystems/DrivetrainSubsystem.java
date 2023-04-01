@@ -231,7 +231,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (gyroOffset == null) {gyroOffset = new Rotation3d(pigeon.getRoll() / 180 * Math.PI,pigeon.getPitch() / 180 * Math.PI,pigeon.getYaw() / 180 * Math.PI);}
-    SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
+    //SmartDashboard.putNumber("Gyro Offsets", gyroOffset.getX());
     // Set the swerve module states
     if (desiredChassisSpeeds != null) {
       var desiredStates = DrivetrainConstants.KINEMATICS.toSwerveModuleStates(desiredChassisSpeeds);
@@ -249,26 +249,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
     SmartDashboard.putNumberArray("Drivetrain/SwerveStates", swerveModulesToNTValues(swerveModules));
     
-    int x = 0;
-    for(SwerveModule mod: swerveModules) {
-    SmartDashboard.putNumber("Mod" + x + "temperature", mod.getDriveMotor().getTemperature());
-    SmartDashboard.putNumber("Mod" + x + "temperature", mod.getSteerMotor().getTemperature());
-    x++;
-    }
+    // int x = 0;
+    // for(SwerveModule mod: swerveModules) {
+    // SmartDashboard.putNumber("Drive Mod" + x + "temperature", mod.getDriveMotor().getTemperature());
+    // SmartDashboard.putNumber("Steer Mod" + x + "temperature", mod.getSteerMotor().getTemperature());
+    // x++;
+    // }
 
-    SmartDashboard.putNumber("FRONT LEFT =", 0);
-    SmartDashboard.putNumber("FRONT RIGHT =", 1);
-    SmartDashboard.putNumber("BACK LEFT =", 2);
-    SmartDashboard.putNumber("BACK RIGHT =", 3);
+    // SmartDashboard.putNumber("FRONT LEFT =", 0);
+    // SmartDashboard.putNumber("FRONT RIGHT =", 1);
+    // SmartDashboard.putNumber("BACK LEFT =", 2);
+    // SmartDashboard.putNumber("BACK RIGHT =", 3);
 
-
-    int i = 0;
-    for(SwerveModule mod : swerveModules){
-      SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
-      SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
-      SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);
-      i++;
-    }
+      //update for zeoring wheels
+    // int i = 0;
+    // for(SwerveModule mod : swerveModules){
+    //   SmartDashboard.putNumber("Mod " + i + " Cancoder", mod.getCancoderAbsoluteAngle().getDegrees());
+    //   SmartDashboard.putNumber("Mod " + i + " Integrated", mod.getPosition().angle.getDegrees());
+    //   SmartDashboard.putNumber("Mod " + i + " Velocity", mod.getState().speedMetersPerSecond);
+    //   i++;
+    // }
 
     // Always reset desiredChassisSpeeds to null to prevent latching to the last
     // state (aka motor safety)!!

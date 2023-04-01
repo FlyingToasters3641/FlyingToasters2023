@@ -149,8 +149,8 @@ public class DriveTrajectory extends CommandBase {
         AllianceFlipUtil.apply(customGenerator.getDriveTrajectory().sample(timer.get()));
     RotationSequence.State holonomicRotationState =
         AllianceFlipUtil.apply(customGenerator.getHolonomicRotationSequence().sample(timer.get()));
-    SmartDashboard.putString("Trajectory: Setpoint",
-            new Pose2d(driveState.poseMeters.getTranslation(), holonomicRotationState.position).toString());
+    // SmartDashboard.putString("Trajectory: Setpoint",
+    //         new Pose2d(driveState.poseMeters.getTranslation(), holonomicRotationState.position).toString());
 
     // Calculate velocity
     ChassisSpeeds nextDriveState =

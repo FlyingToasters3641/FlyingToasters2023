@@ -132,9 +132,6 @@ public class FieldHeadingDriveCommand extends CommandBase {
     if (thetaController.atGoal() || centered) {
       omega = 0;
     }
-
-    SmartDashboard.putNumber("SNAP90: Setpoint", omega);
-    SmartDashboard.putNumber("SNAP90: Measured rotational speed", drivetrainSubsystem.getChassisSpeeds().omegaRadiansPerSecond);
     
     drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(
         translateXRateLimiter.calculate(xSupplier.getAsDouble()),
