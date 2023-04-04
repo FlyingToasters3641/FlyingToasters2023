@@ -231,12 +231,12 @@ public final class Constants {
     }
 
     public enum ArmPos {
-        STORED_POSITION(-56, 0, IntakePos.DEFAULT, false),
-        GROUND_INTAKE_POSITION(-41, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),
-        SOLO_PLAYERSTATION_PICKUP(-23, 0, IntakePos.DEFAULT, true),
+        STORED_POSITION(-53, 0, IntakePos.DEFAULT, false),
+        GROUND_INTAKE_POSITION(-37, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),
+        SOLO_PLAYERSTATION_PICKUP(-15, 0, IntakePos.DEFAULT, true),//-23
         DOUBLE_PLAYERSTATION_PICKUP(131,0, IntakePos.DEFAULT, true),
-        L2_SCORING(142, 0, IntakePos.DEFAULT, false),
-        L3_SCORING(142, 0, IntakePos.DEFAULT, false),
+        L2_SCORING(147, 0, IntakePos.DEFAULT, false),//142
+        L3_SCORING(147, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_AUTON_POS(-28, 0, IntakePos.FLOOR, true);
 
         private double angle;

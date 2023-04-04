@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.IntakePos;
@@ -40,12 +41,12 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.000067; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.000045;//0.00005; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
-        public static final double KD = 0.0000003;// 0.000015; //0.017546;//0.0;
+        public static final double KD = 0.000000003;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
         public static final double KS = 0.078474;// 0.11814;
-        public static final double KG = 0.53836;// 0.49202;
+        public static final double KG = 0.53838;//0.53836;// 0.49202;
         public static final double KV = 0.032529;// 0.034012;
         public static final double KA = 0.00078541;// 0.0020898;
         public static final int LEFT_CURRENT_LIMIT = 39;
@@ -123,12 +124,12 @@ public class Arm extends SubsystemBase {
 
         m_leftMotorPid.setSmartMotionMaxVelocity(35000, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 0);
-        m_leftMotorPid.setSmartMotionMaxAccel(48000, 0);
+        m_leftMotorPid.setSmartMotionMaxAccel(60000, 0);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
 
         m_leftMotorPid.setSmartMotionMaxVelocity(18000, 1);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 1);
-        m_leftMotorPid.setSmartMotionMaxAccel(25000, 1);
+        m_leftMotorPid.setSmartMotionMaxAccel(30000, 1);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 1); // 0.002
         m_leftMotorPid.setP(kArm.KP, 1);
         m_leftMotorPid.setI(kArm.KI, 1);
@@ -253,10 +254,10 @@ public class Arm extends SubsystemBase {
                             m_targetArmPosition = normalizeAngle(angle.getAngle());
                             // System.out.println("Moving arm to: " + angle.getAngle());
                         })
-                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout)
-                        .andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
-                                : m_intake.extendIntake())
-                                .andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
+                        .until(() -> isArmAtPos(angle.getAngle())).withTimeout(timeout),
+                        new WaitCommand(0.5).andThen((angle.getIntakePosition() == IntakePos.DEFAULT ? m_intake.retractIntake()
+                                : m_intake.extendIntake()),
+                                new WaitCommand(0.25).andThen(angle.getRunIntake() ? m_intake.runIntake(m_leds) : m_intake.stopIntake())));
 
     }
     // EXTENSIONS FOR ARM POSITIONS
