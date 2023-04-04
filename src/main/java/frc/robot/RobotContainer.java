@@ -215,7 +215,7 @@ public class RobotContainer {
         driveController.rightBumper()
                 .whileTrue(
                         new SequentialCommandGroup(
-                                new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0.5),
+                                //new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, () -> new Pose2d(m_poseEstimator.getCurrentPose().getTranslation(), new Rotation2d().fromDegrees(0))).withTimeout(0.5),
                                 new SnapToScoreCommand(m_drivetrainSubsystem, m_poseEstimator, true)
                                 // new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, new Pose2d(1.81301, 5.098288, new Rotation2d().fromDegrees(0))
                         )

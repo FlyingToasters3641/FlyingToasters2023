@@ -10,6 +10,8 @@
 
 package frc.robot.subsystems.vision;
 
+import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -36,7 +38,10 @@ public class NorthStarInputs implements AprilTagInputs {
     private double distanceTravelled;
     private double elapsedTime = 0.02;
     private double prevTime = 0;
-
+    private LinearFilter singlePoleFilter = LinearFilter.singlePoleIIR(0.05, elapsedTime);
+    private LinearFilter movingAverageFilterX = LinearFilter.movingAverage(3);
+    private LinearFilter movingAverageFilterY = LinearFilter.movingAverage(3);
+    private MedianFilter medianAverageFilter = new MedianFilter(3);
     public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
         this.NT4Id = NT4Id;
         this.relativeCameraPosition = relativeCameraPosition;
@@ -137,7 +142,8 @@ public class NorthStarInputs implements AprilTagInputs {
                         distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
                 }
 
-                    if (/*ambiguity > 2 || */cameraPosition != null && cameraPosition.getX() >= 7 && cameraPosition.getX() <= 16.54175 - 7/* || distanceTravelled > 4.2672 / elapsedTime*/) {
+                    if (ambiguity > 2/* || cameraPosition != null && cameraPosition.getX() <= 7 && cameraPosition.getX() >= 16.54175 - 7 /*|| distanceTravelled > 4.2672 / elapsedTime*/) {
+
                         cameraPosition = null;
                         SmartDashboard.putNumber("ElapsedTime", Timer.getFPGATimestamp() - prevTime);
                         SmartDashboard.putBoolean("Unambiguous pose detected", false);
@@ -147,6 +153,7 @@ public class NorthStarInputs implements AprilTagInputs {
                     if (cameraPosition != null) {
                         SmartDashboard.putBoolean("Unambiguous pose detected", true);
                         previousPosePosition = new Pose3d(cameraPosition.getTranslation(), cameraPosition.getRotation());
+                        cameraPosition = new Pose3d(movingAverageFilterX.calculate(cameraPosition.getX()), movingAverageFilterY.calculate(cameraPosition.getY()), cameraPosition.getZ(), new Rotation3d(cameraPosition.getRotation().getQuaternion()));
                         
                         var measure = new AprilTagMeasurement(
                                 timestamp,

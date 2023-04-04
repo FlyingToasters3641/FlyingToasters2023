@@ -15,19 +15,19 @@ import frc.robot.subsystems.PoseEstimatorSubsystem;
 import java.util.function.Supplier;
 
 public class DriveToPose extends CommandBase {
-  private final DrivetrainSubsystem drive;
+  protected final DrivetrainSubsystem drive;
   protected final PoseEstimatorSubsystem poseEstimator;
   protected Supplier<Pose2d> poseSupplier;
 
   private boolean running = false;
-  private final ProfiledPIDController driveController =
+  protected ProfiledPIDController driveController =
       new ProfiledPIDController(
           2.0, 0.0, 0.0, new TrapezoidProfile.Constraints(Units.inchesToMeters(150.0), Units.inchesToMeters(450.0)), 0.02);
-  private final ProfiledPIDController thetaController =
+  protected ProfiledPIDController thetaController =
       new ProfiledPIDController(
           5.0, 0.0, 0.0, new TrapezoidProfile.Constraints(Units.degreesToRadians(360.0), Units.degreesToRadians(720.0)), 0.02);
-  private double driveErrorAbs;
-  private double thetaErrorAbs;
+  protected double driveErrorAbs;
+  protected double thetaErrorAbs;
 
   /** Drives to the specified pose under full software control. */
   public DriveToPose(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator, Pose2d pose) {
