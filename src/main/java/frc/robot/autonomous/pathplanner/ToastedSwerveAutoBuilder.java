@@ -3,7 +3,6 @@ package frc.robot.autonomous.pathplanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.BaseAutoBuilder;
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -24,6 +23,11 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
   private final Subsystem[] driveRequirements;
 
   private final boolean useKinematics;
+
+  private final double warnNotificationThreshold;
+  private final Consumer<CommandBase> warnCallback;
+  private final double eStopNotificationThreshold;
+  private final Consumer<CommandBase> eStopCallback;
 
   /**
    * Create an auto builder that will create command groups that will handle path following and
@@ -52,6 +56,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
       PIDConstants rotationConstants,
       Consumer<ChassisSpeeds> outputChassisSpeeds,
       Map<String, Command> eventMap,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... driveRequirements) {
     this(
         poseSupplier,
@@ -61,6 +69,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
         outputChassisSpeeds,
         eventMap,
         false,
+        warnNotificationThreshold,
+        warnCallback,
+        eStopNotificationThreshold,
+        eStopCallback,
         driveRequirements);
   }
 
@@ -93,6 +105,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
       PIDConstants rotationConstants,
       Consumer<SwerveModuleState[]> outputModuleStates,
       Map<String, Command> eventMap,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... driveRequirements) {
     this(
         poseSupplier,
@@ -103,6 +119,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
         outputModuleStates,
         eventMap,
         false,
+        warnNotificationThreshold,
+        warnCallback,
+        eStopNotificationThreshold,
+        eStopCallback,
         driveRequirements);
   }
 
@@ -137,6 +157,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
       Consumer<ChassisSpeeds> outputChassisSpeeds,
       Map<String, Command> eventMap,
       boolean useAllianceColor,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... driveRequirements) {
     super(poseSupplier, resetPose, eventMap, DrivetrainType.HOLONOMIC, useAllianceColor);
 
@@ -146,6 +170,11 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
     this.outputModuleStates = null;
     this.outputChassisSpeeds = outputChassisSpeeds;
     this.driveRequirements = driveRequirements;
+
+    this.warnNotificationThreshold = warnNotificationThreshold;
+    this.warnCallback = warnCallback;
+    this.eStopNotificationThreshold = eStopNotificationThreshold;
+    this.eStopCallback = eStopCallback;
 
     this.useKinematics = false;
   }
@@ -183,6 +212,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
       Consumer<SwerveModuleState[]> outputModuleStates,
       Map<String, Command> eventMap,
       boolean useAllianceColor,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... driveRequirements) {
     super(poseSupplier, resetPose, eventMap, DrivetrainType.HOLONOMIC, useAllianceColor);
 
@@ -192,6 +225,11 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
     this.outputModuleStates = outputModuleStates;
     this.outputChassisSpeeds = null;
     this.driveRequirements = driveRequirements;
+
+    this.warnNotificationThreshold = warnNotificationThreshold;
+    this.warnCallback = warnCallback;
+    this.eStopNotificationThreshold = eStopNotificationThreshold;
+    this.eStopCallback = eStopCallback;
 
     this.useKinematics = true;
   }
@@ -208,6 +246,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
           pidControllerFromConstants(rotationConstants),
           outputModuleStates,
           useAllianceColor,
+          warnNotificationThreshold,
+          warnCallback,
+          eStopNotificationThreshold,
+          eStopCallback,
           driveRequirements);
     } else {
       return new ToastedPPSwerveControllerCommand(
@@ -218,6 +260,10 @@ public class ToastedSwerveAutoBuilder extends BaseAutoBuilder {
           pidControllerFromConstants(rotationConstants),
           outputChassisSpeeds,
           useAllianceColor,
+          warnNotificationThreshold,
+          warnCallback,
+          eStopNotificationThreshold,
+          eStopCallback,
           driveRequirements);
     }
   }
