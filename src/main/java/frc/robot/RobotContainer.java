@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
+import frc.robot.autonomous.pathplanner.ToastedSwerveAutoBuilder;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Arm.kArm;
@@ -443,7 +444,7 @@ public class RobotContainer {
         m_poseEstimator.addTrajectory(path);
         // controllerCommand = DrivetrainSubsystem.followTrajectory(driveSystem,
         // poseEstimatorSystem, alliancePath);
-        SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
+        ToastedSwerveAutoBuilder autoBuilder = new ToastedSwerveAutoBuilder(
                 m_poseEstimator::getCurrentPose,
                 m_poseEstimator::setCurrentPose,
                 Constants.DrivetrainConstants.KINEMATICS,
