@@ -18,7 +18,7 @@ public class SnapToScoreCommand extends DriveToPose {
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 0)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 1)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 2) + 2), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3) + 2), new Rotation2d().fromDegrees(0)),
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3) + 3), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 4)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 5)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 6) + 1), new Rotation2d().fromDegrees(0)),

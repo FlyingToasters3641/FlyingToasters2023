@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 
+import javax.sound.sampled.Line;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +38,7 @@ public class NorthStarInputs implements AprilTagInputs {
     private Pose3d previousPosePosition;
     private double distanceTravelled;
     private double elapsedTime = 0.02;
+    private LinearFilter highPassFilter = LinearFilter.highPass(0.1,0.02);
     private double prevTime = 0;
     private LinearFilter singlePoleFilter = LinearFilter.singlePoleIIR(0.05, elapsedTime);
     private LinearFilter movingAverageFilterX = LinearFilter.movingAverage(3);
@@ -141,9 +143,13 @@ public class NorthStarInputs implements AprilTagInputs {
                     if (previousPosePosition != null && cameraPosition != null) {
                         distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
                 }
-
-                    if (ambiguity > 2/* || cameraPosition != null && cameraPosition.getX() <= 7 && cameraPosition.getX() >= 16.54175 - 7 /*|| distanceTravelled > 4.2672 / elapsedTime*/) {
-
+                    double noise = highPassFilter.calculate(distanceTravelled);
+                    if (ambiguity > 2 || noise > 0.8/* || cameraPosition != null && cameraPosition.getX() <= 7 && cameraPosition.getX() >= 16.54175 - 7 /*|| distanceTravelled > 4.2672 / elapsedTime*/) {
+                        SmartDashboard.putNumber(
+                                "Number of poses thrown out:",
+                                SmartDashboard.getNumber("Number of poses thrown out:", 0) + 1
+                        );
+                        SmartDashboard.putNumber("Noise", noise);
                         cameraPosition = null;
                         SmartDashboard.putNumber("ElapsedTime", Timer.getFPGATimestamp() - prevTime);
                         SmartDashboard.putBoolean("Unambiguous pose detected", false);
