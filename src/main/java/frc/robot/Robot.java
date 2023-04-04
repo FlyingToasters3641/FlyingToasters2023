@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
     checkDriverStationUpdate();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_robotContainer.CurrentAutonomousCommand = m_autonomousCommand; // not the best but echo into robot container so we can "e-stop" auton if we loose encoder telemetry again
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -93,6 +94,7 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+      m_robotContainer.CurrentAutonomousCommand = null;
     }
 
     checkDriverStationUpdate();

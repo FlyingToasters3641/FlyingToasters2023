@@ -37,6 +37,7 @@ import java.util.Map;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    public Command CurrentAutonomousCommand;
 
     public Alliance alliance = Alliance.Invalid;
 
@@ -88,6 +89,8 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
+        CurrentAutonomousCommand = null;
+
         eventMap.put("ScoreL3", m_Arm.moveArm(ArmPos.L3_SCORING, 1)
                 .andThen(m_Arm.extend(kArm.EXTENDED_POSITION, 1.0)./*andThen(new WaitCommand(0.15).*/andThen(m_intake.reverseIntake().withTimeout(0.3))));
         eventMap.put("AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
@@ -198,8 +201,8 @@ public class RobotContainer {
         // DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
         leftTriggerD.onTrue(new ParallelCommandGroup(
-                m_Arm.extendGroundIntake(),
-                new WaitCommand(0.5).andThen(m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION))));
+            m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION),
+            new WaitCommand(0.4).andThen(m_Arm.extendGroundIntake())));
         // driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem,
         // m_poseEstimator));
 
@@ -367,21 +370,21 @@ public class RobotContainer {
 
         chooser.setDefaultOption(
                 "OneConeBalance",
-                makeAutoBuilderCommand("1ConeBalance", new PathConstraints(1.5, 1))
+                makeAutoBuilderCommand("1ConeBalance", new PathConstraints(1.5, 1), false)
         );
 
         chooser.addOption("AutoBalanceAprilTag", 
-                makeAutoBuilderCommand("1ConeBalanceAlt", new PathConstraints(1.5, 1))
+                makeAutoBuilderCommand("1ConeBalanceAlt", new PathConstraints(1.5, 1), false)
         );
 
         chooser.addOption(
                 "2GPWall",
-                makeAutoBuilderCommand("2GPWall", new PathConstraints(3, 2))
+                makeAutoBuilderCommand("2GPWall", new PathConstraints(3, 2), false)
         );
 
         chooser.addOption(
                 "2GPBarrier",
-                makeAutoBuilderCommand("2GPBarrier", new PathConstraints(3, 2))
+                makeAutoBuilderCommand("2GPBarrier", new PathConstraints(3, 2), true)
         );
 
 
@@ -435,7 +438,8 @@ public class RobotContainer {
 
     public CommandBase makeAutoBuilderCommand(
             String pathName,
-            PathConstraints constraints
+            PathConstraints constraints,
+            boolean enableEStop
     ) {
         // return new PPAutoBuilder(drivetrainSubsystem, poseEstimator, pathName,
         // constraints,
@@ -454,6 +458,21 @@ public class RobotContainer {
                 m_drivetrainSubsystem::setModuleStates,
                 eventMap,
                 true,
+                .7,
+                !enableEStop ? null : c -> {
+                        SmartDashboard.putString("AUTON ESTOP", "Warning translational error threshold triggered.");
+                        // Enable vision odometry here?
+                },
+                1.0,
+                !enableEStop ? null : c -> {
+                        if (c != null) {
+                                SmartDashboard.putString("AUTON ESTOP", "Engaging e-stop on autonomous due to excessive trajectory error.");
+                                c.cancel();
+                        }
+                        if (CurrentAutonomousCommand != null) {
+                                CurrentAutonomousCommand.cancel();
+                        }
+                },
                 m_drivetrainSubsystem
         );
         return autoBuilder.fullAuto(path);

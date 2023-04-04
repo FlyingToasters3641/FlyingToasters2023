@@ -31,6 +31,11 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
   private final boolean useKinematics;
   private final boolean useAllianceColor;
 
+  private final double warnNotificationThreshold;
+  private final Consumer<CommandBase> warnCallback;
+  private final double eStopNotificationThreshold;
+  private final Consumer<CommandBase> eStopCallback;
+
   private PathPlannerTrajectory transformedTrajectory;
 
   private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
@@ -38,6 +43,7 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
   private static Consumer<ChassisSpeeds> logSetpoint = null;
   private static BiConsumer<Translation2d, Rotation2d> logError =
       ToastedPPSwerveControllerCommand::defaultLogError;
+
 
   /**
    * Constructs a new PPSwerveControllerCommand that when executed will follow the provided
@@ -67,6 +73,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
       PIDController rotationController,
       Consumer<ChassisSpeeds> outputChassisSpeeds,
       boolean useAllianceColor,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... requirements) {
     this.trajectory = trajectory;
     this.poseSupplier = poseSupplier;
@@ -76,6 +86,11 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
     this.kinematics = null;
     this.useKinematics = false;
     this.useAllianceColor = useAllianceColor;
+
+    this.warnNotificationThreshold = warnNotificationThreshold;
+    this.warnCallback = warnCallback;
+    this.eStopNotificationThreshold = eStopNotificationThreshold;
+    this.eStopCallback = eStopCallback;
 
     addRequirements(requirements);
 
@@ -112,6 +127,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
       PIDController yController,
       PIDController rotationController,
       Consumer<ChassisSpeeds> outputChassisSpeeds,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... requirements) {
     this(
         trajectory,
@@ -121,6 +140,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
         rotationController,
         outputChassisSpeeds,
         false,
+        warnNotificationThreshold,
+        warnCallback,
+        eStopNotificationThreshold,
+        eStopCallback,
         requirements);
   }
 
@@ -154,6 +177,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
       PIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
       boolean useAllianceColor,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... requirements) {
     this.trajectory = trajectory;
     this.poseSupplier = poseSupplier;
@@ -163,6 +190,11 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
     this.outputChassisSpeeds = null;
     this.useKinematics = true;
     this.useAllianceColor = useAllianceColor;
+
+    this.warnNotificationThreshold = warnNotificationThreshold;
+    this.warnCallback = warnCallback;
+    this.eStopNotificationThreshold = eStopNotificationThreshold;
+    this.eStopCallback = eStopCallback;
 
     addRequirements(requirements);
 
@@ -201,6 +233,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
       PIDController yController,
       PIDController rotationController,
       Consumer<SwerveModuleState[]> outputModuleStates,
+      double warnNotificationThreshold,
+      Consumer<CommandBase> warnCallback,
+      double eStopNotificationThreshold,
+      Consumer<CommandBase> eStopCallback,
       Subsystem... requirements) {
     this(
         trajectory,
@@ -211,6 +247,10 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
         rotationController,
         outputModuleStates,
         false,
+        warnNotificationThreshold,
+        warnCallback,
+        eStopNotificationThreshold,
+        eStopCallback,
         requirements);
   }
 
@@ -261,15 +301,29 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
           new Pose2d(desiredState.poseMeters.getTranslation(), desiredState.holonomicRotation));
     }
 
+    var translationError = currentPose.getTranslation().minus(desiredState.poseMeters.getTranslation());
     if (logError != null) {
       logError.accept(
-          currentPose.getTranslation().minus(desiredState.poseMeters.getTranslation()),
+          translationError,
           currentPose.getRotation().minus(desiredState.holonomicRotation));
     }
 
     if (logSetpoint != null) {
       logSetpoint.accept(targetChassisSpeeds);
     }
+
+    // *** Call back if error thresholds and callbacks are defined.
+    // Callback (particularly eStopCallback) can .cancel this command if needed and also stop the autonomous command as well so nothing else happens.
+    if ((Math.abs(translationError.getX()) > warnNotificationThreshold) || (Math.abs(translationError.getY()) > warnNotificationThreshold)) {
+      if (warnCallback != null) {
+        warnCallback.accept(this);
+      }
+    } else if ((Math.abs(translationError.getX()) > eStopNotificationThreshold) || (Math.abs(translationError.getY()) > eStopNotificationThreshold)) {
+      if (eStopCallback != null){
+        eStopCallback.accept(this);
+      }
+    }
+
   }
 
   @Override
@@ -278,6 +332,7 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
 
     if (interrupted
         || Math.abs(transformedTrajectory.getEndState().velocityMetersPerSecond) < 0.1) {
+          SmartDashboard.putBoolean("AUTON ESTOP: PP Path interrupted and stopped.", true);   // ***TEMP**** REMOVE THIS
       if (useKinematics) {
         this.outputModuleStates.accept(
             this.kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
