@@ -226,7 +226,7 @@ public class RobotContainer {
                 .onTrue(
                         new InstantCommand(() -> {
                             double prevPosition = SmartDashboard.getNumber("Lining up to score at", 1);
-                            int newPosition = ((prevPosition + 1) <= 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition - 1;
+                            int newPosition = ((prevPosition + 1) < 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition + 1;
                             SmartDashboard.putNumber("Lining up to score at", newPosition);
                         }
                         )
@@ -235,7 +235,8 @@ public class RobotContainer {
                 .onTrue(
                         new InstantCommand(() -> {
                             double prevPosition = SmartDashboard.getNumber("Lining up to score at", 1);
-                            int newPosition = ((prevPosition + 1) <= 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition + 1;
+                            SmartDashboard.putBoolean("PovRightPressed", true);
+                            int newPosition = ((prevPosition - 1) < 1 || prevPosition - 1 > 9) ? (int) prevPosition : (int) prevPosition - 1;
                             SmartDashboard.putNumber("Lining up to score at", newPosition);
                         }
                         )
@@ -244,7 +245,7 @@ public class RobotContainer {
                 .onTrue(
                         new InstantCommand(() -> {
                             double prevPosition = SmartDashboard.getNumber("Lining up to score at", 1);
-                            int newPosition = ((prevPosition + 1) <= 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition - 1;
+                            int newPosition = ((prevPosition + 1) < 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition + 1;
                             SmartDashboard.putNumber("Lining up to score at", newPosition);
                         }
                         )
@@ -253,7 +254,7 @@ public class RobotContainer {
                 .onTrue(
                         new InstantCommand(() -> {
                             double prevPosition = SmartDashboard.getNumber("Lining up to score at", 1);
-                            int newPosition = ((prevPosition + 1) <= 1 || prevPosition + 1 > 9) ? (int) prevPosition : (int) prevPosition + 1;
+                            int newPosition = ((prevPosition - 1) < 1 || prevPosition - 1 > 9) ? (int) prevPosition : (int) prevPosition - 1;
                             SmartDashboard.putNumber("Lining up to score at", newPosition);
                         }
                         )
