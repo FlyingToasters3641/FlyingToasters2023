@@ -106,7 +106,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             }
       
             fieldVision2d.setRobotPose(visionPose);
-            if (!(!(DriverStation.isTeleopEnabled()) && (RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance")))) {
+            if ((DriverStation.isTeleop()) && !(RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance"))) {
                 poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
             }
         };
