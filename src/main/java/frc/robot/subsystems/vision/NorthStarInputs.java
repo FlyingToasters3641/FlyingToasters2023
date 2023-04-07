@@ -41,8 +41,8 @@ public class NorthStarInputs implements AprilTagInputs {
     private LinearFilter highPassFilter = LinearFilter.highPass(0.1,0.02);
     private double prevTime = 0;
     private LinearFilter singlePoleFilter = LinearFilter.singlePoleIIR(0.05, elapsedTime);
-    private LinearFilter movingAverageFilterX = LinearFilter.movingAverage(3);
-    private LinearFilter movingAverageFilterY = LinearFilter.movingAverage(3);
+    private LinearFilter movingAverageFilterX = LinearFilter.movingAverage(1);
+    private LinearFilter movingAverageFilterY = LinearFilter.movingAverage(1);
     private MedianFilter medianAverageFilter = new MedianFilter(3);
     public NorthStarInputs(String NT4Id, Pose3d relativeCameraPosition) {
         this.NT4Id = NT4Id;
