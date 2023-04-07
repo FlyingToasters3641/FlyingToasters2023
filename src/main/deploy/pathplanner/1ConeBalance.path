@@ -17,7 +17,6 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
           "ScoreL3",
           "Retract",
           "RetractToRest"

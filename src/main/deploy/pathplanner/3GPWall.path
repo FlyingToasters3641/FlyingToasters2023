@@ -53,18 +53,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.778342223351113,
-        "y": 0.9126145648124622
+        "x": 6.899479078472046,
+        "y": 0.8964939110433778
       },
       "prevControl": {
-        "x": 5.707290518825151,
-        "y": 0.5389574311908841
+        "x": 6.125339769776763,
+        "y": 0.5855044644117066
       },
       "nextControl": {
-        "x": 5.707290518825151,
-        "y": 0.5389574311908841
+        "x": 6.125339769776763,
+        "y": 0.5855044644117066
       },
-      "holonomicAngle": 0.7143440055573932,
+      "holonomicAngle": 16.97076369011423,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -103,19 +103,22 @@
     },
     {
       "anchorPoint": {
-        "x": 1.9231840286597242,
-        "y": 1.0469726755425728
+        "x": 1.9363798168426574,
+        "y": 0.977798286141801
       },
       "prevControl": {
-        "x": 2.6201413583382775,
-        "y": 1.0899997442355984
+        "x": 2.6333371465212108,
+        "y": 1.0208253548348267
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 1.239422487164104,
+        "y": 0.9347712174487753
+      },
       "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [
           "ScoreL3",
@@ -126,25 +129,118 @@
         "waitBehavior": "none",
         "waitTime": 0
       }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.444374183822718,
+        "y": 0.6378479563030988
+      },
+      "prevControl": {
+        "x": 4.019782346068975,
+        "y": 0.5238605772189078
+      },
+      "nextControl": {
+        "x": 4.868966021576459,
+        "y": 0.7518353353872893
+      },
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.9532892829726185,
+        "y": 2.001332204337271
+      },
+      "prevControl": {
+        "x": 6.331124855738747,
+        "y": 1.2624844273390856
+      },
+      "nextControl": {
+        "x": 7.575504070617807,
+        "y": 2.740239786551445
+      },
+      "holonomicAngle": 48.21548399174823,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9561955744109754,
+        "y": 0.9760368854690614
+      },
+      "prevControl": {
+        "x": 4.578200603117439,
+        "y": -0.46512987310361253
+      },
+      "nextControl": null,
+      "holonomicAngle": 0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "ScoreL2",
+          "RetractToRest"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
   "markers": [
     {
-      "position": 0.7296874999999994,
+      "position": 0.7487215909090921,
       "names": [
         "GroundIntake"
       ]
     },
     {
-      "position": 2.689488636363642,
+      "position": 1.596874999999996,
+      "names": [
+        "RunIntake"
+      ]
+    },
+    {
+      "position": 2.835298295454541,
       "names": [
         "RetractToRest"
       ]
     },
     {
-      "position": 1.6357954545454534,
+      "position": 4.785156249999983,
+      "names": [
+        "GroundIntake"
+      ]
+    },
+    {
+      "position": 5.705149147727257,
       "names": [
         "RunIntake"
+      ]
+    },
+    {
+      "position": 6.589098011363621,
+      "names": [
+        "RetractToRest"
       ]
     }
   ]

@@ -234,7 +234,7 @@ public final class Constants {
         STORED_POSITION(-53, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_POSITION(-37, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),
         SOLO_PLAYERSTATION_PICKUP(-15, 0, IntakePos.DEFAULT, true),//-23
-        DOUBLE_PLAYERSTATION_PICKUP(131,0, IntakePos.DEFAULT, true),
+        DOUBLE_PLAYERSTATION_PICKUP(138,0, IntakePos.DEFAULT, true),//131
         L2_SCORING(147, 0, IntakePos.DEFAULT, false),//142
         L3_SCORING(147, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_AUTON_POS(-28, 0, IntakePos.FLOOR, true);

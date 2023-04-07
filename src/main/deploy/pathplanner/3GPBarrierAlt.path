@@ -17,7 +17,7 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "ScoreL2",
+          "ScoreL3",
           "Retract",
           "RetractToRest"
         ],
@@ -43,10 +43,10 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -68,10 +68,14 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "ScoreL3",
+          "Retract",
+          "RetractToRest"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
@@ -93,22 +97,22 @@
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": false,
+      "isStopPoint": true,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
       }
     },
     {
       "anchorPoint": {
-        "x": 1.9146024994342432,
-        "y": 4.407045236798033
+        "x": 1.8965481425386643,
+        "y": 4.4158122083282585
       },
       "prevControl": {
-        "x": 3.996892269916567,
-        "y": 4.972253914090387
+        "x": 3.97883791302099,
+        "y": 4.981020885620606
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -118,7 +122,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "Outtake"
+          "ScoreL3",
+          "RetractToRest",
+          "RetractToRest"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -128,39 +134,27 @@
   ],
   "markers": [
     {
-      "position": 0.050710227272726976,
+      "position": 0.33551136363636325,
       "names": [
         "GroundIntake"
       ]
     },
     {
-      "position": 1.3843749999999984,
-      "names": [
-        "RetractToRest"
-      ]
-    },
-    {
-      "position": 1.9146306818181804,
-      "names": [
-        "MoveToL3"
-      ]
-    },
-    {
-      "position": 2.044886363636368,
+      "position": 2.3441761363636364,
       "names": [
         "GroundIntake"
       ]
     },
     {
-      "position": 3.1187500000000083,
+      "position": 1.6031249999999955,
       "names": [
         "RetractToRest"
       ]
     },
     {
-      "position": 3.902272727272728,
+      "position": 3.5241477272727146,
       "names": [
-        "MoveToL2"
+        "RetractToRest"
       ]
     }
   ]

@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -14,20 +15,22 @@ public class SnapToScoreCommand extends DriveToPose {
     Boolean goToClosest = true;
     int oneOver = 0;
     double xScoringPosition = 1.73;
+    double valueConst = 8;
     Pose2d[] Positions = new Pose2d[]{
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 0)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 1)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 2) + 2), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3) + 3), new Rotation2d().fromDegrees(0)),
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 2)), new Rotation2d().fromDegrees(0)),
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 4)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 5)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 6) + 1), new Rotation2d().fromDegrees(0)),
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 6)), new Rotation2d().fromDegrees(0)),
            new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 7)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 8) + 1), new Rotation2d().fromDegrees(0))
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 8) + valueConst), new Rotation2d().fromDegrees(0))
     };
     public SnapToScoreCommand(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator, Boolean goToClosest) {
         super(drive, poseEstimator, (Pose2d) null);
         poseSupplier = this::getBestPosition;
+
         this.goToClosest = goToClosest;
        // ProfiledPIDController thetaController =
          //       new ProfiledPIDController(
