@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
+import frc.robot.util.FieldConstants;
 
 public class SnapToScoreCommand extends DriveToPose {
     int bestPosition;
@@ -30,7 +31,6 @@ public class SnapToScoreCommand extends DriveToPose {
     public SnapToScoreCommand(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator, Boolean goToClosest) {
         super(drive, poseEstimator, (Pose2d) null);
         poseSupplier = this::getBestPosition;
-
         this.goToClosest = goToClosest;
        // ProfiledPIDController thetaController =
          //       new ProfiledPIDController(
@@ -64,7 +64,11 @@ public class SnapToScoreCommand extends DriveToPose {
 
 
     private Pose2d getBestPosition() {
-
+        if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+            for (int i = 0; i < Positions.length; i++) {
+                Positions[i] = new Pose2d(Positions[i].getX(), FieldConstants.FIELD_WIDTH_METERS - Positions[i].getY(), Positions[i].getRotation());
+            }
+        }
         int id = ((bestPosition + oneOver) < Positions.length) && ((bestPosition + oneOver) >= 0) ? bestPosition + oneOver : oneOver;
         return Positions[bestPosition + oneOver];
     }
