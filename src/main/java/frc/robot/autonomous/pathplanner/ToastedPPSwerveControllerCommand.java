@@ -332,7 +332,6 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
 
     if (interrupted
         || Math.abs(transformedTrajectory.getEndState().velocityMetersPerSecond) < 0.1) {
-          SmartDashboard.putBoolean("AUTON ESTOP: PP Path interrupted and stopped.", true);   // ***TEMP**** REMOVE THIS
       if (useKinematics) {
         this.outputModuleStates.accept(
             this.kinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0)));
