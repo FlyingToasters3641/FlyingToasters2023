@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem;
@@ -17,16 +18,16 @@ public class SnapToScoreCommand extends DriveToPose {
     int oneOver = 0;
     double xScoringPosition = 1.73;
     double valueConst = 8;
-    Pose2d[] Positions = new Pose2d[]{
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 0)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 1)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 2)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 4)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 5)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 6)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 7)), new Rotation2d().fromDegrees(0)),
-           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 8) + valueConst), new Rotation2d().fromDegrees(0))
+    Pose2d[] Positions = new Pose2d[]{  // .5588
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 0)), new Rotation2d().fromDegrees(0)),  // .512826
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 1)), new Rotation2d().fromDegrees(0)),  // .512826 + .5588 = 1.071626
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 2)), new Rotation2d().fromDegrees(0)),  // 1.630426
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 3)), new Rotation2d().fromDegrees(0)),  // 2.189226
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 4)), new Rotation2d().fromDegrees(0)),  // 2.748026
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 5)), new Rotation2d().fromDegrees(0)),  // 3.306826
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 6)), new Rotation2d().fromDegrees(0)),  // 3.865626
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 7)), new Rotation2d().fromDegrees(0)),  // 4.424426
+           new Pose2d(xScoringPosition, Units.inchesToMeters(20.19 + (22.0 * 8) + valueConst), new Rotation2d().fromDegrees(0))  // 4.983226
     };
     public SnapToScoreCommand(DrivetrainSubsystem drive, PoseEstimatorSubsystem poseEstimator, Boolean goToClosest) {
         super(drive, poseEstimator, (Pose2d) null);
@@ -45,7 +46,7 @@ public class SnapToScoreCommand extends DriveToPose {
             Double prevLength = null;
 
             for (int i = 0; i < Positions.length; i++) {
-                var pose = Positions[i];
+                var pose = flipYIfNeeded(Positions[i]);
                 var poseCompare = Math.abs(pose.getTranslation().getDistance(curPose.getTranslation()));
                 if (prevLength == null || poseCompare < prevLength) {
                     prevLength = Math.abs(pose.getTranslation().getDistance(curPose.getTranslation()));
@@ -62,7 +63,13 @@ public class SnapToScoreCommand extends DriveToPose {
         SmartDashboard.putNumber("Lining up to score at", bestPosition + 1);
     }
 
-
+    private Pose2d flipYIfNeeded(Pose2d pose) {
+        if (DriverStation.getAlliance() == Alliance.Red) {
+            return new Pose2d(pose.getX(), FieldConstants.FIELD_WIDTH_METERS - pose.getY(), pose.getRotation());
+        } else {
+            return pose;
+        }
+    }
     private Pose2d getBestPosition() {
         if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
             for (int i = 0; i < Positions.length; i++) {
@@ -70,6 +77,6 @@ public class SnapToScoreCommand extends DriveToPose {
             }
         }
         int id = ((bestPosition + oneOver) < Positions.length) && ((bestPosition + oneOver) >= 0) ? bestPosition + oneOver : oneOver;
-        return Positions[bestPosition + oneOver];
+        return flipYIfNeeded(Positions[bestPosition + oneOver]);
     }
 }
