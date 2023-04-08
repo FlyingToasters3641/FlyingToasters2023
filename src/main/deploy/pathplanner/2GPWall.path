@@ -53,18 +53,18 @@
     },
     {
       "anchorPoint": {
-        "x": 6.778342223351113,
-        "y": 0.9126145648124622
+        "x": 6.768382244168454,
+        "y": 0.895853123025948
       },
       "prevControl": {
-        "x": 5.707290518825151,
-        "y": 0.5389574311908841
+        "x": 5.6973305396424925,
+        "y": 0.52219598940437
       },
       "nextControl": {
-        "x": 5.707290518825151,
-        "y": 0.5389574311908841
+        "x": 5.6973305396424925,
+        "y": 0.52219598940437
       },
-      "holonomicAngle": 0.7143440055573932,
+      "holonomicAngle": 6.879732465407117,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -130,7 +130,7 @@
   ],
   "markers": [
     {
-      "position": 1.05,
+      "position": 0.5,
       "names": [
         "GroundIntake"
       ]
@@ -145,24 +145,6 @@
       "position": 1.6357954545454534,
       "names": [
         "RunIntake"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.5268465909090911,
-      "names": [
-        "Retract"
-      ]
-    },
-    {
-      "position": 0.5748579545454549,
-      "names": [
-        "RetractToRest"
       ]
     }
   ]
