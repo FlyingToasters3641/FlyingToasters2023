@@ -16,7 +16,7 @@ public class SnapToScoreCommand extends DriveToPose {
     int bestPosition;
     Boolean goToClosest = true;
     int oneOver = 0;
-    double xScoringPosition = 1.73;
+    double xScoringPosition = 1.87;
     double valueConst = 8;
 
     Pose2d[] Positions = new Pose2d[]{  // .5588
@@ -35,7 +35,7 @@ public class SnapToScoreCommand extends DriveToPose {
         poseSupplier = this::getBestPosition;
         driveController =
                 new ProfiledPIDController(
-                        5.0, 0.0, 0.0, new TrapezoidProfile.Constraints(Units.inchesToMeters(150.0), Units.inchesToMeters(450.0)), 0.02);
+                        4.0, 0.0, 0.0, new TrapezoidProfile.Constraints(Units.inchesToMeters(150.0 / 2), Units.inchesToMeters(450.0 / 2)), 0.02);
         thetaController =
                 new ProfiledPIDController(
                         3.6, 0.018, 0.0, new TrapezoidProfile.Constraints(Units.degreesToRadians(360.0), Units.degreesToRadians(720.0)), 0.02);
