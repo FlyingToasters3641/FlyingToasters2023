@@ -96,7 +96,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
         tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
        // tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
         tab.add("Vision Field", fieldVision2d).withPosition(2,0).withSize(6,4);
-        tab.add("Path Planner Field", fieldVision2d).withPosition(2,0).withSize(6,4);
+        tab.add("Path Planner Field", fieldPathPlannerTargetPoses).withPosition(2,0).withSize(6,4);
 
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
 
