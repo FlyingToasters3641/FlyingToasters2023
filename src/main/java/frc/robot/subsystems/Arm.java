@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.000045;//0.00005; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.000045; //0.00005; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
         public static final double KD = 0.000000003;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
@@ -163,7 +163,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmAbsolutePositionDegrees() {
-        return ((m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360) - (233.54476049651504 - 90));
+        return ((m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360) - (233.54476049651504 - 90) - (10.50900011869723 - 90) - (88.63499623008238 - 90));
     }
 
     protected double getArmEncoderPositionDegrees() {
