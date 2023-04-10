@@ -352,7 +352,7 @@ public class ToastedPPSwerveControllerCommand extends CommandBase {
     SmartDashboard.putNumber(
         "PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
   }
-
+  
   /**
    * Set custom logging callbacks for this command to use instead of the default configuration of
    * pushing values to SmartDashboard
