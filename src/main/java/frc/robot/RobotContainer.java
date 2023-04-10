@@ -2,10 +2,13 @@ package frc.robot;
 
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Timer;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmPos;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.TeleopDriveConstants;
+import frc.robot.autonomous.pathplanner.ToastedPPSwerveControllerCommand;
 import frc.robot.autonomous.pathplanner.ToastedSwerveAutoBuilder;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -132,6 +136,12 @@ public class RobotContainer {
         configureAutonomousChooser();
 
         reseedTimer.start();
+
+        ToastedPPSwerveControllerCommand.setLoggingCallbacks(
+                this::defaultLogTrajectory,
+                this::defaultLogTargetPose,
+                this:: defaultLogSetpoint,
+                this::defaultLogError);
     }
 
     /**
@@ -463,7 +473,6 @@ public class RobotContainer {
         // true, eventMap);
         var path = PathPlanner.loadPath(pathName, constraints);
 
-        m_poseEstimator.addTrajectory(path);
         // controllerCommand = DrivetrainSubsystem.followTrajectory(driveSystem,
         // poseEstimatorSystem, alliancePath);
         ToastedSwerveAutoBuilder autoBuilder = new ToastedSwerveAutoBuilder(
@@ -495,6 +504,26 @@ public class RobotContainer {
         return autoBuilder.fullAuto(path);
     }
 
+    private void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
+        SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
+        SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
+        SmartDashboard.putNumber("PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
+    }
+      
+    private void defaultLogTrajectory(PathPlannerTrajectory trajectory) {
+        m_poseEstimator.addTrajectory(trajectory);
+    }
+
+    private void defaultLogTargetPose(Pose2d targetPose) {
+        m_poseEstimator.logPathPlannerTargetPose(targetPose);
+    }
+
+    private void defaultLogSetpoint(ChassisSpeeds chassisSpeeds) {
+        SmartDashboard.putNumber("PPSwerveControllerCommand/Setpoint Speed X (meters/sec)", chassisSpeeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("PPSwerveControllerCommand/Setpoint Speed Y (meters/sec)", chassisSpeeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("PPSwerveControllerCommand/Setpoint Speed Omega (radians/sec)", chassisSpeeds.omegaRadiansPerSecond);
+    }
+    
     public void onAllianceChanged(Alliance currentAlliance) {
         alliance = currentAlliance;
         m_poseEstimator.setAlliance(currentAlliance);
