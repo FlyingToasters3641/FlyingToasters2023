@@ -175,6 +175,20 @@ public class IntakeEffector extends SubsystemBase {
         // TODO: MAP TO BUTTON FOR REVERSING THE INTAKE
     }
 
+    public Command shootPiece() {
+        return Commands.run(() -> {
+            m_rollers.set(-1);
+        })
+                .finallyDo(end -> {
+                    m_rollers.set(0);
+                    PIDController.setReference(
+                            m_rollers.getEncoder().getPosition(),
+                            ControlType.kPosition
+                    );
+                });
+        // TODO: MAP TO BUTTON FOR REVERSING THE INTAKE
+    }
+
     private void toggleIntake() {
         solenoid.toggle();
         intakeRetracted = !intakeRetracted;

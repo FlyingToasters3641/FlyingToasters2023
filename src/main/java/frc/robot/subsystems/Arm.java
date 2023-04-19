@@ -59,12 +59,12 @@ public class Arm extends SubsystemBase {
 
         // values for Extender
         public static final double GEAR_RATIO_EX = 9 / 1;
-        public static final double EX_KP = 0.00004;//0.000070; // 0.025;// 0.015;
+        public static final double EX_KP = 0.000004;//0.0000000000001;//0.000070; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
-        public static final double EX_KD = 0.000004; // 0.0001;//took away 1 0
-        public static final double EX_KF = 0.0005;
+        public static final double EX_KD = 0.004;//0.00004 // 0.0001;
+        public static final double EX_KF = 0.0002;  //0.0005
         public static final double EX_KG = 0.4;
-        public static final double EXTENDED_POSITION = 90;// 26.23; // TODO: measure analog pot for extender.
+        public static final double EXTENDED_POSITION = 90;//90; // TODO: measure analog pot for extender.
         public static final double DOUBLE_PLAYERSTATION_EXT = 14;
         public static final double GROUND_INTAKE_EXT = 56; 
 
@@ -137,8 +137,8 @@ public class Arm extends SubsystemBase {
         m_leftMotorPid.setFF(kArm.KF, 1);
 
         m_extenderPid.setOutputRange(-0.5, 0.5);
-        m_extenderPid.setSmartMotionMaxVelocity(1500/* 1500 */, 0);//3000
-        m_extenderPid.setSmartMotionMaxAccel(4000/* 1000 */, 0);//6000
+        m_extenderPid.setSmartMotionMaxVelocity(20000/* 1500 */, 0);//1500
+        m_extenderPid.setSmartMotionMaxAccel(50000/* 1000 */, 0);//4000
         m_extenderPid.setSmartMotionAllowedClosedLoopError(1.0, 0); // 0.002
 
         m_rightArmMotor.follow(m_leftArmMotor, true);

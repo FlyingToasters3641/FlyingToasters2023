@@ -48,11 +48,11 @@ public final class Constants {
         public static double THETA_kI = 0.0;
         public static double THETA_kD = 0.0;
 
-        public static double X_kP = 5;
+        public static double X_kP = 4;
         public static double X_kI = 0.0;
         public static double X_kD = 0.0;
 
-        public static double Y_kP = 5;
+        public static double Y_kP = 4;
         public static double Y_kI = 0.0;
         public static double Y_kD = 0.0;
 
@@ -235,8 +235,8 @@ public final class Constants {
         GROUND_INTAKE_POSITION(-34, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),//-37
         SOLO_PLAYERSTATION_PICKUP(-15, 0, IntakePos.DEFAULT, true),//-23
         DOUBLE_PLAYERSTATION_PICKUP(131 ,0, IntakePos.DEFAULT, true),//131
-        L2_SCORING(142, 0, IntakePos.DEFAULT, false),//147
-        L3_SCORING(142, 0, IntakePos.DEFAULT, false),
+        L2_SCORING(145, 0, IntakePos.DEFAULT, false),//147
+        L3_SCORING(145, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_AUTON_POS(-28, 0, IntakePos.FLOOR, true);
 
         private double angle;

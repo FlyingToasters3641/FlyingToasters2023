@@ -144,7 +144,7 @@ public class NorthStarInputs implements AprilTagInputs {
                         distanceTravelled = cameraPosition.getTranslation().getDistance(previousPosePosition.getTranslation());
                 }
                     double noise = highPassFilter.calculate(distanceTravelled);
-                    if (ambiguity > 2 || noise > 0.8/* || cameraPosition != null && cameraPosition.getX() <= 7 && cameraPosition.getX() >= 16.54175 - 7 /*|| distanceTravelled > 4.2672 / elapsedTime*/) {
+                    if (ambiguity > 2 || noise > 0.4 || cameraPosition != null && cameraPosition.getX() >= 5.5 && cameraPosition.getX() <= 16.54175 - 5.5 /*|| distanceTravelled > 4.2672 / elapsedTime*/) {
                         SmartDashboard.putNumber(
                                 "Number of poses thrown out:",
                                 SmartDashboard.getNumber("Number of poses thrown out:", 0) + 1

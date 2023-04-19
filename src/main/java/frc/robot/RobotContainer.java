@@ -98,7 +98,7 @@ public class RobotContainer {
         eventMap.put("ScoreL3", m_Arm.moveArm(ArmPos.L3_SCORING, 1)
                 .andThen(m_Arm.extend(kArm.EXTENDED_POSITION, 1.0)./*andThen(new WaitCommand(0.15).*/andThen(m_intake.reverseIntake().withTimeout(0.3))));
         eventMap.put("AutoBalance", new AutoBalanceAlt(m_drivetrainSubsystem, m_poseEstimator));
-        eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1).andThen(m_intake.reverseIntake().withTimeout(0.3))); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
+        eventMap.put("ScoreL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1).andThen(new WaitCommand(0.15).andThen(m_intake.reverseIntake().withTimeout(0.3)))); //.andThen(m_intake.reverseIntake()).withTimeout(0.5).andThen(m_Arm.moveArm(ArmPos.STORED_POSITION)))
         eventMap.put("Extend", m_Arm.extend(ArmPos.L3_SCORING.getExtended()));
         eventMap.put("Outtake", m_intake.reverseIntake().withTimeout(0.5));
         eventMap.put("Retract", m_Arm.extend(0));
@@ -110,6 +110,7 @@ public class RobotContainer {
         eventMap.put("MoveToL2", m_Arm.moveArm(ArmPos.L2_SCORING, 1));
         eventMap.put("AutoBalanceTag", new DriveToPose(m_drivetrainSubsystem, m_poseEstimator, PoseEstimatorSubsystem.flipAllianceStatic(new Pose2d(12.7926178, 5.270563878, new Rotation2d(-180)))).withTimeout(1));
         eventMap.put("RunIntake", m_intake.runIntake(m_LEDSubsystem));
+        eventMap.put("Shoot", m_intake.shootPiece().withTimeout(1));
         
         SmartDashboard.putNumber("Lining up to score at", 1);
         m_drivetrainSubsystem.setDefaultCommand(
@@ -140,7 +141,7 @@ public class RobotContainer {
         ToastedPPSwerveControllerCommand.setLoggingCallbacks(
                 this::defaultLogTrajectory,
                 this::defaultLogTargetPose,
-                this:: defaultLogSetpoint,
+                this::defaultLogSetpoint,
                 this::defaultLogError);
     }
 
@@ -385,6 +386,11 @@ public class RobotContainer {
                 makeAutoBuilderCommand("1ConeBalance", new PathConstraints(1.5, 1), false)
         );
 
+        chooser.addOption(
+                "1.5PieceBalance",
+                makeAutoBuilderCommand("1.5PieceBalance", new PathConstraints(1.5, 1), false)
+        );
+
         chooser.addOption("AutoBalanceAprilTag", 
                 makeAutoBuilderCommand("1ConeBalanceAlt", new PathConstraints(1.5, 1), false)
         );
@@ -401,7 +407,11 @@ public class RobotContainer {
 
         chooser.addOption(
                 "3GPBarrierAlt",
-                makeAutoBuilderCommand("3GPBarrierAlt", new PathConstraints(3, 2), true)
+                makeAutoBuilderCommand("3GPBarrierAlt2", new PathConstraints(3.9, 3.2), true)
+        );
+        chooser.addOption(
+                "3GPBarrier",
+                makeAutoBuilderCommand("3GPBarrier", new PathConstraints(1, 0.5), true)
         );
 
         chooser.addOption(
@@ -471,7 +481,7 @@ public class RobotContainer {
         // return new PPAutoBuilder(drivetrainSubsystem, poseEstimator, pathName,
         // constraints,
         // true, eventMap);
-        var path = PathPlanner.loadPath(pathName, constraints);
+        var path = PathPlanner.loadPathGroup(pathName, constraints);
 
         // controllerCommand = DrivetrainSubsystem.followTrajectory(driveSystem,
         // poseEstimatorSystem, alliancePath);
