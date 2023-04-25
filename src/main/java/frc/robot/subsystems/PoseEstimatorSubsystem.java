@@ -107,7 +107,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             }
       
             fieldVision2d.setRobotPose(visionPose);
-            if ((DriverStation.isTeleop()) || RobotContainer.selectedAutonomous.equals("2GPWall") || !(RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance"))) {
+            if (DriverStation.isTeleop() || RobotContainer.selectedAutonomous.equals("2GPWall") || !(RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance"))) {
                 poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
                 SmartDashboard.putBoolean("Fusing April Tags:", true);
             } else {
