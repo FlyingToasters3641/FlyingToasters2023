@@ -63,6 +63,7 @@ public class RobotContainer {
     Trigger leftTriggerD = driveController.leftTrigger();
 
     private double joystickSensitivity = 1;
+    private boolean robotModerateSpeed = false;
 
     // bumpers
     Trigger leftBumperO = operatorController.leftBumper();
@@ -217,7 +218,7 @@ public class RobotContainer {
             m_Arm.moveArm(ArmPos.GROUND_INTAKE_POSITION),
             new WaitCommand(0.4).andThen(m_Arm.extendGroundIntake())));
         // driveController.y().whileTrue(new AutoBalanceAlt(m_drivetrainSubsystem,
-        // m_poseEstimator));
+        // m_poseEstimator))
 
         // Field-oriented 90 degree mode
 //      driveController.rightBumper()
@@ -349,12 +350,29 @@ public class RobotContainer {
                 )
                 .onFalse(
                         new InstantCommand(() -> {
-                            joystickSensitivity = 1.0;
+                                if (robotModerateSpeed = true) {
+                                        joystickSensitivity = 0.8;
+                                } else {
+                                        joystickSensitivity = 1.0;
+                                }
                         })
                 );
 
 
-        driveController.start().onTrue(Commands.run(() -> m_drivetrainSubsystem.reseedSteerMotorOffsets()));
+        //driveController.start().onTrue(Commands.run(() -> m_drivetrainSubsystem.reseedSteerMotorOffsets()));
+        driveController.start().onTrue(
+                new InstantCommand(() -> {
+                    joystickSensitivity = 0.8;
+                    robotModerateSpeed = true;
+                }));
+        driveController.back().onTrue(
+                new InstantCommand(() -> {
+                 joystickSensitivity = 1;
+                 robotModerateSpeed = false;
+                }));
+
+
+        
     }
 
 
