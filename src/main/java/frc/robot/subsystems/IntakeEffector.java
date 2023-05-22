@@ -21,6 +21,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.MotorHelper;
 import frc.robot.Constants.DrivetrainConstants;
 
+
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.ArmPos;
+import frc.robot.Constants.IntakePos;
+import frc.robot.subsystems.Arm.kArm;
+import frc.robot.Constants.ArmPos; //Dummy values to be changed later
+
 public class IntakeEffector extends SubsystemBase {
 
     private final DoubleSolenoid solenoid;
@@ -31,11 +42,19 @@ public class IntakeEffector extends SubsystemBase {
     private DutyCycle m_tof;
     private LinearFilter m_tofFilter;
 
+    
+    private SparkMaxPIDController m_groundIntakeRotationPID;
+
+    private CANSparkMax m_groundIntakeRotationMotor;
+
     private boolean intakeRetracted;
     SparkMaxPIDController PIDController;
     double prevEncoder;
 
+    
+
     public IntakeEffector() {
+
         solenoid =
                 new DoubleSolenoid(
                         DrivetrainConstants.PNEUMATIC_HUB,
@@ -55,10 +74,38 @@ public class IntakeEffector extends SubsystemBase {
                         DrivetrainConstants.ROLLER_MOTOR_LIMIT,
                         IdleMode.kBrake
                 );
+        m_groundIntakeRotationMotor = MotorHelper.createSparkMax(
+            DrivetrainConstants.GROUND_INTAKE_ROTATOR_MOTOR,
+            MotorType.kBrushless,
+            false,
+            kArm.LEFT_CURRENT_LIMIT,
+            IdleMode.kBrake,
+            kArm.KP,
+            kArm.KI,
+            kArm.KD,
+            kArm.KF);
         PIDController = m_rollers.getPIDController();
         PIDController.setP(0.05);
         PIDController.setI(0);
         PIDController.setD(0);
+
+        
+        
+        m_groundIntakeRotationPID = m_groundIntakeRotationMotor.getPIDController();
+
+        m_groundIntakeRotationPID.setSmartMotionMaxVelocity(35000, 0);
+        m_groundIntakeRotationPID.setSmartMotionMinOutputVelocity(0, 0);
+        m_groundIntakeRotationPID.setSmartMotionMaxAccel(60000, 0);
+        m_groundIntakeRotationPID.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
+
+        m_groundIntakeRotationPID.setSmartMotionMaxVelocity(18000, 1);
+        m_groundIntakeRotationPID.setSmartMotionMinOutputVelocity(0, 1);
+        m_groundIntakeRotationPID.setSmartMotionMaxAccel(30000, 1);
+        m_groundIntakeRotationPID.setSmartMotionAllowedClosedLoopError(0.13889, 1); // 0.002
+        m_groundIntakeRotationPID.setP(kArm.KP, 1);
+        m_groundIntakeRotationPID.setI(kArm.KI, 1);
+        m_groundIntakeRotationPID.setD(kArm.KD, 1);
+        m_groundIntakeRotationPID.setFF(kArm.KF, 1);
 
         prevEncoder = m_rollers.getEncoder().getPosition();
 
@@ -194,6 +241,18 @@ public class IntakeEffector extends SubsystemBase {
         intakeRetracted = !intakeRetracted;
         // TODO: DO WE NEED THIS?
     }
+
+  
+
+    private void setGroundIntakePosition(double target, double gintakeFF) {
+        m_groundIntakeRotationPID.setReference(
+                target,
+                CANSparkMax.ControlType.kSmartMotion,
+                0,
+                gintakeFF);
+    }
+
+
 
     @Override
     public void periodic() {

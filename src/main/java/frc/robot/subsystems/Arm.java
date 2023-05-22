@@ -361,6 +361,8 @@ public class Arm extends SubsystemBase {
         return angle;
     }
 
+    
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm: Absolute Encoder Pos (pot position)", getArmAbsolutePositionDegrees());

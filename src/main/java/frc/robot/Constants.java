@@ -118,6 +118,7 @@ public final class Constants {
         public static final int LEFT_ARM_MOTOR = 26;
         public static final int RIGHT_ARM_MOTOR = 21;
         public static final int EXTENDER_MOTOR = 23;
+        public static final int GROUND_INTAKE_ROTATOR_MOTOR = 50; 
         public static final int ARM_POT_CHANNEL = 0; // Port for the potentiometer on the rotation for the arm.
         public static final int EX_POT_CHANNEL = 1; // Port for the extender pot
 
