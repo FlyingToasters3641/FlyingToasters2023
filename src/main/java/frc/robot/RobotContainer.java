@@ -409,10 +409,10 @@ public class RobotContainer {
                 "3GPBarrierAlt",
                 makeAutoBuilderCommand("3GPBarrierAlt2", new PathConstraints(3.9, 3.2), true)
         );
-        chooser.addOption(
-                "3GPBarrier",
-                makeAutoBuilderCommand("3GPBarrier", new PathConstraints(1, 0.5), true)
-        );
+        // chooser.addOption(
+        //         "3GPBarrier",
+        //         makeAutoBuilderCommand("3GPBarrier", new PathConstraints(1, 0.5), true)
+        // );
 
         chooser.addOption(
                 "3GPWall",

@@ -233,10 +233,10 @@ public final class Constants {
     public enum ArmPos {
         STORED_POSITION(-53, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_POSITION(-34, 0 /*kArm.EXTENDED_POSITION * 0.4*/, IntakePos.FLOOR, true),//-37
-        SOLO_PLAYERSTATION_PICKUP(-15, 0, IntakePos.DEFAULT, true),//-23
-        DOUBLE_PLAYERSTATION_PICKUP(131 ,0, IntakePos.DEFAULT, true),//131
-        L2_SCORING(145, 0, IntakePos.DEFAULT, false),//147
-        L3_SCORING(145, 0, IntakePos.DEFAULT, false),
+        SOLO_PLAYERSTATION_PICKUP(-19, 0, IntakePos.DEFAULT, true),//-23
+        DOUBLE_PLAYERSTATION_PICKUP(135 ,0, IntakePos.DEFAULT, true),//131
+        L2_SCORING(148, 0, IntakePos.DEFAULT, false),//147
+        L3_SCORING(148, 0, IntakePos.DEFAULT, false),
         GROUND_INTAKE_AUTON_POS(-28, 0, IntakePos.FLOOR, true);
 
         private double angle;

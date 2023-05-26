@@ -62,7 +62,7 @@ public class Arm extends SubsystemBase {
         public static final double EX_KP = 0.000004;//0.0000000000001;//0.000070; // 0.025;// 0.015;
         public static final double EX_KI = 0.0;
         public static final double EX_KD = 0.004;//0.00004 // 0.0001;
-        public static final double EX_KF = 0.0002;  //0.0005
+        public static final double EX_KF = 0.00006;//0.00009;//0.0002;  //0.0005
         public static final double EX_KG = 0.4;
         public static final double EXTENDED_POSITION = 90;//90; // TODO: measure analog pot for extender.
         public static final double DOUBLE_PLAYERSTATION_EXT = 14;
