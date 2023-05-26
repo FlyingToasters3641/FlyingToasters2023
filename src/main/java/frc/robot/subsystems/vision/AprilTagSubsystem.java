@@ -93,21 +93,19 @@ public class AprilTagSubsystem extends SubsystemBase {
                 Pose2d curTagPoseDrivetrainMatch = new Pose2d();
                 double prevTimestamp = 999999999;
                 double curTimestamp = 999999999;
-                {
-
-                    for (Map.Entry<Double, Pose2d> pose2dEntry : historicalDrivetrainPoses.entrySet()) {
-                        if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < curTimestamp) {
-                            curTimestamp = pose2dEntry.getKey();
-                        }
-                        if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < prevTimestamp) {
-                            prevTimestamp = pose2dEntry.getKey();
-                        }
+                for (Map.Entry<Double, Pose2d> pose2dEntry : historicalDrivetrainPoses.entrySet()) {
+                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < curTimestamp) {
+                        curTimestamp = pose2dEntry.getKey();
                     }
-                    prevTagPoseDrivetrainMatch = historicalDrivetrainPoses.get(prevTimestamp);
-                    curTagPoseDrivetrainMatch = historicalDrivetrainPoses.get(curTimestamp);
+                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < prevTimestamp) {
+                        prevTimestamp = pose2dEntry.getKey();
+                    }
                 }
+                prevTagPoseDrivetrainMatch = historicalDrivetrainPoses.get(prevTimestamp);
+                curTagPoseDrivetrainMatch = historicalDrivetrainPoses.get(curTimestamp);
+
                 prevTagPoseDrivetrainMatch = prevTagPoseDrivetrainMatch.interpolate(curTagPoseDrivetrainMatch, (prevTimestamp - prevTagPoseTime) / (curTimestamp - prevTagPoseTime));
-               // curTagPoseDrivetrainMatch = curTagPoseDrivetrainMatch.(curTagPoseDrivetrainMatch, (prevTimestamp - prevTagPoseTime) / (curTimestamp - prevTagPoseTime));
+                // curTagPoseDrivetrainMatch = curTagPoseDrivetrainMatch.(curTagPoseDrivetrainMatch, (prevTimestamp - prevTagPoseTime) / (curTimestamp - prevTagPoseTime));
                 xDiff = Math.abs(Math.abs(curTagPoseDrivetrainMatch.getX() - prevTagPoseDrivetrainMatch.getX()) - Math.abs(xDist));
                 yDiff = Math.abs(Math.abs(curTagPoseDrivetrainMatch.getY() - prevTagPoseDrivetrainMatch.getY()) - Math.abs(yDist));
                 xDiff *= 8;
@@ -150,29 +148,24 @@ public class AprilTagSubsystem extends SubsystemBase {
         //This is awful, but I don't care about this code anymore
         historicalDrivetrainPoses.put(Timer.getFPGATimestamp(), getDriveOdometryPose.get());
         ArrayList<Double> valuesToRemove = new ArrayList<>();
-        {
-            Double time = Timer.getFPGATimestamp();
 
-            for (Map.Entry<Double, Pose2d> entry : historicalDrivetrainPoses.entrySet()) {
-                if (time - entry.getKey() > 1) {
-                    valuesToRemove.add(entry.getKey());
-                }
-            }
-            for (Double val : valuesToRemove) {
-                historicalDrivetrainPoses.remove(val);
-            }
-            valuesToRemove.clear();
-            for (Map.Entry<Double, Pose2d> entry : historicalAprilTagPoses.entrySet()) {
-                if (time - entry.getKey() > 1) {
-                    valuesToRemove.add(entry.getKey());
-                   // historicalAprilTagPoses.remove(entry.getKey());
-                }
-            }
-            for (Double val : valuesToRemove) {
-                historicalDrivetrainPoses.remove(val);
-            }
-            valuesToRemove.clear();
-        }
+        Double time = Timer.getFPGATimestamp();
+
+        cleanupMap(valuesToRemove, time, historicalDrivetrainPoses);
+        cleanupMap(valuesToRemove, time, historicalAprilTagPoses);
+
         updatePoses();
+    }
+
+    private void cleanupMap(ArrayList<Double> valuesToRemove, Double time, TreeMap<Double, Pose2d> historicalDrivetrainPoses) {
+        for (Map.Entry<Double, Pose2d> entry : historicalDrivetrainPoses.entrySet()) {
+            if (time - entry.getKey() > 1) {
+                valuesToRemove.add(entry.getKey());
+            }
+        }
+        for (Double val : valuesToRemove) {
+            historicalDrivetrainPoses.remove(val);
+        }
+        valuesToRemove.clear();
     }
 }
