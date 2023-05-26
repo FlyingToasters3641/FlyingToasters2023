@@ -1,16 +1,14 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.vision.VisionHelpers.*;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -52,13 +50,14 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
      * less. This matrix is in the form [x, y, theta]ᵀ, with units in meters and
      * radians.
      */
-    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.04, 0.04,5);
+    private static final Vector<N3> visionMeasurementStdDevs = VecBuilder.fill(0.04, 0.04, 5);
 
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final SwerveDrivePoseEstimator poseEstimator;
+    private SwerveDriveOdometry traditionalOdometry;
 
     private final Field2d field2d = new Field2d();
-//    private final Field2d fieldOdometry2d = new Field2d();
+    //    private final Field2d fieldOdometry2d = new Field2d();
     private final Field2d fieldVision2d = new Field2d();
     private final Field2d fieldPathPlannerTargetPoses = new Field2d();
 
@@ -67,6 +66,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     private final ArrayList<Double> xValues = new ArrayList<>();
     private final ArrayList<Double> yValues = new ArrayList<>();
     Consumer<AprilTagMeasurement> addData;
+    Supplier<Pose2d> getDriveOdometryPose;
     private final AprilTagSubsystem NorthStarEstimator;
 
     public PoseEstimatorSubsystem(/* PhotonCamera photonCamera,*/ DrivetrainSubsystem drivetrainSubsystem) {
@@ -91,24 +91,26 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
                 new Pose2d(),
                 stateStdDevs,
                 visionMeasurementStdDevs);
+        traditionalOdometry = new SwerveDriveOdometry(DrivetrainConstants.KINEMATICS, drivetrainSubsystem.getGyroscopeRotation(), drivetrainSubsystem.getModulePositions());
 
         tab.addString("Pose", this::getFomattedPose).withPosition(0, 0).withSize(2, 0);
         tab.add("Field", field2d).withPosition(2, 0).withSize(6, 4);
-       // tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
-        tab.add("Vision Field", fieldVision2d).withPosition(2,0).withSize(6,4);
-        tab.add("Path Planner Field", fieldPathPlannerTargetPoses).withPosition(2,0).withSize(6,4);
+        // tab.add("Odometry Field", fieldOdometry2d).withPosition(2,0).withSize(6,4);
+        tab.add("Vision Field", fieldVision2d).withPosition(2, 0).withSize(6, 4);
+        tab.add("Path Planner Field", fieldPathPlannerTargetPoses).withPosition(2, 0).withSize(6, 4);
 
         //addData = measure -> poseEstimator.addVisionMeasurement(flipAlliance(measure.getPose().toPose2d()), measure.getTimestamp());
-
+        getDriveOdometryPose = () -> traditionalOdometry.getPoseMeters();
         addData = measure -> {
             var visionPose = measure.getPose().toPose2d();
             if (DriverStation.getAlliance() == Alliance.Red) {
                 visionPose = flipAlliance(visionPose);
             }
-      
+
+
             fieldVision2d.setRobotPose(visionPose);
             if ((DriverStation.isTeleop()) || RobotContainer.selectedAutonomous.equals("2GPWall") || !(RobotContainer.selectedAutonomous.equals("2GPBarrier") || RobotContainer.selectedAutonomous.equals("OneConeBalance"))) {
-                poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp());
+                poseEstimator.addVisionMeasurement(visionPose, measure.getTimestamp(), VecBuilder.fill(measure.getXStdDev(), measure.getYStdDev(), 5));
                 SmartDashboard.putBoolean("Fusing April Tags:", true);
             } else {
                 SmartDashboard.putBoolean("Fusing April Tags:", false);
@@ -118,8 +120,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
 
         NorthStarEstimator = new AprilTagSubsystem(
                 addData,
-                 new NorthStarInputs("NorthStarLeft", new Pose3d(-0.270769403, 0.198938789, 0.628645808, new Rotation3d(0,0,2.79252665359))),
-                 new NorthStarInputs("NorthStarRight", new Pose3d(-0.270769403,-0.198938789,  0.628645808, new Rotation3d(0,0,0.349066 + Math.PI)))
+                getDriveOdometryPose,
+                new NorthStarInputs("NorthStarLeft", new Pose3d(-0.270769403, 0.198938789, 0.628645808, new Rotation3d(0, 0, 2.79252665359))),
+                new NorthStarInputs("NorthStarRight", new Pose3d(-0.270769403, -0.198938789, 0.628645808, new Rotation3d(0, 0, 0.349066 + Math.PI)))
 
         );
     }
@@ -171,6 +174,9 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
             dashboardPose = flipAlliance(dashboardPose);
         }
         field2d.setRobotPose(dashboardPose);
+        traditionalOdometry.update(drivetrainSubsystem.getGyroscopeRotation(),
+                drivetrainSubsystem.getModulePositions());
+
     }
 
     private String getFomattedPose() {
@@ -241,7 +247,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     public void logPathPlannerTargetPose(Pose2d pose) {
         fieldPathPlannerTargetPoses.setRobotPose(pose);
     }
-    
+
     /**
      * Resets the holonomic rotation of the robot (gyro last year)
      * This would be used if Apriltags are not getting accurate pose estimation

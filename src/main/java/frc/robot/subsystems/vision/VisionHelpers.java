@@ -6,6 +6,8 @@ public class VisionHelpers {
     public static class AprilTagMeasurement {
         double timestamp;
         double ambiguity;
+        double xStdDev;
+        double yStdDev;
         int ID;
         long fps;
         Pose3d pose;
@@ -37,6 +39,17 @@ public class VisionHelpers {
         }
         public long getFps() {
             return fps;
+        }
+        public void addStdDevs(double xStdDev, double yStdDev) {
+            this.xStdDev = xStdDev;
+            this.yStdDev = yStdDev;
+        }
+        public double getXStdDev() {
+            return xStdDev;
+        }
+
+        public double getYStdDev() {
+            return yStdDev;
         }
     }
     //NOTE: You must place the theta components in a quaternion
