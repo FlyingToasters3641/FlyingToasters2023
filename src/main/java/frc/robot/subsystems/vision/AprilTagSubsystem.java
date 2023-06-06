@@ -77,13 +77,10 @@ public class AprilTagSubsystem extends SubsystemBase {
 
         }
         double avgDistance = totalDistance / tagPoses.size();
-        //TODO: I'd like to actually use these
         double xyStdDev = xyStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPoses.size();
         double thetaStdDev = thetaStdDevCoefficient * Math.pow(avgDistance, 2.0) / tagPoses.size();
 
         for (Map.Entry<Integer, AprilTagMeasurement> entry : tagPoses.entrySet()) {
-            /*TODO: I'd be interested in doing something to select the closest tag to the camera, Mechanical Advantage
-             *  mentioned it in their blog post and said it had a couple issues, but I'd like to see how it works.*/
 
             int id = entry.getValue().getID();
             if (prevTagPose != null && historicalDrivetrainPoses != null && historicalDrivetrainPoses.size() != 0) {
@@ -92,12 +89,16 @@ public class AprilTagSubsystem extends SubsystemBase {
                 Pose2d prevTagPoseDrivetrainMatch = new Pose2d();
                 Pose2d curTagPoseDrivetrainMatch = new Pose2d();
                 double prevTimestamp = 999999999;
+                double prevTimeDiff = 999999999;
                 double curTimestamp = 999999999;
+                double curTimeDiff = 999999999;
                 for (Map.Entry<Double, Pose2d> pose2dEntry : historicalDrivetrainPoses.entrySet()) {
-                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < curTimestamp) {
+                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < curTimeDiff) {
+                        curTimeDiff = Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp());
                         curTimestamp = pose2dEntry.getKey();
                     }
-                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < prevTimestamp) {
+                    if (Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp()) < prevTimeDiff) {
+                        prevTimeDiff = Math.abs(pose2dEntry.getKey() - entry.getValue().getTimestamp());
                         prevTimestamp = pose2dEntry.getKey();
                     }
                 }
@@ -105,7 +106,6 @@ public class AprilTagSubsystem extends SubsystemBase {
                 curTagPoseDrivetrainMatch = historicalDrivetrainPoses.get(curTimestamp);
 
                 prevTagPoseDrivetrainMatch = prevTagPoseDrivetrainMatch.interpolate(curTagPoseDrivetrainMatch, (prevTimestamp - prevTagPoseTime) / (curTimestamp - prevTagPoseTime));
-                // curTagPoseDrivetrainMatch = curTagPoseDrivetrainMatch.(curTagPoseDrivetrainMatch, (prevTimestamp - prevTagPoseTime) / (curTimestamp - prevTagPoseTime));
                 xDiff = Math.abs(Math.abs(curTagPoseDrivetrainMatch.getX() - prevTagPoseDrivetrainMatch.getX()) - Math.abs(xDist));
                 yDiff = Math.abs(Math.abs(curTagPoseDrivetrainMatch.getY() - prevTagPoseDrivetrainMatch.getY()) - Math.abs(yDist));
                 xDiff *= 8;

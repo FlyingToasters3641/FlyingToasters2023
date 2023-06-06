@@ -69,7 +69,7 @@ public class PoseEstimatorSubsystem extends SubsystemBase {
     Supplier<Pose2d> getDriveOdometryPose;
     private final AprilTagSubsystem NorthStarEstimator;
 
-    public PoseEstimatorSubsystem(/* PhotonCamera photonCamera,*/ DrivetrainSubsystem drivetrainSubsystem) {
+    public PoseEstimatorSubsystem(DrivetrainSubsystem drivetrainSubsystem) {
 
         this.drivetrainSubsystem = drivetrainSubsystem;
         //PhotonPoseEstimator photonPoseEstimator;

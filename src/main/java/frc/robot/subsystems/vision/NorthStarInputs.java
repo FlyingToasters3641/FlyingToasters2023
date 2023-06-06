@@ -90,7 +90,7 @@ public class NorthStarInputs implements AprilTagInputs {
 
             for (int tag = 0; tag < queue.length; tag++) {
                 //TODO: Remove SmartDashboard calls, they eat up time on the robot loop
-                SmartDashboard.putBoolean("NorthStarInputsCalled", true);
+               // SmartDashboard.putBoolean("NorthStarInputsCalled", true);
                 double timestamp = timestamps[tag];
                 double[] frame = frames[tag];
                 //If there's a duplicate tag pose, the tag id moves to position 17 in the frame (double array) and
