@@ -122,14 +122,14 @@ public class Arm extends SubsystemBase {
         m_pot = new AnalogPotentiometer(DrivetrainConstants.ARM_POT_CHANNEL, 360, -(258.661793 - 180) / (90 / 44));
         m_exPot = new AnalogPotentiometer(DrivetrainConstants.EX_POT_CHANNEL, 100, -27.247387);
 
-        m_leftMotorPid.setSmartMotionMaxVelocity(35000, 0);
+        m_leftMotorPid.setSmartMotionMaxVelocity(35000 * 4, 0);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 0);
-        m_leftMotorPid.setSmartMotionMaxAccel(60000, 0);
+        m_leftMotorPid.setSmartMotionMaxAccel(60000 * 3, 0);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 0); // 0.002
 
-        m_leftMotorPid.setSmartMotionMaxVelocity(18000, 1);
+        m_leftMotorPid.setSmartMotionMaxVelocity(18000 * 3, 1);
         m_leftMotorPid.setSmartMotionMinOutputVelocity(0, 1);
-        m_leftMotorPid.setSmartMotionMaxAccel(30000, 1);
+        m_leftMotorPid.setSmartMotionMaxAccel(30000 * 3, 1);
         m_leftMotorPid.setSmartMotionAllowedClosedLoopError(0.13889, 1); // 0.002
         m_leftMotorPid.setP(kArm.KP, 1);
         m_leftMotorPid.setI(kArm.KI, 1);
@@ -163,7 +163,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmAbsolutePositionDegrees() {
-        return ((m_pot.get() * -(90.0 / (217.6 - 173.06)) + 360) - (233.54476049651504 - 90) - (10.50900011869723 - 90) - (88.63499623008238 - 90));
+        return (((m_pot.get()) * -(90 / (111.88785934078001 - 67.03644941166725))) + 224.856962064);
     }
 
     protected double getArmEncoderPositionDegrees() {
