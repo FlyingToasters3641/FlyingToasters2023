@@ -193,8 +193,7 @@ public class RobotContainer {
         rightTriggerO.whileTrue(m_Arm.extendL3()).whileFalse(m_Arm.extend(0));
 
         //Purple LED's
-        operatorController
-                .rightBumper()
+        operatorController.rightBumper()
                 .onTrue(
                         new InstantCommand(() -> {
                             m_LEDSubsystem.ledSwitch(3);
@@ -210,6 +209,7 @@ public class RobotContainer {
                         })
                 )
                 .onFalse(new InstantCommand(() -> m_LEDSubsystem.ledSwitch(1)));
+                
 
         // DRIVER BUTTON BINDINGS
         rightTriggerD.whileTrue(m_intake.reverseIntake());
