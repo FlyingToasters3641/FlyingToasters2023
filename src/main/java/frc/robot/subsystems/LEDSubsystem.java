@@ -34,6 +34,7 @@ public class LEDSubsystem extends SubsystemBase {
     // A list of int's which shows the specific positions of when a block or
     // blue/orange starts
     private int[] ledIndex = { 8, 45, 81, 117 };
+    private int[] americaLedIndex = { 8, 33, 57, 81, 105, 129 };
 
     /*
      * Variables used to modify the
@@ -47,10 +48,9 @@ public class LEDSubsystem extends SubsystemBase {
      * Variables used to modify the sparkling of the blue-orange idling stripes
      */
     private int whiteness; // Brightness of the sparks
-    // private String sparkColor; //Color of the sparks
-    // private int sparkIndex; //Variable which is used to modify what place the
-    // spark is being placed at
-    // private int amountOfSparkLeds; //Amount of sparkles for each block
+    private String sparkColor; // Color of the sparks
+    private int sparkIndex; // Variable which is used to modify what place the spark is being placed at
+    private int amountOfSparkLeds; // Amount of sparkles for each block
 
     public LEDSubsystem() {
 
@@ -191,13 +191,11 @@ public class LEDSubsystem extends SubsystemBase {
                 if (ledTimer.advanceIfElapsed(.2)) {
                     ledBlink++;
                 }
-
                 if (ledBlink % 2 == 0) {
                     ledStatusSwitch = false;
                 } else {
                     ledStatusSwitch = true;
                 }
-
                 if (ledStatusSwitch) {
                     setColorSimplified("yellow", 8, 152);
                 }
@@ -243,6 +241,90 @@ public class LEDSubsystem extends SubsystemBase {
                         ledSwitch(1);
                     }
                 }
+                break;
+            case 6:
+                // blinks the red white and blue of the greatest country in the world
+                setColorSimplified("blue-white", americaLedIndex[0], 24);
+                setColorSimplified("white", americaLedIndex[1], 24);
+                setColorSimplified("red-white", americaLedIndex[2], 24);
+                setColorSimplified("blue-white", americaLedIndex[3], 24);
+                setColorSimplified("white", americaLedIndex[4], 24);
+                setColorSimplified("red-white", americaLedIndex[5], 24);
+
+                americaLedIndex[0]++;
+                americaLedIndex[1]++;
+                americaLedIndex[2]++;
+                americaLedIndex[3]++;
+                americaLedIndex[4]++;
+                americaLedIndex[5]++;
+
+                if (startLed == true) {
+                    setColorSimplified(startLedColor, 8, startLedCount);
+                    startLedCount++;
+                    if (startLedCount >= 24) {
+                        startLedCount = 0;
+                        startLed = false;
+                    }
+                }
+                if (startLed == false) {
+                    for (int i = 0; i < 6; i++) {
+                        if (americaLedIndex[i] >= 128) {
+                            if (i % 3 == 0) {
+                                startLedColor = "blue";
+                            }
+                            if (i % 3 == 1) {
+                                startLedColor = "white";
+                            }
+                            if (i % 3 == 2) {
+                                startLedColor = "red";
+                            }
+                            startLed = true;
+                        }
+                    }
+                }
+
+                // Sets the position back to the LED start
+                for (int i = 0; i < 6; i++) {
+                    if (americaLedIndex[i] > 151) {
+                        americaLedIndex[i] = 8;
+                    }
+
+                }
+
+                if (sparkleTimer.advanceIfElapsed(.15)) {
+                    amountOfSparkLeds = MathUtil.randomNum(3, 5);
+                    for (int i = 0; i < amountOfSparkLeds; i++) {
+                        sparkIndex = MathUtil.randomNum(8, 152);
+                        if (sparkIndex >= ledIndex[0] && sparkIndex <= ledIndex[0] + 24) {
+                            sparkColor = "blue-white";
+                        }
+                        if (sparkIndex >= ledIndex[1] && sparkIndex <= ledIndex[1] + 24) {
+                            sparkColor = "white";
+                        }
+                        if (sparkIndex >= ledIndex[2] && sparkIndex <= ledIndex[2] + 24) {
+                            sparkColor = "red-white";
+                        }
+                        if (sparkIndex >= ledIndex[3] && sparkIndex <= ledIndex[3] + 24) {
+                            sparkColor = "blue-white";
+                        }
+                        if (sparkIndex >= ledIndex[4] && sparkIndex <= ledIndex[4] + 24) {
+                            sparkColor = "white";
+                        }
+                        if (sparkIndex >= ledIndex[5] && sparkIndex <= ledIndex[5] + 24) {
+                            sparkColor = "red-white";
+                        }
+                        if (sparkIndex >= 8 && sparkIndex <= 8 + startLedCount) {
+                            if (startLedColor == "blue") {
+                                sparkColor = "blue-white";
+                            } else if (startLedColor == "red") {
+                                sparkColor = "red-white";
+                            }
+                        }
+
+                        setColorSimplified(sparkColor, sparkIndex, 1);
+
+                    }
+                }
         }
     }
 
@@ -263,6 +345,8 @@ public class LEDSubsystem extends SubsystemBase {
             candle.setLEDs(35, 0, 60, 0, index, count);
         } else if (color.equals("green")) {
             candle.setLEDs(47, 125, 0, 0, index, count);
+        } else if (color.equals("red")) {
+            candle.setLEDs(230, 9, 35, 0, index, count);
         } else if (color.equals("none")) {
             candle.setLEDs(0, 0, 0, 0, index, count);
         } else if (color.equals("blue-white")) {
@@ -271,6 +355,9 @@ public class LEDSubsystem extends SubsystemBase {
         } else if (color.equals("orange-white")) {
             whiteness = MathUtil.randomNum(50, 100);
             candle.setLEDs(255, 25, 0, whiteness, index, count);
+        } else if (color.equals("red-white")) {
+            whiteness = MathUtil.randomNum(50, 100);
+            candle.setLEDs(230, 9, 35, whiteness, index, count);
         }
     }
 
