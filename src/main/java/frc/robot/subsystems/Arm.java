@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase {
 
     public static final class kArm {
         public static final double GEAR_RATIO = 90 / 1;
-        public static final double KP = 0.000045; //0.00005; // 0.0025; //0.04;//0.090071;//0.0001;
+        public static final double KP = 0.000037;//0.000045; //0.00005; // 0.0025; //0.04;//0.090071;//0.0001;
         public static final double KI = 0;// 0.0001;
         public static final double KD = 0.000000003;// 0.000015; //0.017546;//0.0;
         public static final double KF = 0.0;
