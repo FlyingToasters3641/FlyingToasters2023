@@ -113,6 +113,22 @@ public class RobotContainer {
         eventMap.put("Shoot", m_intake.shootPiece().withTimeout(1));
         
         SmartDashboard.putNumber("Lining up to score at", 1);
+        m_drivetrainSubsystem.setDefaultCommand(
+                new FieldOrientedDriveCommand(
+                        m_drivetrainSubsystem,
+                        () -> m_poseEstimator.getCurrentPose().getRotation(),
+                        () ->
+                                -modifyAxis(driveController.getLeftY() * joystickSensitivity) *
+                                        DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () ->
+                                -modifyAxis(driveController.getLeftX() * joystickSensitivity) *
+                                        DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
+                        () ->
+                                -modifyAxis(driveController.getRightX() * joystickSensitivity) *
+                                        DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND /
+                                        2
+                )
+        );
 
         // Configure the button bindings
         configureButtonBindings();
@@ -138,27 +154,6 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        Command oldDefaultCommand = CommandScheduler.getInstance().getDefaultCommand(m_drivetrainSubsystem);
-        if (oldDefaultCommand != null) {
-                oldDefaultCommand.cancel();
-        }
-
-        m_drivetrainSubsystem.setDefaultCommand(
-                new FieldOrientedDriveCommand(
-                        m_drivetrainSubsystem,
-                        () -> m_poseEstimator.getCurrentPose().getRotation(),
-                        () ->
-                                -modifyAxis(driveController.getLeftY() * joystickSensitivity) *
-                                        DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () ->
-                                -modifyAxis(driveController.getLeftX() * joystickSensitivity) *
-                                        DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-                        () ->
-                                -modifyAxis(driveController.getRightX() * joystickSensitivity) *
-                                        DrivetrainConstants.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND /
-                                        2
-                )
-        );
         // OPPERATOR BUTTON BINDINGS
         operatorController
                 .x()
